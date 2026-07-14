@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>三兔船长的店 · 头部商家深度诊断 · 2026-07</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { font-size: 14px; }
+  body { font-family: -apple-system, "SF Pro Text", "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif; background:#f5f7fa; color:#1f2937; line-height:1.6; }
+  a { color:#0891b2; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  /* Container */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+  /* Header */
+  .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:#fff; padding: 32px 16px 40px; }
+  .hero h1 { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+  .hero .sub { margin-top: 8px; opacity: 0.85; font-size: 13px; }
+  .hero .meta { display:flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+  .hero .meta span { background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 20px; font-size: 12px; backdrop-filter: blur(10px); }
+
+  /* Section */
+  section { background:#fff; margin: 16px 0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow:hidden; }
+  .sect-h { padding: 18px 20px 8px; border-bottom: 1px solid #eef0f3; }
+  .sect-h h2 { font-size: 18px; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+  .sect-h .sub { font-size: 12px; color: #6b7280; margin-top: 4px; }
+  .sect-body { padding: 16px 20px; }
+
+  /* Caliber card */
+  details.caliber { background: #f8fafc; border-left: 3px solid #94a3b8; padding: 10px 14px; margin: 12px 20px 0; border-radius: 6px; font-size: 12px; color:#475569; }
+  details.caliber summary { cursor:pointer; font-weight: 600; color:#334155; user-select:none; }
+  details.caliber summary::-webkit-details-marker { display:none; }
+  details.caliber summary::before { content: "📊 "; }
+  details.caliber summary::after { content: " · 点击展开"; opacity:0.5; font-weight:400; }
+  details.caliber[open] summary::after { content: " · 点击折叠"; }
+  details.caliber ul { margin: 8px 0 0 16px; }
+  details.caliber li { margin: 2px 0; }
+
+  /* KPI cards */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 8px; }
+  .kpi { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; }
+  .kpi .label { font-size: 12px; color:#6b7280; }
+  .kpi .value { font-size: 24px; font-weight: 700; color: #0f172a; margin-top: 4px; letter-spacing: -0.5px; }
+  .kpi .delta { font-size: 12px; margin-top: 6px; padding: 2px 8px; border-radius: 12px; display:inline-block; }
+  .kpi .delta.up { background:#d1fae5; color:#065f46; }
+  .kpi .delta.down { background:#fee2e2; color:#991b1b; }
+  .kpi .delta.warn { background:#fef3c7; color:#92400e; }
+  .kpi.alert { border-left: 4px solid #ef4444; }
+  .kpi.good { border-left: 4px solid #10b981; }
+
+  /* Signal card */
+  .signals { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin: 12px 0; }
+  .signal { padding: 14px 16px; border-radius: 10px; border-left: 4px solid; }
+  .signal.warn { background: #fffbeb; border-color: #f59e0b; }
+  .signal.alert { background: #fef2f2; border-color: #ef4444; }
+  .signal.good { background: #f0fdf4; border-color: #10b981; }
+  .signal.info { background: #eff6ff; border-color: #3b82f6; }
+  .signal .title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .signal .desc { font-size: 12px; color: #4b5563; }
+
+  /* Chart */
+  .chart { width: 100%; height: 320px; margin-top: 8px; }
+  .chart.small { height: 260px; }
+
+  /* Table */
+  table { width:100%; border-collapse: collapse; font-size: 13px; }
+  table th, table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+  table th { background: #f8fafc; color: #475569; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  table tr.self { background: #fef3c7 !important; font-weight: 600; }
+  table tr:hover { background: #f9fafb; }
+  table .up { color: #059669; font-weight: 600; }
+  table .down { color: #dc2626; font-weight: 600; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Note cards */
+  .notes { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 12px; }
+  .note-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; background: #fff; display:flex; flex-direction:column; }
+  .note-card .note-rank { display:inline-block; background:#f59e0b; color:#fff; font-size:11px; padding:2px 8px; border-radius:12px; margin-bottom:8px; align-self: flex-start; }
+  .note-card .note-title { font-size: 14px; font-weight: 600; color: #1f2937; margin-bottom: 8px; line-height: 1.4; }
+  .note-card .note-meta { font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+  .note-card .note-gmv { font-size: 18px; font-weight: 700; color: #d97706; margin: 8px 0; }
+  .note-card .note-btn { display:inline-block; margin-top:auto; background:#ff2442; color:#fff; padding: 8px 12px; border-radius: 6px; font-size: 12px; text-align: center; transition: opacity 0.2s; }
+  .note-card .note-btn:hover { opacity: 0.85; text-decoration: none; }
+
+  /* Coming soon placeholder */
+  .placeholder { padding: 40px 20px; text-align: center; color: #94a3b8; background: repeating-linear-gradient(45deg, #f8fafc, #f8fafc 10px, #f1f5f9 10px, #f1f5f9 20px); border-radius: 10px; margin: 12px 0; }
+
+  /* TOC */
+  .toc { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #e5e7eb; padding: 10px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; z-index: 10; }
+  .toc a { display: inline-block; margin-right: 16px; font-size: 13px; color: #64748b; padding: 4px 0; }
+  .toc a.active { color: #667eea; border-bottom: 2px solid #667eea; }
+
+  /* Footer */
+  footer { text-align: center; padding: 24px 16px; color: #94a3b8; font-size: 12px; }
+
+  /* Mobile tweak */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 20px; }
+    .kpi .value { font-size: 20px; }
+    .sect-h h2 { font-size: 16px; }
+    .chart { height: 260px; }
+    table { font-size: 12px; }
+    table th, table td { padding: 8px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>🎯 三兔船长的店 · 头部商家深度诊断</h1>
+    <div class="sub">面点类速食主营 · 单品类专营型商家</div>
+    <div class="meta">
+      <span>📅 数据周期：2026-06-14 ~ 2026-07-13（近30天）</span>
+      <span>👤 AM：大门（朱锦程）</span>
+      <span>🏢 五组·休食</span>
+      <span>🕐 报告生成：2026-07-14</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <a href="#s0">⭐ 一屏诊断</a>
+    <a href="#s1">📈 生意分析</a>
+    <a href="#s2">🎯 品类结构</a>
+    <a href="#s3">🔥 竞品案例</a>
+    <a href="#s4">💬 社区趋势</a>
+    <a href="#s5">💭 客户反馈</a>
+    <a href="#s6">👥 私域老客</a>
+    <a href="#s7">⚠️ 合规风险</a>
+    <a href="#s8">🚀 下阶段建议</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ 0. 一屏诊断 ============ -->
+<section id="s0">
+  <div class="sect-h">
+    <h2>⭐ 一屏诊断</h2>
+    <div class="sub">30 天核心信号 · 判断三兔当前经营状态</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>DGMV</strong>：dataset 1922 「人货场成交分析」T-1 苍穹当前挂户数据；商家口径；不含退款</li>
+      <li><strong>时间窗</strong>：本期 2026-06-14~2026-07-13（30天），上期 2026-05-15~2026-06-13（30天）</li>
+      <li><strong>环比</strong>：(本期 - 上期) / 上期 × 100%</li>
+      <li><strong>专营度阈值</strong>：Top1 类目占比 ≥ 80% 记为「单品类专营」；50-80% 为「主副营」；<50% 为「多品类合集」</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div class="kpis">
+      <div class="kpi alert">
+        <div class="label">近30d 总 DGMV</div>
+        <div class="value">50.75 万</div>
+        <div class="delta down">环比 -19.6%</div>
+      </div>
+      <div class="kpi">
+        <div class="label">主营品类占比</div>
+        <div class="value">81%</div>
+        <div class="delta warn">单品类专营</div>
+      </div>
+      <div class="kpi">
+        <div class="label">场域集中度</div>
+        <div class="value">94%</div>
+        <div class="delta warn">商卡+商笔驱动</div>
+      </div>
+      <div class="kpi alert">
+        <div class="label">店播场次</div>
+        <div class="value">1 场</div>
+        <div class="delta down">近乎停播</div>
+      </div>
+    </div>
+
+    <div class="signals">
+      <div class="signal alert">
+        <div class="title">🚨 大盘同频下滑</div>
+        <div class="desc">面点类速食赛道 6-7 月季节性回调，Top20 里 11 家在跌，三兔 -21% 跑赢头部大部分（宫门口 -28% / 董饱饱 -19% / 馒头超人 -38%）</div>
+      </div>
+      <div class="signal warn">
+        <div class="title">⚠️ 直播场域几乎归零</div>
+        <div class="desc">店播 30 天只开 1 场，K播 -48%；主动放弃直播增量，未来复苏靠图文内容</div>
+      </div>
+      <div class="signal good">
+        <div class="title">✅ 图文效率仍在线</div>
+        <div class="desc">图文笔记 440 篇产出 17 万 GMV（笔均 386元），是视频笔记（145元/篇）的 2.66 倍</div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 增长者启示</div>
+        <div class="desc">田味坊 +75% / 乡下头 +183% / 穗穗 +35% 三家都靠商品笔记发力（70%+ 占比），可作三兔对标</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. 生意分析 ============ -->
+<section id="s1">
+  <div class="sect-h">
+    <h2>📈 1. 生意分析 · 场域拆解</h2>
+    <div class="sub">近 30 天 vs 上 30 天 · 4 大场域 DGMV 环比</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922「人货场成交分析」·「载体划分(店播/k播/笔记/商卡)」字段</li>
+      <li><strong>场域定义</strong>：普通商卡=搜索/推荐商卡；商品笔记=挂车图文/视频；店播=商家自播；K播=达人带货；普通笔记=无挂车但有商品成交归因</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div id="chart-carrier" class="chart"></div>
+
+    <div class="table-wrap" style="margin-top:16px;">
+      <table>
+        <thead>
+          <tr><th>场域</th><th>本期 DGMV</th><th>上期 DGMV</th><th>环比</th><th>本期占比</th></tr>
+        </thead>
+        <tbody id="tbl-carrier"></tbody>
+      </table>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📝 商品笔记过程指标（近30d）</h3>
+    <div class="kpis">
+      <div class="kpi">
+        <div class="label">图文笔记</div>
+        <div class="value">440 <span style="font-size:12px;color:#94a3b8;">篇</span></div>
+        <div class="delta up">笔均 386 元</div>
+      </div>
+      <div class="kpi">
+        <div class="label">视频笔记</div>
+        <div class="value">418 <span style="font-size:12px;color:#94a3b8;">篇</span></div>
+        <div class="delta warn">笔均 145 元</div>
+      </div>
+      <div class="kpi">
+        <div class="label">图文 DGMV</div>
+        <div class="value">17.0 万</div>
+        <div class="delta up">占商笔 77%</div>
+      </div>
+      <div class="kpi">
+        <div class="label">视频 DGMV</div>
+        <div class="value">6.1 万</div>
+        <div class="delta down">占商笔 23%</div>
+      </div>
+    </div>
+    <div class="signal info" style="margin-top:12px;">
+      <div class="title">💡 图文 vs 视频效率悬殊</div>
+      <div class="desc">图文效率是视频的 2.66 倍。建议：视频笔记只做「厨艺演示 / 使用场景」等强需要视频语言的内容，普通产品种草仍以图文为主。</div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📺 店播过程指标（近30d）</h3>
+    <div class="signal alert">
+      <div class="title">🚨 店播 30 天只开 1 场</div>
+      <div class="desc">1 场 · 观播 5,423 UV · 购买 126 UV · CVR 2.32% · DGMV 1.54 万 · 单场平均已属健康水平（客单 122 元），但月度供给严重不足。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. 品类结构 ============ -->
+<section id="s2">
+  <div class="sect-h">
+    <h2>🎯 2. 品类结构 · 专营度诊断</h2>
+    <div class="sub">17 个类目 · 单品类专营型 · Top3 明确</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922，按「商品运营三级类目(当日快照)」聚合</li>
+      <li><strong>类目角色</strong>：主营=占比 Top1；副营=Top2；季节品=当期占比≥2% 且明显有季节属性（如杨梅 6 月）</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div id="chart-cat" class="chart"></div>
+  </div>
+</section>
+
+<!-- ============ 3. 竞品案例 ============ -->
+<section id="s3">
+  <div class="sect-h">
+    <h2>🔥 3. 竞品案例 · 面点类速食赛道</h2>
+    <div class="sub">近30d 全平台面点类速食 Top20 商家 · 增速榜 · 高 GMV 笔记</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922，商品运营三级类目=「面点类速食」全平台商家</li>
+      <li><strong>Top20 榜</strong>：按近30d DGMV 绝对值降序</li>
+      <li><strong>增速榜</strong>：环比 ≥ +50% 且本期 DGMV ≥ 1万</li>
+      <li><strong>下滑榜</strong>：环比 < 0 且本期 DGMV ≥ 5万</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <h3 style="font-size: 15px; color:#334155; margin-bottom:8px;">🏆 面点类速食 Top20（三兔排名 #5）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>商家</th><th>近30d DGMV</th><th>上30d DGMV</th><th>环比</th></tr>
+        </thead>
+        <tbody id="tbl-top20"></tbody>
+      </table>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">🚀 增速榜（对标学习对象）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>商家</th><th>本期</th><th>上期</th><th>环比</th></tr>
+        </thead>
+        <tbody id="tbl-growers"></tbody>
+      </table>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📊 增长者的渠道拆解（谁靠啥涨的？）</h3>
+    <div id="chart-grower-carrier" class="chart"></div>
+    <div class="signal good" style="margin-top:8px;">
+      <div class="title">💡 核心发现</div>
+      <div class="desc">田味坊 / 乡下头 / 穗穗 三家增长者都是<strong>商品笔记驱动型</strong>（商笔占比 60-70%）；头厨走 K播（40%）；娜小圆更均衡。<br>→ 三兔本身商笔已占 44%，可继续加大投入而非分散做直播</div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">🎬 面点类速食高 GMV 笔记 TOP15（近30d · 全平台）</h3>
+    <div class="notes" id="notes-grid"></div>
+  </div>
+</section>
+
+<!-- ============ 4-8 数据待补 ============ -->
+<section id="s4">
+  <div class="sect-h"><h2>💬 4. 社区趋势</h2><div class="sub">近30d 面点类速食社区高互动话题</div></div>
+  <div class="sect-body"><div class="placeholder">🚧 数据抓取中，即将补充...</div></div>
+</section>
+
+<section id="s5">
+  <div class="sect-h"><h2>💭 5. 客户反馈</h2><div class="sub">近180d 三兔笔记评论洞察</div></div>
+  <div class="sect-body"><div class="placeholder">🚧 数据抓取中，即将补充...</div></div>
+</section>
+
+<section id="s6">
+  <div class="sect-h"><h2>👥 6. 私域老客</h2><div class="sub">复购率 · AOV · 5档人群漏斗</div></div>
+  <div class="sect-body"><div class="placeholder">🚧 数据抓取中，即将补充...</div></div>
+</section>
+
+<section id="s7">
+  <div class="sect-h"><h2>⚠️ 7. 合规风险预警</h2><div class="sub">近90d 违规明细 · 类目对标</div></div>
+  <div class="sect-body"><div class="placeholder">🚧 数据抓取中，即将补充...</div></div>
+</section>
+
+<section id="s8">
+  <div class="sect-h"><h2>🚀 8. 下阶段建议</h2><div class="sub">综合诊断 · 8月节点 · Q3 品方向（口味颗粒度）</div></div>
+  <div class="sect-body"><div class="placeholder">🚧 待其他模块数据齐全后综合输出...</div></div>
+</section>
+
+</main>
+
+<footer>
+  <p>📊 DIBP 数据平台 · 数据来源：RedBI dataset 1922（人货场成交分析） / 5574（店播指标宽表） / 28963（违规中心）</p>
+  <p style="margin-top:6px;">🤖 本报告由 DIBP AI 自动生成 · 生成时间 2026-07-14 · <a href="https://github.com/zhudamen528-code/merchant-deep-diagnosis" target="_blank">GitHub</a></p>
+</footer>
+
+<script>
+fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
+  window.__DATA__ = data;
+
+  // 1. 场域环比图
+  const carrier = data.carrier;
+  echarts.init(document.getElementById('chart-carrier')).setOption({
+    tooltip: { trigger:'axis', axisPointer:{type:'shadow'} },
+    legend: { data:['上30d','本30d','环比%'], top:0 },
+    grid: { left:10, right:40, bottom:10, top:40, containLabel:true },
+    xAxis: { type:'category', data: carrier.map(x=>x.name) },
+    yAxis: [{ type:'value', name:'DGMV(元)' }, { type:'value', name:'环比%', splitLine:{show:false} }],
+    series: [
+      { name:'上30d', type:'bar', data: carrier.map(x=>x.prev), itemStyle:{color:'#cbd5e1'} },
+      { name:'本30d', type:'bar', data: carrier.map(x=>x.now), itemStyle:{color:'#667eea'} },
+      { name:'环比%', type:'line', yAxisIndex:1, data: carrier.map(x=>x.wow.toFixed(1)),
+        itemStyle:{color:'#ef4444'}, symbolSize:8, label:{show:true, formatter:'{c}%'} },
+    ],
+  });
+
+  // 场域表格
+  document.getElementById('tbl-carrier').innerHTML = carrier.map(x=>`
+    <tr>
+      <td>${x.name}</td>
+      <td>${(x.now/10000).toFixed(2)}万</td>
+      <td>${(x.prev/10000).toFixed(2)}万</td>
+      <td class="${x.wow>=0?'up':'down'}">${x.wow>=0?'+':''}${x.wow.toFixed(1)}%</td>
+      <td>${x.ratio.toFixed(1)}%</td>
+    </tr>`).join('');
+
+  // 2. 品类环形图
+  echarts.init(document.getElementById('chart-cat')).setOption({
+    tooltip: { trigger:'item', formatter:'{b}: {c}元 ({d}%)' },
+    legend: { orient:'horizontal', bottom:0 },
+    series: [{
+      type:'pie', radius:['40%','70%'], center:['50%','45%'],
+      data: data.categories.map(c=>({name:`${c.name} [${c.role}]`, value:c.dgmv})),
+      label:{ formatter:'{b}\n{d}%', fontSize:12 },
+      itemStyle:{ borderColor:'#fff', borderWidth:2 },
+    }],
+    color:['#667eea','#f59e0b','#10b981','#94a3b8'],
+  });
+
+  // 3. Top20 竞品表
+  document.getElementById('tbl-top20').innerHTML = data.compete_top20.map((x,i)=>{
+    const wowStr = x.wow===null ? '-' : `<span class="${x.wow>=0?'up':'down'}">${x.wow>=0?'+':''}${x.wow.toFixed(1)}%</span>`;
+    return `<tr class="${x.is_self?'self':''}">
+      <td>${i+1}</td>
+      <td>${x.is_self ? '🎯 ':''}${x.name}</td>
+      <td>${(x.now/10000).toFixed(2)}万</td>
+      <td>${(x.prev/10000).toFixed(2)}万</td>
+      <td>${wowStr}</td>
+    </tr>`;
+  }).join('');
+
+  // 4. 增速榜
+  document.getElementById('tbl-growers').innerHTML = data.compete_growers.map(x=>`
+    <tr>
+      <td>${x.name}</td>
+      <td>${(x.now/10000).toFixed(2)}万</td>
+      <td>${(x.prev/10000).toFixed(2)}万</td>
+      <td class="up">+${x.wow.toFixed(1)}%</td>
+    </tr>`).join('');
+
+  // 5. 增长者渠道堆叠图
+  const gc = data.grower_carrier;
+  const allCarriers = ['商品笔记','普通商卡','K播','店播','普通笔记','其他','品合笔记'];
+  const seriesData = allCarriers.map(c => ({
+    name: c, type:'bar', stack:'total',
+    data: gc.map(g => Math.round(g.carriers[c] || 0)),
+    emphasis:{focus:'series'},
+  }));
+  echarts.init(document.getElementById('chart-grower-carrier')).setOption({
+    tooltip:{trigger:'axis', axisPointer:{type:'shadow'}},
+    legend:{ top:0, textStyle:{fontSize:11} },
+    grid:{ left:10, right:20, bottom:10, top:50, containLabel:true },
+    xAxis:{ type:'category', data: gc.map(g=>g.name.replace('的店','').replace('旗舰店','')) },
+    yAxis:{ type:'value', name:'DGMV(元)' },
+    series: seriesData,
+    color:['#667eea','#f59e0b','#ef4444','#10b981','#8b5cf6','#94a3b8','#f472b6'],
+  });
+
+  // 6. TOP 笔记卡片
+  document.getElementById('notes-grid').innerHTML = data.top_notes.map(n=>`
+    <div class="note-card">
+      <span class="note-rank">#${n.rank}</span>
+      <div class="note-title">${n.title || '(无标题)'}</div>
+      <div class="note-meta">👤 ${n.author}</div>
+      <div class="note-meta">📅 ${n.publish_date}</div>
+      <div class="note-gmv">💰 GMV ¥${(n.gmv/10000).toFixed(2)}万</div>
+      <a class="note-btn" href="https://www.xiaohongshu.com/discovery/item/${n.note_id}" target="_blank">🔗 打开笔记 →</a>
+    </div>
+  `).join('');
+
+  // 响应式 resize
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.chart').forEach(el => {
+      const inst = echarts.getInstanceByDom(el);
+      if (inst) inst.resize();
+    });
+  });
+
+  // TOC 高亮
+  const tocLinks = document.querySelectorAll('.toc a');
+  const sections = document.querySelectorAll('section');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      const rect = s.getBoundingClientRect();
+      if (rect.top < 120) current = s.id;
+    });
+    tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+  });
+});
+</script>
+</body>
+</html>
