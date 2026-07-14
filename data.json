@@ -636,23 +636,27 @@
   ],
   "violation_total": 19,
   "user_feedback": {
-    "source_notes": [
+    "source_type": "📝 笔记评论（非商品评价）",
+    "source_note": "数据来自三兔头部爆款笔记的评论区（浏览器抓取公开数据），共分析 2 篇高转化笔记 · 累计 114 条评论 · 有效样本 34 条",
+    "note_details": [
       {
         "note_id": "69b03571000000000601ec8c",
         "title": "不是托！真的无限次复购❗️❗️",
-        "total_comments": 84
+        "total": 84,
+        "analyzed": 24
       },
       {
         "note_id": "6979806d000000001a023cd5",
         "title": "冬季限定，红虾小馄饨预定❗️第2批只有200盒",
-        "total_comments": 30
+        "total": 30,
+        "analyzed": 10
       }
     ],
-    "total_analyzed": 34,
     "themes": [
       {
-        "category": "📦 SKU 拆分需求（强烈！）",
+        "category": "📦 SKU 拆分需求",
         "weight": "high",
+        "mention_count": 3,
         "insight": "多位用户主动提出\"20只装太多、想要小份装\"，说明现有 SKU 结构与\"独居/一人食\"客群不匹配",
         "business_opportunity": "⭐ 强推：立刻上架 10-15 只小份装 + 试吃装 4-6只装",
         "quotes": [
@@ -669,6 +673,7 @@
       {
         "category": "🧂 料包/调料优化",
         "weight": "high",
+        "mention_count": 4,
         "insight": "用户反映\"料包偷工减料/粉包半包不够/建议加虾皮紫菜\"",
         "business_opportunity": "⭐ 调料包升级：1盒配1整包料，附小份虾皮紫菜",
         "quotes": [
@@ -689,7 +694,8 @@
       {
         "category": "🍜 品类扩展需求",
         "weight": "medium",
-        "insight": "用户主动询问\"荠菜/纯虾/不含猪肉/汤底\"等其他口味",
+        "mention_count": 3,
+        "insight": "用户主动询问\"荠菜/纯虾/不含猪肉/汤底\"等其他口味/形态",
         "business_opportunity": "产品矩阵可扩：荠菜鲜肉（已计划4月）、纯虾馄饨（无猪肉，回教/素食客群）、独立汤底料包",
         "quotes": [
           {
@@ -705,8 +711,9 @@
       {
         "category": "🍤 供不应求信号",
         "weight": "high",
-        "insight": "爆款红虾馄饨库存频繁售罄，用户\"抢\"的紧迫感强",
-        "business_opportunity": "⭐ 供应链侧：红虾馄饨提前 30-45 天备货，避免错失流量",
+        "mention_count": 5,
+        "insight": "爆款红虾馄饨库存频繁售罄，用户\"抢不到\"的抱怨与紧迫感强",
+        "business_opportunity": "⭐ 供应链侧：红虾馄饨提前 30-45 天备货，避免错失流量高峰",
         "quotes": [
           {
             "user": "momo",
@@ -725,8 +732,9 @@
       {
         "category": "🏭 品质担忧 / 食品安全",
         "weight": "medium",
-        "insight": "存在少量差评（皮薄不筋道）+ 食品安全焦虑（硼砂/淀粉）",
-        "business_opportunity": "内容侧：制作\"检测报告/工厂参观/明厨亮灶\"系列图文，主动展示安全资质",
+        "mention_count": 3,
+        "insight": "存在少量差评（皮薄不筋道，属南北口味差异）+ 食品安全焦虑（硼砂/淀粉）",
+        "business_opportunity": "内容侧：制作「检测报告 / 工厂参观 / 明厨亮灶」系列图文，主动展示安全资质",
         "quotes": [
           {
             "user": "带着数哥走天下",
@@ -743,8 +751,9 @@
         ]
       },
       {
-        "category": "🏠 线下门店 / 到店打卡",
+        "category": "🏠 线下门店 / 到店打卡需求",
         "weight": "medium",
+        "mention_count": 2,
         "insight": "有用户主动问\"有实体店吗，去舟山想试试\"，说明品牌已有一定认知度且用户愿意专程到访",
         "business_opportunity": "💡 跳脱思考：可考虑在舟山/杭州开线下体验店/快闪店，做「线上下单-线下体验」品牌深化",
         "quotes": [
@@ -761,8 +770,9 @@
       {
         "category": "💌 情感/复购证言",
         "weight": "insight",
+        "mention_count": 4,
         "insight": "真正打动人的复购证言，可以直接作为下期笔记的引用素材",
-        "business_opportunity": "内容侧：把这些真实的用户故事二次加工成\"用户来信\"系列图文，情感牌",
+        "business_opportunity": "内容侧：把这些真实的用户故事二次加工成「用户来信」系列图文",
         "quotes": [
           {
             "user": "Ooo",
@@ -860,5 +870,221 @@
       "生活化减脂🥣 小基数一日三餐"
     ],
     "insight": "面点类速食赛道近30d 社区内容围绕 6 大主题展开，其中「一人食/早餐/手工感」是三大高流量入口；三兔现有内容偏「产品介绍/使用教程」，可增加「场景故事化」内容占位。"
+  },
+  "community_v2": {
+    "sub_categories": [
+      {
+        "cat": "包点",
+        "gmv_wan": 209.5,
+        "shops": 50,
+        "items": 496,
+        "wow": -26.8,
+        "per_shop_wan": 4.2,
+        "santu_covered": true
+      },
+      {
+        "cat": "馄饨/抄手/云吞/肉燕",
+        "gmv_wan": 202.0,
+        "shops": 25,
+        "items": 114,
+        "wow": -17.3,
+        "per_shop_wan": 8.1,
+        "santu_covered": true
+      },
+      {
+        "cat": "年糕/糍粑",
+        "gmv_wan": 54.5,
+        "shops": 20,
+        "items": 67,
+        "wow": 76.7,
+        "per_shop_wan": 2.7,
+        "santu_covered": false
+      },
+      {
+        "cat": "手抓饼/葱油饼/煎饼/卷饼",
+        "gmv_wan": 45.6,
+        "shops": 24,
+        "items": 95,
+        "wow": -18.8,
+        "per_shop_wan": 1.9,
+        "santu_covered": false
+      },
+      {
+        "cat": "水饺/煎饺/虾饺",
+        "gmv_wan": 28.5,
+        "shops": 17,
+        "items": 53,
+        "wow": 8.1,
+        "per_shop_wan": 1.7,
+        "santu_covered": false
+      },
+      {
+        "cat": "馅饼/烧饼/锅盔",
+        "gmv_wan": 17.5,
+        "shops": 16,
+        "items": 58,
+        "wow": -25.5,
+        "per_shop_wan": 1.1,
+        "santu_covered": false
+      },
+      {
+        "cat": "粘豆包",
+        "gmv_wan": 6.8,
+        "shops": 3,
+        "items": 9,
+        "wow": -22.4,
+        "per_shop_wan": 2.3,
+        "santu_covered": false
+      },
+      {
+        "cat": "烧麦/烧卖",
+        "gmv_wan": 6.2,
+        "shops": 13,
+        "items": 53,
+        "wow": -22.0,
+        "per_shop_wan": 0.5,
+        "santu_covered": false
+      },
+      {
+        "cat": "汤圆/元宵",
+        "gmv_wan": 0.9,
+        "shops": 9,
+        "items": 25,
+        "wow": -25.0,
+        "per_shop_wan": 0.1,
+        "santu_covered": false
+      },
+      {
+        "cat": "馒头",
+        "gmv_wan": 0.5,
+        "shops": 2,
+        "items": 4,
+        "wow": -94.1,
+        "per_shop_wan": 0.2,
+        "santu_covered": false
+      },
+      {
+        "cat": "油条/春卷",
+        "gmv_wan": 0.3,
+        "shops": 4,
+        "items": 9,
+        "wow": 28.8,
+        "per_shop_wan": 0.1,
+        "santu_covered": false
+      }
+    ],
+    "opportunities": [
+      {
+        "sub_cat": "年糕/糍粑",
+        "wow": 76.7,
+        "gmv_wan": 54.5,
+        "shops": 20,
+        "level": "star",
+        "insight": "面点类速食赛道最大增长引擎，环比 +76.7%，商家数仅 20 家（竞争度低）",
+        "hot_keywords": [
+          {
+            "kw": "红糖",
+            "freq": 16,
+            "note": "最强口味词（薄片小葱红糖是爆款组合）"
+          },
+          {
+            "kw": "芝士",
+            "freq": 12,
+            "note": "甜口新势力，田味坊爆品原型"
+          },
+          {
+            "kw": "小葱",
+            "freq": 9,
+            "note": "咸口经典，与红糖搭配销量最高"
+          },
+          {
+            "kw": "桂花/艾草/椰子/抹茶",
+            "freq": 23,
+            "note": "季节/新奇口味组合"
+          },
+          {
+            "kw": "杨枝甘露/百香果",
+            "freq": 7,
+            "note": "甜品化年糕新趋势"
+          }
+        ],
+        "leader_brands": [
+          "娜小圆（宁波水磨年糕，¥7.1万）",
+          "田味坊（小份组合，¥6万+）"
+        ],
+        "santu_action": "⭐ 三兔可延伸「舟山特色年糕」系列：椰奶年糕 / 桂花年糕 / 艾草年糕（对标娜小圆的宁波水磨，做舟山地域差异化）"
+      },
+      {
+        "sub_cat": "水饺/煎饺/虾饺",
+        "wow": 8.1,
+        "gmv_wan": 28.5,
+        "shops": 17,
+        "level": "growth",
+        "insight": "稳步增长的细分，商家数 17 家（竞争适中），关键机会在\"非遗手工+特色馅\"",
+        "hot_keywords": [
+          {
+            "kw": "手工",
+            "freq": 21,
+            "note": "必备卖点，几乎所有 TOP 商品都用"
+          },
+          {
+            "kw": "芋饺/山粉饺",
+            "freq": 20,
+            "note": "非遗/无麸质概念差异化"
+          },
+          {
+            "kw": "蒲公英/槐花/荠菜/野菜",
+            "freq": 21,
+            "note": "\"野菜+黑猪肉\"高端组合"
+          },
+          {
+            "kw": "黑猪肉",
+            "freq": 6,
+            "note": "高端肉源，客单价支撑"
+          },
+          {
+            "kw": "无麸质",
+            "freq": 4,
+            "note": "健身/过敏客群，客单价高"
+          },
+          {
+            "kw": "米其林",
+            "freq": 2,
+            "note": "广式虾饺高端化标签"
+          }
+        ],
+        "leader_brands": [
+          "四喜鲜饺（手工薄皮，¥7.4万）",
+          "遂香记（无麸质芋饺，¥3.4万）",
+          "蒲花岛（野菜+黑猪肉，¥1.6万）"
+        ],
+        "santu_action": "⭐ 三兔核心品类邻近扩品，可切入「舟山手工鲜肉水饺 / 野菜黑猪肉水饺」，复用馄饨供应链和客群"
+      },
+      {
+        "sub_cat": "油条/春卷",
+        "wow": 28.8,
+        "gmv_wan": 0.3,
+        "shops": 4,
+        "level": "blueOcean",
+        "insight": "超小盘（¥3千）+ 商家极少（4家）= 极致蓝海；但盘子小可能不适合规模型商家",
+        "hot_keywords": [],
+        "leader_brands": [],
+        "santu_action": "💡 观察，暂不建议主攻（盘子太小，投入回报不成正比）"
+      }
+    ],
+    "insight": "面点类速食赛道分 11 个细分子品类，其中「年糕/糍粑」和「水饺/煎饺/虾饺」是唯二环比正增长的方向，且商家数少于 25 家，属于「小盘+高增+竞争缓和」的黄金机会区。"
+  },
+  "violations_v2": {
+    "total_visible": 3,
+    "note": "仅展示对商家可见的白盒违规（黑盒违规不对外披露）",
+    "items": [
+      {
+        "risk_domain": "笔记内容生态",
+        "sub_domain": "博眼球骗互动",
+        "penalty_type": "白盒",
+        "count": 3
+      }
+    ],
+    "guidance": "避免\"标题党/夸张博眼球\"型内容表达（如\"绝了！\"、\"打脸！\"等强对比钩子），改用\"场景描述+品质卖点\"的稳健表达"
   }
 }
