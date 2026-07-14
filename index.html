@@ -369,46 +369,51 @@
 
 <section id="s5">
   <div class="sect-h">
-    <h2>💭 5. 客户反馈 · 笔记评论洞察</h2>
+    <h2>💭 5. 客户反馈 · 商品评价洞察</h2>
     <div class="sub"><span id="fb-source-info"></span></div>
   </div>
   <details class="caliber">
     <summary>数据口径说明</summary>
     <ul>
-      <li><strong>本报告数据源</strong>：📝 笔记评论（浏览器抓取三兔近90d 头部 3 篇爆款笔记评论区公开数据） + 🌟 商品详情页公开的卖家口碑分</li>
-      <li><strong>样本量</strong>：3 篇爆款笔记 · 累计 144 条评论 · 有效样本 44 条（去重后）</li>
-      <li><strong>"多少条提及"口径</strong>：基于当前 44 条样本的人工分类计数；数字仅反映样本内分布，非全平台真实占比</li>
-      <li><strong>⚠️ 商品订单评价缺口</strong>：小红书电商订单评价（销售通/千帆）需商家侧数据源或商家中心 API 权限。建议商家自行从「千帆-店铺-评价管理」导出后，可获得更全面的商品维度评价分析</li>
-      <li><strong>后续升级建议</strong>：接入 dataset 67877（近1年笔记评论）+ 商家中心订单评价 = 全景客户反馈</li>
+      <li><strong>数据源</strong>：RedBI dataset 8033「订单晒单评价自助分析数据集」</li>
+      <li><strong>过滤条件</strong>：店铺id = 三兔（<code>66c70bb6777979001546350d</code>），时间 2026-04-14 ~ 2026-07-13（近90d）</li>
+      <li><strong>样本量</strong>：<strong>3159 条</strong>有效评价（非采样，全量拉取）</li>
+      <li><strong>主题分类</strong>：基于关键词规则匹配（负反馈 8 类 / 表扬 7 类），一条评价可命中多个主题</li>
+      <li><strong>"多少条提及"口径</strong>：全量样本的真实分布，可作决策依据</li>
     </ul>
   </details>
   <div class="sect-body">
     <!-- 卖家口碑总览 -->
     <div id="shop-rating-box"></div>
 
+    <!-- 评分分布图 -->
+    <h3 style="margin: 20px 0 12px; font-size: 15px; color:#334155;">📊 评分分布（近90d）</h3>
+    <div id="chart-score-dist" style="height:260px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px;"></div>
+
     <!-- 负反馈/需求区 -->
     <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">
       🔴 负反馈 & 需求主题（用来做产品优化）
     </h3>
+    <p style="font-size:12px;color:#6b7280;margin-bottom:12px;">💡 每条评价可能提及多主题；数字为该主题在全量 3159 条评价中的出现次数</p>
     <div id="feedback-themes-v2" style="margin-top:12px;"></div>
 
     <!-- ⭐ 表扬素材库 -->
     <h3 style="margin: 32px 0 12px; font-size: 15px; color:#92400e; background:#fff8f1; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #f59e0b;">
       ⭐ 表扬素材库（拿来做二次内容 · 转化新客）
     </h3>
-    <p style="font-size:12px;color:#78716c;margin-bottom:12px;">💡 每一条真实评论都是一句「金句素材」，可以直接引用到笔记、直播口播、包装卡片、订单短信、朋友圈里</p>
+    <p style="font-size:12px;color:#78716c;margin-bottom:12px;">💡 每一条真实评价都是一句「金句素材」，可以直接引用到笔记、直播口播、包装卡片、订单短信、朋友圈里</p>
     <div id="positive-themes"></div>
 
     <div class="signal info" style="margin-top:16px;">
       <div class="title">💡 综合建议</div>
       <div class="desc">
         <strong>短期（1-2 周可上）</strong>：<br>
-        ① 上架 10-15 只小份装（对应"一人食"客群）<br>
-        ② 调料包升级：1盒1整包 + 附虾皮紫菜<br>
-        ③ 立刻用「Ooo 的家的味道」+「大溜溜 南方人在北方馋疯了」做一条情感型笔记<br><br>
+        ① 上架 10-15 只小份装（对应"一人食"客群，30 条评价明确诉求）<br>
+        ② 调料包升级：1盒1整包 + 附虾皮紫菜（62 条料包相关评价）<br>
+        ③ 用「品质盛赞 1858 条金句」中的高热度评价，做一条「用户金句集」笔记<br><br>
         <strong>中期（1-2 月）</strong>：<br>
         ④ 拍摄「工厂参观 / 检测报告 / 煮法教程」系列图文，缓解食安担忧+煮法失误<br>
-        ⑤ 用「老梅没烦恼 我妈都点赞」类家人认可素材做"给爸妈买"场景笔记<br><br>
+        ⑤ 用「复购证言 701 条」做"XX 用户已 3 刷"型信任状内容<br><br>
         <strong>长期（Q3-Q4）</strong>：<br>
         ⑥ 探索线下门店/快闪店（舟山/杭州）+ 海外/异地社群<br>
         ⑦ 开发不含猪肉的纯虾/素馅产品线，拓展客群
@@ -702,7 +707,7 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
     document.getElementById('community-insight-v2').textContent = cv2.insight;
   }
 
-  // ====== 第5章 v3：客户反馈（负反馈 + 表扬素材双区） ======
+  // ====== 第5章 v4：客户反馈（3159 条商品评价） ======
   const fb2 = data.user_feedback;
   if (fb2) {
     document.getElementById('fb-source-info').innerHTML = fb2.source_type + ' · ' + fb2.source_note;
@@ -711,47 +716,65 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
     const ratingBox = document.getElementById('shop-rating-box');
     if (ratingBox && fb2.shop_rating) {
       ratingBox.innerHTML = `
-        <div class="kpis" style="margin-bottom:16px;">
+        <div class="kpis" style="margin-bottom:12px;">
           <div class="kpi good">
             <div class="label">🌟 卖家口碑分</div>
             <div class="value">${fb2.shop_rating.score}</div>
             <div class="delta up">/5.0 优秀</div>
           </div>
-          <div class="kpi">
-            <div class="label">👥 店铺粉丝</div>
-            <div class="value">${fb2.shop_rating.fans}</div>
-            <div class="delta">累计</div>
+          <div class="kpi good">
+            <div class="label">📦 有效评价</div>
+            <div class="value">${fb2.total_reviews}</div>
+            <div class="delta up">近90d 全量</div>
+          </div>
+          <div class="kpi good">
+            <div class="label">💚 好评率</div>
+            <div class="value">${fb2.good_pct}%</div>
+            <div class="delta up">优秀</div>
           </div>
           <div class="kpi">
-            <div class="label">📦 累计已售</div>
-            <div class="value">${fb2.shop_rating.sold}</div>
-            <div class="delta">累计</div>
+            <div class="label">💔 差评率</div>
+            <div class="value">${fb2.bad_pct}%</div>
+            <div class="delta">${fb2.bad_pct < 5 ? '低' : '需关注'}</div>
           </div>
-        </div>
-        <div class="signal warn" style="font-size:12px;">
-          <div class="title">📎 商品评价数据说明</div>
-          <div class="desc">${fb2.data_gap_note}</div>
         </div>`;
     }
 
+    // 评分分布图
+    if (fb2.score_dist) {
+      const scoreChart = echarts.init(document.getElementById('chart-score-dist'));
+      scoreChart.setOption({
+        grid: {left:60, right:30, top:20, bottom:40},
+        tooltip: {},
+        xAxis: {type:'category', data: fb2.score_dist.map(s=>s.star+'星')},
+        yAxis: {type:'value', name:'评价数'},
+        series: [{
+          type:'bar', barWidth:'40%',
+          data: fb2.score_dist.map(s=>({
+            value: s.count,
+            itemStyle: {color: s.star>=4?'#10b981':(s.star==3?'#f59e0b':'#ef4444')}
+          })),
+          label: {show:true, position:'top', formatter: p => p.data.value+' ('+fb2.score_dist[p.dataIndex].pct+'%)'}
+        }]
+      });
+    }
+
     const weightColor = {high:'#ef4444', medium:'#f59e0b', insight:'#667eea'};
-    const weightLabel = {high:'🔴 高优先', medium:'🟡 中优先', insight:'💡 内容素材'};
 
     // 负反馈区
     document.getElementById('feedback-themes-v2').innerHTML = fb2.negative_themes.map(t => `
       <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:10px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
           <span style="font-weight:600;font-size:14px;color:#1e293b;">${t.category}</span>
-          <span style="font-size:11px;background:${weightColor[t.weight]}22;color:${weightColor[t.weight]};border-radius:4px;padding:2px 6px;">${weightLabel[t.weight]}</span>
-          <span style="font-size:11px;background:#eef2ff;color:#4338ca;border-radius:4px;padding:2px 6px;">📊 样本内 ${t.mention_count} 条提及</span>
+          <span style="font-size:11px;background:#fee2e2;color:#dc2626;border-radius:4px;padding:2px 8px;font-weight:600;">${t.mention_count} 条 · ${t.mention_pct}%</span>
         </div>
         <div style="font-size:13px;color:#475569;margin-bottom:8px;">${t.insight}</div>
-        <div style="background:#f0fdf4;border-left:3px solid #10b981;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#166534;margin-bottom:6px;">
+        ${t.business_opportunity ? `<div style="background:#f0fdf4;border-left:3px solid #10b981;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#166534;margin-bottom:6px;">
           💼 <strong>行动建议：</strong>${t.business_opportunity}
-        </div>
-        ${t.quotes.map(q=>`
+        </div>` : ''}
+        ${t.quotes.slice(0,3).map(q=>`
           <div style="background:#f8fafc;border-radius:6px;padding:6px 10px;margin-top:6px;font-size:12px;color:#475569;">
-            <span style="font-weight:600;color:#667eea;">@${q.user}</span>：${q.quote}
+            <span style="font-weight:600;color:#667eea;">${q.user}：</span>${q.quote}
           </div>`).join('')}
       </div>`).join('');
 
@@ -762,14 +785,14 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
         <div style="background:#fff8f1;border:1.5px solid #fbbf24;border-radius:10px;padding:14px;margin-bottom:10px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
             <span style="font-weight:700;font-size:14px;color:#92400e;">${t.category}</span>
-            <span style="font-size:11px;background:#fef3c7;color:#92400e;border-radius:4px;padding:2px 6px;">📊 样本内 ${t.mention_count} 条</span>
+            <span style="font-size:11px;background:#fef3c7;color:#92400e;border-radius:4px;padding:2px 8px;font-weight:600;">${t.mention_count} 条 · ${t.mention_pct}%</span>
           </div>
           <div style="background:#fef9c3;border-left:3px solid #f59e0b;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#78350f;margin-bottom:8px;">
             📝 <strong>内容素材建议：</strong>${t.usage_hint}
           </div>
-          ${t.quotes.map(q=>`
+          ${t.quotes.slice(0,3).map(q=>`
             <div style="background:#fff;border:1px solid #fde68a;border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12px;color:#475569;">
-              <span style="font-weight:600;color:#d97706;">@${q.user}</span>：${q.quote}
+              <span style="font-weight:600;color:#d97706;">${q.user}：</span>${q.quote}
             </div>`).join('')}
         </div>`).join('');
     }
