@@ -545,5 +545,94 @@
       "gmv": 16949.199999999997,
       "rank": 16
     }
-  ]
+  ],
+  "user_segments": [
+    {
+      "name": "老客(≥3次)",
+      "dgmv": 500352,
+      "users": 4408,
+      "arpu": 114
+    },
+    {
+      "name": "180天流失",
+      "dgmv": 3787,
+      "users": 39,
+      "arpu": 97
+    },
+    {
+      "name": "新客(1-2次)",
+      "dgmv": 2017,
+      "users": 19,
+      "arpu": 106
+    },
+    {
+      "name": "潜客",
+      "dgmv": 1363,
+      "users": 18,
+      "arpu": 76
+    }
+  ],
+  "violations": [
+    {
+      "domain": "未成年",
+      "sub_domain": "未成年社交风险行为",
+      "penalty_type": "黑盒",
+      "count": 3
+    },
+    {
+      "domain": "违规营销商品",
+      "sub_domain": "价格信息违规",
+      "penalty_type": "黑盒",
+      "count": 3
+    },
+    {
+      "domain": "笔记内容生态",
+      "sub_domain": "博眼球骗互动",
+      "penalty_type": "白盒",
+      "count": 3
+    },
+    {
+      "domain": "内容画风",
+      "sub_domain": "【不真诚】夸张博眼球",
+      "penalty_type": "黑盒",
+      "count": 3
+    },
+    {
+      "domain": "不当导流",
+      "sub_domain": "平台导流",
+      "penalty_type": "黑盒",
+      "count": 2
+    },
+    {
+      "domain": "问题账号",
+      "sub_domain": "高频低质号",
+      "penalty_type": "黑盒",
+      "count": 1
+    },
+    {
+      "domain": "商业生态",
+      "sub_domain": "导流",
+      "penalty_type": "黑盒",
+      "count": 1
+    },
+    {
+      "domain": "(未分类)",
+      "sub_domain": "",
+      "penalty_type": "黑盒",
+      "count": 1
+    },
+    {
+      "domain": "问题账号",
+      "sub_domain": "工业化量产号",
+      "penalty_type": "黑盒",
+      "count": 1
+    },
+    {
+      "domain": "平台 吐槽",
+      "sub_domain": "体验吐槽",
+      "penalty_type": "黑盒",
+      "count": 1
+    }
+  ],
+  "violation_total": 19
 }

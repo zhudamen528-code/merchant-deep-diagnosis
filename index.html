@@ -337,18 +337,181 @@
 </section>
 
 <section id="s6">
-  <div class="sect-h"><h2>👥 6. 私域老客</h2><div class="sub">复购率 · AOV · 5档人群漏斗</div></div>
-  <div class="sect-body"><div class="placeholder">🚧 数据抓取中，即将补充...</div></div>
+  <div class="sect-h">
+    <h2>👥 6. 私域老客</h2>
+    <div class="sub">复购结构 · ARPU · 老客健康度</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922，按「新老客」字段拆分</li>
+      <li><strong>老客(≥3次)</strong>：近30d 有购买 + 历史累计购买 ≥ 3 次</li>
+      <li><strong>新客(1-2次)</strong>：近30d 有购买 + 历史累计购买 1-2 次</li>
+      <li><strong>180天流失</strong>：过去 180 天曾购买、近30d 有回购</li>
+      <li><strong>潜客</strong>：其他类型</li>
+      <li><strong>⚠️ 待核实</strong>：字段口径可能是"店铺回访型"分类，新客占比 0.4% 偏低，可能未覆盖首次到店的自然新客</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div class="kpis">
+      <div class="kpi good">
+        <div class="label">老客(≥3次) 贡献</div>
+        <div class="value">98.6%</div>
+        <div class="delta up">50.0 万 · 4,408 人</div>
+      </div>
+      <div class="kpi">
+        <div class="label">老客 30 天 ARPU</div>
+        <div class="value">¥114</div>
+        <div class="delta up">健康客单</div>
+      </div>
+      <div class="kpi alert">
+        <div class="label">新客占比</div>
+        <div class="value">0.4%</div>
+        <div class="delta down">仅 19 人</div>
+      </div>
+      <div class="kpi warn">
+        <div class="label">180 天流失回购</div>
+        <div class="value">39 人</div>
+        <div class="delta warn">召回效果一般</div>
+      </div>
+    </div>
+
+    <div id="chart-user-segments" class="chart small" style="margin-top:16px;"></div>
+
+    <div class="signal alert" style="margin-top:12px;">
+      <div class="title">🚨 核心风险：过度依赖老客池</div>
+      <div class="desc">4,408 老客支撑 99% GMV，新客池几乎干涸。老客自然流失率若 5%/月，半年内 GMV 会自然下降 25-30%。<br><strong>建议</strong>：① 每月安排 1-2 次拉新活动（新客首单券/试吃装）；② 通过站外投放/新达人合作拓宽新客入口；③ 老客沉淀私域池防止自然流失</div>
+    </div>
+  </div>
 </section>
 
 <section id="s7">
-  <div class="sect-h"><h2>⚠️ 7. 合规风险预警</h2><div class="sub">近90d 违规明细 · 类目对标</div></div>
-  <div class="sect-body"><div class="placeholder">🚧 数据抓取中，即将补充...</div></div>
+  <div class="sect-h">
+    <h2>⚠️ 7. 合规风险预警</h2>
+    <div class="sub">近90d 违规明细 · 类目对标</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 28963「违规中心全量」</li>
+      <li><strong>时间窗</strong>：近90d（2026-04-14~2026-07-13）</li>
+      <li><strong>说明</strong>：黑盒=商家/主播不可见；白盒=商家侧可查询</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div class="kpis">
+      <div class="kpi good">
+        <div class="label">近90d 违规总数</div>
+        <div class="value">19 条</div>
+        <div class="delta up">低风险</div>
+      </div>
+      <div class="kpi">
+        <div class="label">白盒(商家可见)</div>
+        <div class="value">3 条</div>
+        <div class="delta warn">博眼球骗互动</div>
+      </div>
+      <div class="kpi">
+        <div class="label">黑盒</div>
+        <div class="value">16 条</div>
+        <div class="delta warn">主要为营销/内容画风</div>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:16px;">
+      <table>
+        <thead><tr><th>风险域</th><th>子风险域</th><th>处罚类型</th><th>数量</th></tr></thead>
+        <tbody id="tbl-violation"></tbody>
+      </table>
+    </div>
+
+    <div class="signal info" style="margin-top:12px;">
+      <div class="title">💡 主要风险点</div>
+      <div class="desc">近90d 违规集中在 <strong>内容画风（夸张博眼球）</strong>、<strong>价格信息违规</strong>、<strong>平台导流</strong> 三个方向。整体量小无 P0 警报，但需注意笔记文案避免"夸张、吐槽、导流外部" 三类高频雷区。</div>
+    </div>
+  </div>
 </section>
 
 <section id="s8">
-  <div class="sect-h"><h2>🚀 8. 下阶段建议</h2><div class="sub">综合诊断 · 8月节点 · Q3 品方向（口味颗粒度）</div></div>
-  <div class="sect-body"><div class="placeholder">🚧 待其他模块数据齐全后综合输出...</div></div>
+  <div class="sect-h">
+    <h2>🚀 8. 下阶段建议</h2>
+    <div class="sub">综合诊断 · 8月节点 · Q3 品方向（口味颗粒度）· 内容方向</div>
+  </div>
+  <div class="sect-body">
+    <h3 style="font-size: 15px; color:#334155; margin-bottom: 12px;">🎯 一句话诊断</h3>
+    <div class="signal alert">
+      <div class="title">三兔正处在"面点赛道季节回调 + 老客过度依赖"的双重压力期</div>
+      <div class="desc">环比 -19.6% 主要是行业性下滑（Top20 里 11 家在跌），三兔跑赢头部大部分同行；但真正的长期风险是<strong>新客池干涸（0.4%）</strong>和<strong>店播场次断供（30天1场）</strong>。下阶段核心：稳老客 + 开拉新 + 内容对标增长者。</div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📅 8-9 月节点日历</h3>
+    <div class="signals">
+      <div class="signal warn">
+        <div class="title">📆 8月：立秋（8/7）+ 七夕（8/29）</div>
+        <div class="desc"><strong>面点方向</strong>：立秋"贴秋膘"→ 手工牛肉馅饺子/蒸包；七夕→ 双人餐、心形手工馄饨（可做小规格 2-3人份）</div>
+      </div>
+      <div class="signal warn">
+        <div class="title">📆 9月：开学季 + 中秋（9/17-19）</div>
+        <div class="desc"><strong>开学季</strong>：宿舍党场景（微波炉 3 分钟速食面点）；<strong>中秋</strong>：家庭聚餐大礼包（馄饨+饺子+春卷组合装）</div>
+      </div>
+      <div class="signal info">
+        <div class="title">📆 Q4 前瞻：10-11月冷天 + 双11 + 双12</div>
+        <div class="desc">面点类冬季旺季（10月起环比+20-40%）；大促重点备货老客高频 SKU（历史 Top10 SPU）</div>
+      </div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">🍜 Q3 品方向建议（口味颗粒度）</h3>
+    <div class="signals">
+      <div class="signal good">
+        <div class="title">🌾 主线：地方特色馅料</div>
+        <div class="desc"><strong>推荐口味</strong>：<br>• 江浙鲜肉小馄饨（对标乡下头 +183%）<br>• 潮汕牛肉丸馄饨（差异化，市面少见）<br>• 云南野生菌鸡枞水饺（高溢价 + 猎奇）<br>• 川渝红油钟水饺（下饭属性强）</div>
+      </div>
+      <div class="signal good">
+        <div class="title">🌿 支线：健康/功能型</div>
+        <div class="desc"><strong>推荐口味</strong>：<br>• 藜麦全麦馒头（低卡人群）<br>• 蔬菜汁彩色饺子（宝妈亲子）<br>• 高蛋白鸡胸肉馄饨（健身人群）<br>• 无糖手工馒头（银发族/糖尿病）</div>
+      </div>
+      <div class="signal info">
+        <div class="title">🎁 试验：跨品类联名</div>
+        <div class="desc"><strong>创新思路</strong>：<br>• "早餐三件套"：包子+豆浆+咸菜（提客单价）<br>• "小时候的味道"：怀旧包装 + IP 联名<br>• "宵夜档"：麻辣锅底馄饨（针对夜间流量）</div>
+      </div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📝 内容方向建议</h3>
+    <ol style="padding-left: 20px; line-height: 2;">
+      <li><strong>加大图文投入</strong>：图文笔均 386 元 vs 视频 145 元，图文效率是视频的 2.66 倍，视频只做"技法演示"</li>
+      <li><strong>对标增长者笔记</strong>：穗穗手作"独居一人食闭眼入 🌿" 类"场景+人群"型标题效果最好（62,312 元）</li>
+      <li><strong>规避雷区</strong>：避免"夸张博眼球" (近90d违规集中此)、"体验吐槽"、"平台导流" 三个方向</li>
+      <li><strong>季节内容准备</strong>：8月立秋要提前2周（7/20左右）铺"贴秋膘"笔记；中秋前3周铺家庭组合装</li>
+    </ol>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">🎪 场域动作建议</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>场域</th><th>当前状态</th><th>建议动作</th></tr></thead>
+        <tbody>
+          <tr><td>普通商卡 (50%)</td><td>-12.7% 温和下滑</td><td>SEO 优化 + 关键词覆盖新口味词</td></tr>
+          <tr><td>商品笔记 (44%)</td><td>-17.4% 需重启</td><td>加大投入，对标增长者内容套路</td></tr>
+          <tr><td>店播 (3%)</td><td>1场/30天 断供</td><td>恢复 2场/周节奏，测试可行性</td></tr>
+          <tr><td>K播 (1%)</td><td>-48% 断崖</td><td>补充 3-5 个中腰部买手；对标头厨(40% K播)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">💡 3 个"不太离谱"的跳脱思考</h3>
+    <div class="signals">
+      <div class="signal info">
+        <div class="title">💡 1. "早餐订阅"服务</div>
+        <div class="desc">面点是高频消费品，试点"月度早餐订阅"（30 天不重样早餐组合），提高老客复购频次 + 锁定 30 天现金流</div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 2. "小份/试吃装"拉新</div>
+        <div class="desc">解决新客池干涸问题：推 9.9 元 4 个馄饨 试吃装（4-6种口味小包装），配合"评价返 5 元券"，闭环拉新→留存</div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 3. "IP 主理人"打造</div>
+        <div class="desc">对标 "乡下头-金二狗"（+183% 主理人IP驱动），把三兔品牌背后的手作师傅推到台前，做"手艺人日记" 系列图文，塑造温度感</div>
+      </div>
+    </div>
+  </div>
 </section>
 
 </main>
@@ -451,6 +614,27 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
       <a class="note-btn" href="https://www.xiaohongshu.com/discovery/item/${n.note_id}" target="_blank">🔗 打开笔记 →</a>
     </div>
   `).join('');
+
+  // 7. 用户分层饼图
+  echarts.init(document.getElementById('chart-user-segments')).setOption({
+    tooltip: { trigger:'item', formatter:'{b}<br>DGMV: ¥{c}<br>占比: {d}%' },
+    legend: { orient:'horizontal', bottom:0 },
+    series: [{
+      type:'pie', radius:['30%','60%'], center:['50%','45%'],
+      data: data.user_segments.map(s=>({name:`${s.name} · ${s.users}人`, value:s.dgmv})),
+      label:{ formatter:'{b}\n{d}%', fontSize:11 },
+    }],
+    color:['#10b981','#f59e0b','#3b82f6','#94a3b8'],
+  });
+
+  // 8. 违规表
+  document.getElementById('tbl-violation').innerHTML = data.violations.map(v=>`
+    <tr>
+      <td>${v.domain}</td>
+      <td>${v.sub_domain || '-'}</td>
+      <td><span class="delta ${v.penalty_type==='白盒'?'up':'warn'}" style="padding:2px 8px;border-radius:12px;font-size:11px;background:${v.penalty_type==='白盒'?'#d1fae5':'#fef3c7'};color:${v.penalty_type==='白盒'?'#065f46':'#92400e'};">${v.penalty_type}</span></td>
+      <td>${v.count}</td>
+    </tr>`).join('');
 
   // 响应式 resize
   window.addEventListener('resize', () => {
