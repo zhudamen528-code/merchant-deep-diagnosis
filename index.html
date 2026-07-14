@@ -390,9 +390,17 @@
     <h3 style="margin: 20px 0 12px; font-size: 15px; color:#334155;">📊 评分分布（近90d）</h3>
     <div id="chart-score-dist" style="height:260px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px;"></div>
 
+    <!-- 品类聚合表 -->
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📦 按品类聚合（找到"到底对啥有意见"）</h3>
+    <div id="tbl-category-summary" style="margin-bottom:12px;"></div>
+
+    <!-- 品类 × 差评主题 -->
+    <h3 style="margin: 20px 0 12px; font-size: 15px; color:#334155;">🔍 各品类下的负反馈主题（差评+3星以下+明确诉求）</h3>
+    <div id="category-negatives" style="margin-bottom:16px;"></div>
+
     <!-- 负反馈/需求区 -->
     <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">
-      🔴 负反馈 & 需求主题（用来做产品优化）
+      🔴 全品类汇总 · 负反馈 & 需求主题
     </h3>
     <p style="font-size:12px;color:#6b7280;margin-bottom:12px;">💡 每条评价可能提及多主题；数字为该主题在全量 3159 条评价中的出现次数</p>
     <div id="feedback-themes-v2" style="margin-top:12px;"></div>
@@ -403,6 +411,21 @@
     </h3>
     <p style="font-size:12px;color:#78716c;margin-bottom:12px;">💡 每一条真实评价都是一句「金句素材」，可以直接引用到笔记、直播口播、包装卡片、订单短信、朋友圈里</p>
     <div id="positive-themes"></div>
+
+    <!-- 📝 笔记评论区 - 独立模块 -->
+    <h3 style="margin: 32px 0 12px; font-size: 15px; color:#4338ca; background:#eef2ff; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #6366f1;">
+      📝 笔记评论洞察（近90d 8 篇头部笔记 · 直接跳转原笔记）
+    </h3>
+    <details class="caliber" style="margin-bottom:12px;">
+      <summary>数据源说明</summary>
+      <ul>
+        <li><strong>来源</strong>：浏览器抓取小红书前台公开评论区（不同于商品评价的"匿名订单评价"，笔记评论有真实用户 ID）</li>
+        <li><strong>覆盖</strong>：近90d GMV Top 8 笔记，去重后 28 条高价值评论</li>
+        <li><strong>用途</strong>：抓真实用户 ID 便于回访；获取长文本情感型金句素材；发现用户主动诉求</li>
+      </ul>
+    </details>
+    <div id="note-comments-notes" style="margin-bottom:16px;"></div>
+    <div id="note-comments-themes"></div>
 
     <div class="signal info" style="margin-top:16px;">
       <div class="title">💡 综合建议</div>
@@ -793,6 +816,79 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
           ${t.quotes.slice(0,3).map(q=>`
             <div style="background:#fff;border:1px solid #fde68a;border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12px;color:#475569;">
               <span style="font-weight:600;color:#d97706;">${q.user}：</span>${q.quote}
+            </div>`).join('')}
+        </div>`).join('');
+    }
+
+    // === 品类聚合表 ===
+    const catBox = document.getElementById('tbl-category-summary');
+    if (catBox && fb2.category_summary) {
+      const rows = fb2.category_summary.map(c => {
+        const scoreColor = c.avg_score >= 4.7 ? '#10b981' : (c.avg_score >= 4.4 ? '#f59e0b' : '#ef4444');
+        return `<tr>
+          <td>${c.category}</td>
+          <td style="text-align:right;">${c.review_count.toLocaleString()}</td>
+          <td style="text-align:right;color:${scoreColor};font-weight:700;">${c.avg_score}</td>
+          <td style="text-align:right;">${c.item_count}</td>
+        </tr>`;
+      }).join('');
+      catBox.innerHTML = `<div style="overflow-x:auto;"><table style="width:100%;font-size:13px;border-collapse:collapse;background:#fff;">
+        <thead><tr style="background:#f1f5f9;color:#475569;">
+          <th style="padding:8px 12px;text-align:left;">品类</th>
+          <th style="padding:8px 12px;text-align:right;">评价数</th>
+          <th style="padding:8px 12px;text-align:right;">平均评分</th>
+          <th style="padding:8px 12px;text-align:right;">SPU数</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>`;
+    }
+
+    // === 品类 × 差评主题 ===
+    const catNegBox = document.getElementById('category-negatives');
+    if (catNegBox && fb2.category_negatives) {
+      catNegBox.innerHTML = fb2.category_negatives.map(c => `
+        <details style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;margin-bottom:8px;" ${c.themes[0]?.count >= 30 ? 'open' : ''}>
+          <summary style="cursor:pointer;font-weight:600;color:#1e293b;font-size:14px;">
+            📦 ${c.category}
+            <span style="font-size:11px;background:#fee2e2;color:#dc2626;border-radius:4px;padding:2px 8px;margin-left:8px;font-weight:600;">${c.themes.reduce((s,t)=>s+t.count,0)} 条负反馈</span>
+          </summary>
+          <div style="margin-top:10px;">
+            ${c.themes.slice(0,6).map(t => `
+              <div style="background:#fef2f2;border-left:3px solid #ef4444;padding:6px 10px;margin-top:6px;border-radius:0 6px 6px 0;">
+                <div style="font-size:12px;color:#991b1b;font-weight:600;">${t.name} · ${t.count} 条</div>
+                ${t.examples.slice(0,2).map(ex=>`<div style="font-size:11px;color:#78716c;margin-top:2px;">· ${ex.slice(0,120)}</div>`).join('')}
+              </div>`).join('')}
+          </div>
+        </details>`).join('');
+    }
+  }
+
+  // ====== 📝 笔记评论区（独立模块 v0.9） ======
+  const nc = data.note_comments;
+  if (nc) {
+    const notesBox = document.getElementById('note-comments-notes');
+    if (notesBox) {
+      notesBox.innerHTML = `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:12px;color:#475569;">
+        <strong>📎 覆盖笔记：</strong><br>
+        ${nc.note_details.map(n=>`<a href="${n.url}" target="_blank" style="color:#4338ca;text-decoration:none;margin-right:12px;">📝 ${n.title}</a>`).join('')}
+        <div style="color:#64748b;margin-top:6px;">${nc.source_note}</div>
+      </div>`;
+    }
+    const themesBox = document.getElementById('note-comments-themes');
+    if (themesBox) {
+      themesBox.innerHTML = nc.themes.map(t => `
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:14px;color:#3730a3;">${t.category}</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">${t.quotes.length} 条</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:8px;">
+            💡 <strong>用途建议：</strong>${t.usage_hint}
+          </div>
+          ${t.quotes.map(q=>`
+            <div style="background:#f8fafc;border:1px solid #e0e7ff;border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12px;color:#475569;">
+              <span style="font-weight:600;color:#6366f1;">@${q.user}</span>：${q.quote}
+              <a href="https://www.xiaohongshu.com/discovery/item/${q.note_id}" target="_blank" style="color:#94a3b8;font-size:11px;margin-left:6px;text-decoration:none;">🔗 原笔记</a>
             </div>`).join('')}
         </div>`).join('');
     }
