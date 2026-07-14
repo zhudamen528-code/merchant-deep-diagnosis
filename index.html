@@ -375,33 +375,43 @@
   <details class="caliber">
     <summary>数据口径说明</summary>
     <ul>
-      <li><strong>数据类型</strong>：📝 <strong>笔记评论</strong>（浏览器抓取小红书前台公开数据）；<strong>不是</strong>商品订单评价</li>
-      <li><strong>本轮样本</strong>：三兔近180d 头部 2 篇爆款笔记 · 累计 114 条评论 · 有效样本 34 条（去重后）</li>
-      <li><strong>局限</strong>：BI 侧全量评论数据集（67877/22824）暂无权限；本轮为定性洞察，非全量统计</li>
-      <li><strong>"多少条提到"口径</strong>：基于当前 34 条样本的人工分类计数；数字仅反映样本内分布，非全平台真实占比</li>
-      <li><strong>建议</strong>：如需覆盖商品评价维度，需接入商家中心「订单评价」数据源；如需全量笔记评论，需申请 dataset 67877 权限</li>
+      <li><strong>本报告数据源</strong>：📝 笔记评论（浏览器抓取三兔近90d 头部 3 篇爆款笔记评论区公开数据） + 🌟 商品详情页公开的卖家口碑分</li>
+      <li><strong>样本量</strong>：3 篇爆款笔记 · 累计 144 条评论 · 有效样本 44 条（去重后）</li>
+      <li><strong>"多少条提及"口径</strong>：基于当前 44 条样本的人工分类计数；数字仅反映样本内分布，非全平台真实占比</li>
+      <li><strong>⚠️ 商品订单评价缺口</strong>：小红书电商订单评价（销售通/千帆）需商家侧数据源或商家中心 API 权限。建议商家自行从「千帆-店铺-评价管理」导出后，可获得更全面的商品维度评价分析</li>
+      <li><strong>后续升级建议</strong>：接入 dataset 67877（近1年笔记评论）+ 商家中心订单评价 = 全景客户反馈</li>
     </ul>
   </details>
   <div class="sect-body">
-    <div class="signal good">
-      <div class="title">🎯 核心洞察</div>
-      <div class="desc">三兔用户主动提出<strong>大量高价值反馈</strong>，涵盖 SKU 拆分、料包优化、品类扩展、供不应求、品质担忧、线下需求等 6 大方向。<strong>每一条差评都是产品迭代金矿</strong>。</div>
-    </div>
+    <!-- 卖家口碑总览 -->
+    <div id="shop-rating-box"></div>
 
-    <div id="feedback-themes-v2" style="margin-top:16px;"></div>
+    <!-- 负反馈/需求区 -->
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">
+      🔴 负反馈 & 需求主题（用来做产品优化）
+    </h3>
+    <div id="feedback-themes-v2" style="margin-top:12px;"></div>
+
+    <!-- ⭐ 表扬素材库 -->
+    <h3 style="margin: 32px 0 12px; font-size: 15px; color:#92400e; background:#fff8f1; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+      ⭐ 表扬素材库（拿来做二次内容 · 转化新客）
+    </h3>
+    <p style="font-size:12px;color:#78716c;margin-bottom:12px;">💡 每一条真实评论都是一句「金句素材」，可以直接引用到笔记、直播口播、包装卡片、订单短信、朋友圈里</p>
+    <div id="positive-themes"></div>
 
     <div class="signal info" style="margin-top:16px;">
       <div class="title">💡 综合建议</div>
       <div class="desc">
         <strong>短期（1-2 周可上）</strong>：<br>
-        ① 立刻上架 10-15 只小份装（对应"一人食"客群）<br>
-        ② 调料包升级：1盒1整包 + 附虾皮紫菜<br><br>
+        ① 上架 10-15 只小份装（对应"一人食"客群）<br>
+        ② 调料包升级：1盒1整包 + 附虾皮紫菜<br>
+        ③ 立刻用「Ooo 的家的味道」+「大溜溜 南方人在北方馋疯了」做一条情感型笔记<br><br>
         <strong>中期（1-2 月）</strong>：<br>
-        ③ 拍摄「工厂参观 / 检测报告」系列图文，缓解食安担忧<br>
-        ④ 挖掘用户"复购证言"做二次内容（Ooo 的"家的味道"故事就是天然素材）<br><br>
+        ④ 拍摄「工厂参观 / 检测报告 / 煮法教程」系列图文，缓解食安担忧+煮法失误<br>
+        ⑤ 用「老梅没烦恼 我妈都点赞」类家人认可素材做"给爸妈买"场景笔记<br><br>
         <strong>长期（Q3-Q4）</strong>：<br>
-        ⑤ 探索线下门店/快闪店的可能性（舟山/杭州）<br>
-        ⑥ 开发不含猪肉的纯虾/素馅产品线，拓展客群
+        ⑥ 探索线下门店/快闪店（舟山/杭州）+ 海外/异地社群<br>
+        ⑦ 开发不含猪肉的纯虾/素馅产品线，拓展客群
       </div>
     </div>
   </div>
@@ -692,13 +702,43 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
     document.getElementById('community-insight-v2').textContent = cv2.insight;
   }
 
-  // ====== 第5章 v2：客户反馈（加计数 + 明确来源） ======
+  // ====== 第5章 v3：客户反馈（负反馈 + 表扬素材双区） ======
   const fb2 = data.user_feedback;
   if (fb2) {
     document.getElementById('fb-source-info').innerHTML = fb2.source_type + ' · ' + fb2.source_note;
-    const weightColor = {high:'#10b981', medium:'#f59e0b', insight:'#667eea'};
+
+    // 卖家口碑分卡片
+    const ratingBox = document.getElementById('shop-rating-box');
+    if (ratingBox && fb2.shop_rating) {
+      ratingBox.innerHTML = `
+        <div class="kpis" style="margin-bottom:16px;">
+          <div class="kpi good">
+            <div class="label">🌟 卖家口碑分</div>
+            <div class="value">${fb2.shop_rating.score}</div>
+            <div class="delta up">/5.0 优秀</div>
+          </div>
+          <div class="kpi">
+            <div class="label">👥 店铺粉丝</div>
+            <div class="value">${fb2.shop_rating.fans}</div>
+            <div class="delta">累计</div>
+          </div>
+          <div class="kpi">
+            <div class="label">📦 累计已售</div>
+            <div class="value">${fb2.shop_rating.sold}</div>
+            <div class="delta">累计</div>
+          </div>
+        </div>
+        <div class="signal warn" style="font-size:12px;">
+          <div class="title">📎 商品评价数据说明</div>
+          <div class="desc">${fb2.data_gap_note}</div>
+        </div>`;
+    }
+
+    const weightColor = {high:'#ef4444', medium:'#f59e0b', insight:'#667eea'};
     const weightLabel = {high:'🔴 高优先', medium:'🟡 中优先', insight:'💡 内容素材'};
-    document.getElementById('feedback-themes-v2').innerHTML = fb2.themes.map(t => `
+
+    // 负反馈区
+    document.getElementById('feedback-themes-v2').innerHTML = fb2.negative_themes.map(t => `
       <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:10px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
           <span style="font-weight:600;font-size:14px;color:#1e293b;">${t.category}</span>
@@ -714,6 +754,25 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
             <span style="font-weight:600;color:#667eea;">@${q.user}</span>：${q.quote}
           </div>`).join('')}
       </div>`).join('');
+
+    // ⭐ 表扬素材区
+    const posBox = document.getElementById('positive-themes');
+    if (posBox && fb2.positive_themes) {
+      posBox.innerHTML = fb2.positive_themes.map(t => `
+        <div style="background:#fff8f1;border:1.5px solid #fbbf24;border-radius:10px;padding:14px;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:14px;color:#92400e;">${t.category}</span>
+            <span style="font-size:11px;background:#fef3c7;color:#92400e;border-radius:4px;padding:2px 6px;">📊 样本内 ${t.mention_count} 条</span>
+          </div>
+          <div style="background:#fef9c3;border-left:3px solid #f59e0b;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#78350f;margin-bottom:8px;">
+            📝 <strong>内容素材建议：</strong>${t.usage_hint}
+          </div>
+          ${t.quotes.map(q=>`
+            <div style="background:#fff;border:1px solid #fde68a;border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12px;color:#475569;">
+              <span style="font-weight:600;color:#d97706;">@${q.user}</span>：${q.quote}
+            </div>`).join('')}
+        </div>`).join('');
+    }
   }
 
   // 6. TOP 笔记卡片
