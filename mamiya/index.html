@@ -128,6 +128,18 @@
     <h3 style="margin:32px 0 12px;font-size:15px;color:#92400e;background:#fff8f1;padding:10px 14px;border-radius:8px;border-left:4px solid #f59e0b">⭐ 表扬素材库（拿来做二次内容 · 转化新客）</h3>
     <p style="font-size:12px;color:#78716c;margin-bottom:12px">💡 每一条真实评价都是一句金句素材，可以直接引用到笔记、直播口播、包装卡片、订单短信、朋友圈里</p>
     <div id="s5-pos-themes"></div>
+
+    <h3 style="margin:32px 0 12px;font-size:15px;color:#4338ca;background:#eef2ff;padding:10px 14px;border-radius:8px;border-left:4px solid #6366f1">📝 笔记评论洞察（近90d 头部笔记 · 直接跳转原笔记）</h3>
+    <details class="caliber">
+      <summary>数据源说明</summary>
+      <ul>
+        <li><strong>来源</strong>：浏览器抓取小红书前台公开评论区（与「商品评价」不同：笔记评论有真实用户 ID + 文本更长 + 情感更浓）</li>
+        <li><strong>覆盖</strong>：近90d 头部 <span id="s5nc-notes-count"></span> 篇 GMV Top 笔记，去重后 <span id="s5nc-total"></span> 条高价值评论</li>
+        <li><strong>用途</strong>：抓真实用户 ID 便于回访；情感型金句素材；发现主动诉求</li>
+      </ul>
+    </details>
+    <div id="s5-nc-notes" style="margin-bottom:16px"></div>
+    <div id="s5-nc-themes"></div>
   </section>
 
   <section id="s6">
@@ -299,6 +311,32 @@ fetch('data.json').then(r=>r.json()).then(data=>{
       <div class="title">📝 ${n.title||'（无标题）'}</div>
       <div class="meta">${n.date} · 📈 ¥${fmt(n.gmv)}</div>
     </a>`).join('');
+
+  // ===== CH5 · 笔记评论（v0.9 补齐）=====
+  const nc = data.ch5_note_comments;
+  if (nc) {
+    document.getElementById('s5nc-notes-count').textContent = nc.note_details.length;
+    document.getElementById('s5nc-total').textContent = nc.themes.reduce((s,t)=>s+t.quotes.length,0);
+    document.getElementById('s5-nc-notes').innerHTML = `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:12px;color:#475569">
+      <strong>📎 覆盖笔记：</strong><br>
+      ${nc.note_details.map(n=>`<a href="${n.url}" target="_blank" style="color:#4338ca;text-decoration:none;margin-right:12px;display:inline-block;margin-top:4px">📝 ${n.title}</a>`).join('')}
+      <div style="color:#64748b;margin-top:6px">${nc.source_note}</div>
+    </div>`;
+    document.getElementById('s5-nc-themes').innerHTML = nc.themes.map(t=>`
+      <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+          <span style="font-weight:700;font-size:14px;color:#3730a3">${t.category}</span>
+          <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600">${t.quotes.length} 条</span>
+        </div>
+        <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:8px">
+          💡 <strong>用途建议：</strong>${t.usage_hint}
+        </div>
+        ${t.quotes.map(q=>`<div style="background:#f8fafc;border:1px solid #e0e7ff;border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12px;color:#475569">
+          <span style="font-weight:600;color:#6366f1">@${q.user}</span>：${q.quote}
+          <a href="https://www.xiaohongshu.com/discovery/item/${q.note_id}" target="_blank" style="color:#94a3b8;font-size:11px;margin-left:6px;text-decoration:none">🔗 原笔记</a>
+        </div>`).join('')}
+      </div>`).join('');
+  }
 
   // ===== CH7 =====
   const v = data.ch7_violations;
