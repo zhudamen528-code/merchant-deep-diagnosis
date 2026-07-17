@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mamiya旗舰店 · 月度经营复盘（近30d）</title>
+<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f8fafc;color:#1e293b;line-height:1.6;padding:16px}
+  .container{max-width:960px;margin:0 auto}
+  header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:24px;border-radius:12px;margin-bottom:16px;box-shadow:0 4px 12px rgba(102,126,234,.2)}
+  header h1{font-size:22px;margin-bottom:6px}
+  header .sub{font-size:12px;opacity:.9}
+  header .meta{margin-top:12px;font-size:11px;opacity:.85;display:flex;gap:16px;flex-wrap:wrap}
+  nav{background:#fff;border-radius:10px;padding:10px 14px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.05);position:sticky;top:8px;z-index:100;overflow-x:auto;white-space:nowrap}
+  nav a{color:#475569;font-size:12px;padding:6px 10px;border-radius:6px;text-decoration:none;margin-right:4px;display:inline-block}
+  nav a:hover{background:#f1f5f9;color:#4338ca}
+  section{background:#fff;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  section h2{font-size:18px;color:#1e293b;margin-bottom:6px;padding-bottom:10px;border-bottom:2px solid #f1f5f9;display:flex;align-items:center;gap:8px}
+  section .desc{font-size:12px;color:#64748b;margin-bottom:14px}
+  details.caliber{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:12px}
+  details.caliber summary{cursor:pointer;color:#475569;font-weight:600}
+  details.caliber ul{margin:8px 0 4px 18px;color:#64748b}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+  .kpi{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px}
+  .kpi .label{font-size:11px;color:#64748b}
+  .kpi .value{font-size:20px;font-weight:700;color:#1e293b;margin:4px 0}
+  .kpi .sub{font-size:11px;color:#64748b}
+  .mom-up{color:#10b981;font-weight:600}
+  .mom-down{color:#ef4444;font-weight:600}
+  .mom-flat{color:#64748b}
+  table{width:100%;font-size:13px;border-collapse:collapse;background:#fff}
+  thead tr{background:#f1f5f9;color:#475569}
+  th,td{padding:8px 12px;text-align:left}
+  th:not(:first-child),td:not(:first-child){text-align:right}
+  tr:not(:last-child) td{border-bottom:1px solid #f1f5f9}
+  .signal{border-left:4px solid;padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0}
+  .signal.info{border-color:#3b82f6;background:#eff6ff}
+  .signal.warn{border-color:#f59e0b;background:#fffbeb}
+  .signal.ok{border-color:#10b981;background:#f0fdf4}
+  .card-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+  .card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px}
+  .card .title{font-weight:600;font-size:13px;color:#1e293b;margin-bottom:4px}
+  .card .meta{font-size:11px;color:#64748b}
+  .card .tag{display:inline-block;background:#e0e7ff;color:#4338ca;font-size:10px;padding:2px 6px;border-radius:4px;margin-right:4px}
+  footer{text-align:center;padding:20px;font-size:11px;color:#94a3b8}
+  @media(max-width:640px){body{padding:8px}section{padding:14px}header{padding:18px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🍞 Mamiya旗舰店 · 月度经营复盘</h1>
+    <div class="sub">近30d 全链路诊断报告 · 生意/商品/竞对/机会/评价/合规/建议</div>
+    <div class="meta">
+      <span>📅 <span id="hdr-period"></span></span>
+      <span>🔖 <span id="hdr-cat"></span></span>
+      <span>🆔 seller_id 已知</span>
+      <span>🕒 <span id="hdr-gen"></span></span>
+    </div>
+  </header>
+
+  <nav>
+    <a href="#s1">① 生意盘</a>
+    <a href="#s2">② 商品矩阵</a>
+    <a href="#s3">③ 同类对标</a>
+    <a href="#s4">④ 品类机会</a>
+    <a href="#s5">⑤ 客户反馈</a>
+    <a href="#s6">⑥ 头部笔记</a>
+    <a href="#s7">⑦ 合规</a>
+    <a href="#s8">⑧ AM 建议</a>
+  </nav>
+
+  <section id="s1">
+    <h2>① 生意盘（近30d vs 上30d · 载体拆分）</h2>
+    <div class="desc">数据源：dataset 1922（人货场成交分析）· 环比口径：近30d vs 上30d 同期</div>
+    <div class="kpi-grid" id="s1-kpi"></div>
+    <div id="chart-carrier" style="height:280px"></div>
+    <div id="s1-tbl" style="margin-top:14px"></div>
+  </section>
+
+  <section id="s2">
+    <h2>② 商品矩阵 & 专营度</h2>
+    <div class="desc">TOP20 商品贡献 · 商品所属四级类目分布</div>
+    <div class="signal info" id="s2-signal"></div>
+    <div id="s2-cats" style="margin-bottom:14px"></div>
+    <div id="s2-tbl"></div>
+  </section>
+
+  <section id="s3">
+    <h2>③ 同类对标（品牌型早餐/健康零食头部）</h2>
+    <div class="desc">数据源：dataset 1922 · L4=肉制品/肉类罐头 TOP20 · 已筛选品牌型对标（剔除百货/生鲜）</div>
+    <div id="s3-list"></div>
+  </section>
+
+  <section id="s4">
+    <h2>④ 细分品类机会（自身货盘 vs 环比）</h2>
+    <div class="desc">你自己商品所在 L4 子品类近30d vs 上30d 环比 · 找可以加码的方向</div>
+    <div id="s4-tbl"></div>
+  </section>
+
+  <section id="s5">
+    <h2>⑤ 客户反馈（3个月商品评价 · 双维分析）</h2>
+    <details class="caliber">
+      <summary>数据源说明</summary>
+      <ul>
+        <li><strong>来源</strong>：dataset 8033（订单晒单评价自助分析数据集），近3个月 <span id="s5-total-hint"></span> 条真实商品评价</li>
+        <li><strong>局限</strong>：订单评价系统匿名，无用户 ID；文本较短</li>
+        <li><strong>用途</strong>：产品优化优先级 + 内容营销素材库</li>
+      </ul>
+    </details>
+    <div class="kpi-grid" id="s5-kpi"></div>
+
+    <h3 style="margin:20px 0 12px;font-size:15px;color:#334155">📊 评分分布（近3个月）</h3>
+    <div id="chart-score-dist" style="height:240px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px"></div>
+
+    <h3 style="margin:24px 0 12px;font-size:15px;color:#334155">📦 按品类聚合（看出对啥商品有意见）</h3>
+    <div id="s5-cat-summary" style="margin-bottom:12px"></div>
+
+    <h3 style="margin:20px 0 12px;font-size:15px;color:#334155">🔍 各品类下的负反馈主题（差评+3星以下+明确诉求）</h3>
+    <div id="s5-cat-negatives"></div>
+
+    <h3 style="margin:24px 0 12px;font-size:15px;color:#334155">🔴 全品类汇总 · 负反馈 & 需求主题</h3>
+    <p style="font-size:12px;color:#6b7280;margin-bottom:12px">💡 数字为该主题在全量评价中的出现次数</p>
+    <div id="s5-neg-themes"></div>
+
+    <h3 style="margin:32px 0 12px;font-size:15px;color:#92400e;background:#fff8f1;padding:10px 14px;border-radius:8px;border-left:4px solid #f59e0b">⭐ 表扬素材库（拿来做二次内容 · 转化新客）</h3>
+    <p style="font-size:12px;color:#78716c;margin-bottom:12px">💡 每一条真实评价都是一句金句素材，可以直接引用到笔记、直播口播、包装卡片、订单短信、朋友圈里</p>
+    <div id="s5-pos-themes"></div>
+  </section>
+
+  <section id="s6">
+    <h2>⑥ 头部笔记（近90d TOP GMV）</h2>
+    <div class="desc">数据源：dataset 1922 · 近90d 高 GMV 笔记（可点击跳转原笔记）</div>
+    <div class="card-list" id="s6-notes"></div>
+  </section>
+
+  <section id="s7">
+    <h2>⑦ 合规状态（仅商家可见部分）</h2>
+    <div class="desc">数据源：dataset 28963（违规中心）· 仅展示白盒罚单（商家在苍穹后台可见）</div>
+    <div class="kpi-grid" id="s7-kpi"></div>
+    <div id="s7-tbl"></div>
+  </section>
+
+  <section id="s8">
+    <h2>⑧ AM 建议（口味颗粒度 · 数据驱动）</h2>
+    <div class="desc">基于评价分析 + 头部笔记 + 品类机会矩阵，给出可执行动作</div>
+    <div id="s8-list"></div>
+  </section>
+
+  <footer>
+    Mamiya旗舰店 · 月度经营复盘 · Powered by DIBP · 
+    数据源：<b>dataset 1922 / 8033 / 28963</b>
+  </footer>
+</div>
+
+<script>
+fetch('data.json').then(r=>r.json()).then(data=>{
+  // ===== Header =====
+  document.getElementById('hdr-period').textContent = data.shop.report_period;
+  document.getElementById('hdr-cat').textContent = `${data.shop.category_l2} · ${data.shop.category_l3}`;
+  document.getElementById('hdr-gen').textContent = data.shop.gen_at;
+
+  const fmt = n => n>=10000 ? (n/10000).toFixed(1)+'万' : Math.round(n).toLocaleString();
+  const momCls = m => m===null?'mom-flat':(m>0?'mom-up':(m<0?'mom-down':'mom-flat'));
+  const momStr = m => m===null?'—':((m>0?'+':'')+m+'%');
+
+  // ===== CH1 =====
+  const b = data.ch1_business;
+  document.getElementById('s1-kpi').innerHTML = `
+    <div class="kpi"><div class="label">近30d DGMV</div><div class="value">¥${fmt(b.total_gmv)}</div><div class="sub">上30d ¥${fmt(b.total_prev)}</div></div>
+    <div class="kpi"><div class="label">环比</div><div class="value ${momCls(b.mom)}">${momStr(b.mom)}</div><div class="sub">近30d vs 上30d</div></div>
+    <div class="kpi"><div class="label">载体数量</div><div class="value">${b.carriers.filter(c=>c.gmv>0).length}</div><div class="sub">在营</div></div>
+    <div class="kpi"><div class="label">Top1 载体</div><div class="value" style="font-size:14px">${b.carriers[0].name}</div><div class="sub">¥${fmt(b.carriers[0].gmv)}</div></div>
+  `;
+  // 载体柱状图
+  const c1 = echarts.init(document.getElementById('chart-carrier'));
+  const cActive = b.carriers.filter(c=>c.gmv>0 || c.prev>0);
+  c1.setOption({
+    tooltip:{trigger:'axis'},
+    legend:{data:['近30d','上30d'],bottom:0},
+    grid:{left:60,right:20,top:20,bottom:40},
+    xAxis:{type:'category',data:cActive.map(c=>c.name),axisLabel:{fontSize:10,interval:0,rotate:30}},
+    yAxis:{type:'value',axisLabel:{formatter:v=>fmt(v)}},
+    series:[
+      {name:'近30d',type:'bar',data:cActive.map(c=>c.gmv),itemStyle:{color:'#6366f1'}},
+      {name:'上30d',type:'bar',data:cActive.map(c=>c.prev),itemStyle:{color:'#c7d2fe'}}
+    ]
+  });
+  document.getElementById('s1-tbl').innerHTML = `<div style="overflow-x:auto"><table><thead><tr><th>载体</th><th>近30d</th><th>上30d</th><th>环比</th></tr></thead><tbody>
+    ${cActive.map(c=>`<tr><td>${c.name}</td><td>¥${fmt(c.gmv)}</td><td>¥${fmt(c.prev)}</td><td class="${momCls(c.mom)}">${momStr(c.mom)}</td></tr>`).join('')}
+  </tbody></table></div>`;
+
+  // ===== CH2 =====
+  const p = data.ch2_products;
+  const specColor = p.specialization==='单品类专营'?'ok':(p.specialization==='主副营'?'info':'warn');
+  document.getElementById('s2-signal').className = 'signal '+specColor;
+  document.getElementById('s2-signal').innerHTML = `<b>专营度判定：${p.specialization}</b> · Top1 类目「${p.top1_category}」占 <b>${p.top1_pct}%</b>（阈值：≥80%单品类 / 50-80%主副营 / <50%多品类合集）`;
+  document.getElementById('s2-cats').innerHTML = `<div style="overflow-x:auto"><table><thead><tr><th>四级类目</th><th>DGMV</th><th>占比</th></tr></thead><tbody>
+    ${p.category_dist.map(c=>`<tr><td>${c.cat}</td><td>¥${fmt(c.gmv)}</td><td>${c.pct}%</td></tr>`).join('')}
+  </tbody></table></div>`;
+  document.getElementById('s2-tbl').innerHTML = `<h3 style="font-size:14px;margin:10px 0;color:#334155">TOP20 商品</h3><div style="overflow-x:auto"><table><thead><tr><th>#</th><th>商品</th><th>DGMV</th></tr></thead><tbody>
+    ${p.top_items.map((it,i)=>`<tr><td>${i+1}</td><td style="max-width:400px">${it.name}</td><td>¥${fmt(it.gmv)}</td></tr>`).join('')}
+  </tbody></table></div>`;
+
+  // ===== CH3 =====
+  document.getElementById('s3-list').innerHTML = `<div class="card-list">${data.ch3_competitors.map(c=>`
+    <div class="card">
+      <div class="title">${c.name}</div>
+      <div class="meta"><span class="tag">${c.tag}</span> 近30d DGMV ¥${c.gmv}万</div>
+    </div>`).join('')}</div>
+    <div class="signal info" style="margin-top:12px">💡 <b>对标提示：</b>这几家共同特点是「品牌型早餐/健康食品」+「达人内容+店播闭环」，是 Mamiya 未来 3-6 个月可参考的路径</div>`;
+
+  // ===== CH4 =====
+  document.getElementById('s4-tbl').innerHTML = `<div style="overflow-x:auto"><table><thead><tr><th>子品类</th><th>近30d</th><th>上30d</th><th>环比</th></tr></thead><tbody>
+    ${data.ch4_opportunities.filter(s=>s.gmv>=500).map(s=>{
+      const badge = s.mom>=50?'⭐机会':(s.mom>=0?'📈稳':'—');
+      return `<tr><td>${s.category} ${s.mom>=50?'<span style=\"background:#fef3c7;color:#92400e;font-size:10px;padding:1px 6px;border-radius:4px;margin-left:4px\">'+badge+'</span>':''}</td><td>¥${fmt(s.gmv)}</td><td>¥${fmt(s.prev)}</td><td class="${momCls(s.mom)}">${s.mom>=500?'大幅增长':momStr(s.mom)}</td></tr>`;
+    }).join('')}
+  </tbody></table></div>`;
+
+  // ===== CH5 =====
+  const r5 = data.ch5_reviews;
+  document.getElementById('s5-total-hint').textContent = r5.total_reviews.toLocaleString();
+  const goodPct = (r5.good_count*100/r5.total_reviews).toFixed(1);
+  const badPct = (r5.bad_count*100/r5.total_reviews).toFixed(1);
+  document.getElementById('s5-kpi').innerHTML = `
+    <div class="kpi"><div class="label">有效评价</div><div class="value">${r5.total_reviews.toLocaleString()}</div><div class="sub">近3个月</div></div>
+    <div class="kpi"><div class="label">好评率</div><div class="value mom-up">${goodPct}%</div><div class="sub">${r5.good_count.toLocaleString()} 条</div></div>
+    <div class="kpi"><div class="label">差评率</div><div class="value mom-down">${badPct}%</div><div class="sub">${r5.bad_count.toLocaleString()} 条</div></div>
+    <div class="kpi"><div class="label">品类数</div><div class="value">${r5.category_summary.length}</div><div class="sub">已聚合</div></div>
+  `;
+  // 评分分布
+  const sd = echarts.init(document.getElementById('chart-score-dist'));
+  const scores = [1,2,3,4,5];
+  const colors = {5:'#10b981',4:'#84cc16',3:'#f59e0b',2:'#f97316',1:'#ef4444'};
+  sd.setOption({
+    tooltip:{trigger:'axis'},
+    grid:{left:60,right:20,top:20,bottom:30},
+    xAxis:{type:'category',data:scores.map(s=>s+'星')},
+    yAxis:{type:'value'},
+    series:[{type:'bar',data:scores.map(s=>({value:r5.score_dist[s]||0,itemStyle:{color:colors[s]}})),label:{show:true,position:'top',fontSize:11}}]
+  });
+  // 品类聚合表
+  document.getElementById('s5-cat-summary').innerHTML = `<div style="overflow-x:auto"><table><thead><tr><th>品类</th><th>评价数</th><th>平均评分</th><th>SPU数</th></tr></thead><tbody>
+    ${r5.category_summary.map(c=>{
+      const color = c.avg_score>=4.85?'#10b981':(c.avg_score>=4.7?'#f59e0b':'#ef4444');
+      return `<tr><td>${c.category}</td><td>${c.review_count.toLocaleString()}</td><td style="color:${color};font-weight:700">${c.avg_score}</td><td>${c.item_count}</td></tr>`;
+    }).join('')}
+  </tbody></table></div>`;
+  // 品类 × 差评
+  document.getElementById('s5-cat-negatives').innerHTML = r5.category_negatives.map(c=>`
+    <details style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;margin-bottom:8px" ${c.themes[0]?.count>=50?'open':''}>
+      <summary style="cursor:pointer;font-weight:600;color:#1e293b;font-size:14px">
+        📦 ${c.category}
+        <span style="font-size:11px;background:#fee2e2;color:#dc2626;border-radius:4px;padding:2px 8px;margin-left:8px;font-weight:600">${c.themes.reduce((s,t)=>s+t.count,0)} 条负反馈</span>
+      </summary>
+      <div style="margin-top:10px">
+        ${c.themes.slice(0,6).map(t=>`
+          <div style="background:#fef2f2;border-left:3px solid #ef4444;padding:6px 10px;margin-top:6px;border-radius:0 6px 6px 0">
+            <div style="font-size:12px;color:#991b1b;font-weight:600">${t.name} · ${t.count} 条</div>
+            ${t.examples.slice(0,2).map(ex=>`<div style="font-size:11px;color:#78716c;margin-top:2px">· ${ex.slice(0,120)}</div>`).join('')}
+          </div>`).join('')}
+      </div>
+    </details>`).join('');
+  // 全量负反馈
+  document.getElementById('s5-neg-themes').innerHTML = r5.negative_themes.map(t=>`
+    <div style="background:#fff;border:1.5px solid #fca5a5;border-radius:10px;padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+        <span style="font-weight:700;font-size:14px;color:#991b1b">${t.category}</span>
+        <span style="font-size:11px;background:#fee2e2;color:#991b1b;border-radius:4px;padding:2px 8px;font-weight:600">${t.mention_count} 条 · ${t.mention_pct}%</span>
+      </div>
+      <div style="background:#fef2f2;border-left:3px solid #10b981;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#065f46;margin-bottom:8px">
+        ✅ <strong>行动建议：</strong>${t.action_suggestion}
+      </div>
+      ${t.examples.slice(0,3).map(ex=>`<div style="background:#fff;border:1px solid #fecaca;border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12px;color:#475569">
+        <span style="font-weight:600;color:#dc2626">${ex.item}：</span>${ex.quote}
+      </div>`).join('')}
+    </div>`).join('');
+  // 表扬素材
+  document.getElementById('s5-pos-themes').innerHTML = r5.positive_themes.map(t=>`
+    <div style="background:#fff8f1;border:1.5px solid #fbbf24;border-radius:10px;padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+        <span style="font-weight:700;font-size:14px;color:#92400e">${t.category}</span>
+        <span style="font-size:11px;background:#fef3c7;color:#92400e;border-radius:4px;padding:2px 8px;font-weight:600">${t.mention_count} 条 · ${t.mention_pct}%</span>
+      </div>
+      <div style="background:#fef9c3;border-left:3px solid #f59e0b;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#78350f;margin-bottom:8px">
+        📝 <strong>内容素材建议：</strong>${t.usage_hint}
+      </div>
+      ${t.quotes.slice(0,3).map(q=>`<div style="background:#fff;border:1px solid #fde68a;border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12px;color:#475569">
+        <span style="font-weight:600;color:#d97706">${q.user}：</span>${q.quote}
+      </div>`).join('')}
+    </div>`).join('');
+
+  // ===== CH6 =====
+  document.getElementById('s6-notes').innerHTML = data.ch5_notes.notes.slice(0,12).map(n=>`
+    <a href="${n.url}" target="_blank" class="card" style="text-decoration:none;color:inherit;display:block">
+      <div class="title">📝 ${n.title||'（无标题）'}</div>
+      <div class="meta">${n.date} · 📈 ¥${fmt(n.gmv)}</div>
+    </a>`).join('');
+
+  // ===== CH7 =====
+  const v = data.ch7_violations;
+  document.getElementById('s7-kpi').innerHTML = `
+    <div class="kpi"><div class="label">白盒罚单</div><div class="value" style="color:${v.total_white===0?'#10b981':'#f59e0b'}">${v.total_white}</div><div class="sub">${v.white_box.length} 类</div></div>
+    <div class="kpi"><div class="label">状态</div><div class="value" style="font-size:15px;color:${v.total_white<=5?'#10b981':'#f59e0b'}">${v.total_white===0?'✅ 无违规':(v.total_white<=5?'⚠️ 轻度':'❗ 需关注')}</div><div class="sub">近30d</div></div>
+  `;
+  if(v.white_box.length>0){
+    document.getElementById('s7-tbl').innerHTML = `<div style="overflow-x:auto"><table><thead><tr><th>风险域</th><th>子域</th><th>数量</th></tr></thead><tbody>
+      ${v.white_box.map(w=>`<tr><td>${w.domain}</td><td>${w.sub_domain||'—'}</td><td>${w.count}</td></tr>`).join('')}
+    </tbody></table></div>`;
+  }
+
+  // ===== CH8 =====
+  document.getElementById('s8-list').innerHTML = data.ch8_recommendations.map(r=>`
+    <div style="background:#f8fafc;border-left:4px solid #6366f1;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap">
+        <span style="background:#e0e7ff;color:#4338ca;font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600">${r.level}</span>
+        <span style="font-weight:700;font-size:14px;color:#1e293b">${r.title}</span>
+      </div>
+      <div style="font-size:12px;color:#64748b;margin-bottom:6px">📊 依据：${r.reason}</div>
+      <div style="font-size:13px;color:#334155;background:#eef2ff;padding:8px 10px;border-radius:6px">🎯 建议：${r.action}</div>
+    </div>`).join('');
+});
+</script>
+</body>
+</html>
