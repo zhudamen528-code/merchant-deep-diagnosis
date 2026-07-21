@@ -418,17 +418,17 @@
 
     <!-- 📝 笔记评论区 - 独立模块 -->
     <h3 style="margin: 32px 0 12px; font-size: 15px; color:#4338ca; background:#eef2ff; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #6366f1;">
-      📝 笔记评论洞察（近90d Top 27 篇高GMV笔记 · 133 条独立评论 · 127 位独立用户）
+      📝 笔记评论洞察（近90d 3,333 篇笔记 · 13,092 条评论 · 5,336 独立用户 · BI 数据集全量）
     </h3>
     <details class="caliber" style="margin-bottom:12px;">
       <summary>数据源说明</summary>
       <ul>
-        <li><strong>来源</strong>：浏览器抓取小红书前台公开评论区（不同于商品评价的"匿名订单评价"，笔记评论有真实用户 ID）</li>
-        <li><strong>覆盖</strong>：近90d Mamiya 相关 GMV Top 27 篇笔记，覆盖 GMV ¥46.3 万（占 Mamiya 90d 总 GMV 30%+）</li>
-        <li><strong>样本</strong>：毛评论 220 条 → 去重后 <strong>133 条独立评论</strong>（同一用户在多篇笔记下的相同文案计一次）· <strong>127 位独立用户</strong></li>
-        <li><strong>主题聚合</strong>：基于关键词规则匹配 9 大主题（一条评论可命中多主题），标注热度百分比</li>
-        <li><strong>技术限制</strong>：小红书前端每篇仅暴露前 10 条根评论（"查看更多"反爬严格），故通过横切多篇高热笔记达到"海量"评估</li>
-        <li><strong>用途</strong>：抓真实用户 ID 便于回访；获取长文本情感型金句素材；发现用户主动诉求</li>
+        <li><strong>来源</strong>：RedBI dataset <code>635971</code>「近180天笔记评论区数据」，底表 <code>redcdm.iceberg_dm_ecm_comment_metrics_td_df</code>，非浏览器爬取，是官方数据集全量</li>
+        <li><strong>过滤</strong>：seller_id = <code>6407ef3d9cd18100012e2bbb</code>（Mamiya），时间 2026-04-22 ~ 2026-07-20（近90d），最新分区 <code>20260720</code></li>
+        <li><strong>全量口径</strong>：<strong>13,092 条评论</strong>（每条 comment_id 唯一），覆盖 <strong>3,333 篇笔记</strong>，<strong>5,336 位独立评论用户</strong></li>
+        <li><strong>分析口径</strong>：按评论 <code>content</code> 去重得 <strong>1,375 条独立评论内容</strong>（同一用户在多篇笔记下重复的相同文案计一次），主题占比按 1,375 分母算</li>
+        <li><strong>主题聚合</strong>：11 大主题的关键词规则匹配（一条评论可命中多主题）</li>
+        <li><strong>用途</strong>：真实用户 ID 可用于回访；长文本情感型金句素材；发现用户主动诉求；有效替代前端爬取的采样局限</li>
       </ul>
     </details>
     <div id="note-comments-notes" style="margin-bottom:16px;"></div>
@@ -876,13 +876,14 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
   if (nc) {
     const notesBox = document.getElementById('note-comments-notes');
     if (notesBox) {
-      const top6 = nc.note_details.slice(0,6);
-      const more = nc.note_details.length - top6.length;
-      notesBox.innerHTML = `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:12px;color:#475569;">
-        <strong>📎 覆盖笔记（Top 6 展示）：</strong><br>
-        ${top6.map(n=>`<a href="${n.url}" target="_blank" style="color:#4338ca;text-decoration:none;margin-right:12px;display:inline-block;margin-top:4px;">📝 ${n.title} <span style="color:#94a3b8;">(${n.comment_count}条)</span></a>`).join('')}
-        ${more>0 ? `<div style="color:#94a3b8;margin-top:6px;">…及其他 ${more} 篇</div>`:''}
-        <div style="color:#64748b;margin-top:8px;line-height:1.6;">${nc.source_note}</div>
+      notesBox.innerHTML = `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;font-size:12px;color:#475569;">
+        <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:13px;margin-bottom:8px;">
+          <div>📊 <strong>${(nc.total_raw||0).toLocaleString()}</strong> 条评论</div>
+          <div>📝 <strong>${(nc.total_notes||0).toLocaleString()}</strong> 篇笔记</div>
+          <div>👥 <strong>${(nc.unique_users||0).toLocaleString()}</strong> 位独立用户</div>
+          <div>🔍 <strong>${(nc.total_unique||0).toLocaleString()}</strong> 条独立内容</div>
+        </div>
+        <div style="color:#64748b;line-height:1.6;padding-top:6px;border-top:1px dashed #e2e8f0;">${nc.source_note}</div>
       </div>`;
     }
     const themesBox = document.getElementById('note-comments-themes');
@@ -898,8 +899,8 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
           </div>
           ${t.quotes.map(q=>`
             <div style="background:#f8fafc;border:1px solid #e0e7ff;border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12px;color:#475569;">
-              <span style="font-weight:600;color:#6366f1;">@${q.user}</span>：${q.quote}
-              <a href="https://www.xiaohongshu.com/discovery/item/${q.note_id}" target="_blank" style="color:#94a3b8;font-size:11px;margin-left:6px;text-decoration:none;">🔗 原笔记</a>
+              <span style="font-weight:600;color:#6366f1;">${q.user}</span>：${q.quote}
+              ${q.note_id?`<a href="https://www.xiaohongshu.com/discovery/item/${q.note_id}" target="_blank" style="color:#94a3b8;font-size:11px;margin-left:6px;text-decoration:none;">🔗 原笔记</a>`:''}
             </div>`).join('')}
         </div>`).join('');
     }
