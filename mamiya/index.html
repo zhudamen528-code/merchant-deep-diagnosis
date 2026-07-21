@@ -142,7 +142,7 @@
 <section id="s0">
   <div class="sect-h">
     <h2>⭐ 一屏诊断</h2>
-    <div class="sub">30 天核心信号 · 判断三兔当前经营状态</div>
+    <div class="sub">30 天核心信号 · 判断 Mamiya 当前经营状态</div>
   </div>
   <details class="caliber">
     <summary>数据口径说明</summary>
@@ -418,13 +418,16 @@
 
     <!-- 📝 笔记评论区 - 独立模块 -->
     <h3 style="margin: 32px 0 12px; font-size: 15px; color:#4338ca; background:#eef2ff; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #6366f1;">
-      📝 笔记评论洞察（近90d 7 篇头部笔记 · 直接跳转原笔记）
+      📝 笔记评论洞察（近90d Top 27 篇高GMV笔记 · 133 条独立评论 · 127 位独立用户）
     </h3>
     <details class="caliber" style="margin-bottom:12px;">
       <summary>数据源说明</summary>
       <ul>
         <li><strong>来源</strong>：浏览器抓取小红书前台公开评论区（不同于商品评价的"匿名订单评价"，笔记评论有真实用户 ID）</li>
-        <li><strong>覆盖</strong>：近90d GMV Top 7 篇里脊肉相关笔记，去重后 26 条高价值评论</li>
+        <li><strong>覆盖</strong>：近90d Mamiya 相关 GMV Top 27 篇笔记，覆盖 GMV ¥46.3 万（占 Mamiya 90d 总 GMV 30%+）</li>
+        <li><strong>样本</strong>：毛评论 220 条 → 去重后 <strong>133 条独立评论</strong>（同一用户在多篇笔记下的相同文案计一次）· <strong>127 位独立用户</strong></li>
+        <li><strong>主题聚合</strong>：基于关键词规则匹配 9 大主题（一条评论可命中多主题），标注热度百分比</li>
+        <li><strong>技术限制</strong>：小红书前端每篇仅暴露前 10 条根评论（"查看更多"反爬严格），故通过横切多篇高热笔记达到"海量"评估</li>
         <li><strong>用途</strong>：抓真实用户 ID 便于回访；获取长文本情感型金句素材；发现用户主动诉求</li>
       </ul>
     </details>
@@ -728,7 +731,7 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
           <div style="font-size:12px;color:#334155;">${o.leader_brands.join(' · ')}</div>
         </div>` : ''}
         <div style="background:#fff;border-left:3px solid ${st.border};padding:8px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#166534;">
-          💼 <strong>三兔行动：</strong>${o.santu_action}
+          💼 <strong>Mamiya 行动：</strong>${o.santu_action}
         </div>
       </div>`;
     }).join('');
@@ -873,10 +876,13 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
   if (nc) {
     const notesBox = document.getElementById('note-comments-notes');
     if (notesBox) {
+      const top6 = nc.note_details.slice(0,6);
+      const more = nc.note_details.length - top6.length;
       notesBox.innerHTML = `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:12px;color:#475569;">
-        <strong>📎 覆盖笔记：</strong><br>
-        ${nc.note_details.map(n=>`<a href="${n.url}" target="_blank" style="color:#4338ca;text-decoration:none;margin-right:12px;">📝 ${n.title}</a>`).join('')}
-        <div style="color:#64748b;margin-top:6px;">${nc.source_note}</div>
+        <strong>📎 覆盖笔记（Top 6 展示）：</strong><br>
+        ${top6.map(n=>`<a href="${n.url}" target="_blank" style="color:#4338ca;text-decoration:none;margin-right:12px;display:inline-block;margin-top:4px;">📝 ${n.title} <span style="color:#94a3b8;">(${n.comment_count}条)</span></a>`).join('')}
+        ${more>0 ? `<div style="color:#94a3b8;margin-top:6px;">…及其他 ${more} 篇</div>`:''}
+        <div style="color:#64748b;margin-top:8px;line-height:1.6;">${nc.source_note}</div>
       </div>`;
     }
     const themesBox = document.getElementById('note-comments-themes');
@@ -885,7 +891,7 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
         <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:10px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
             <span style="font-weight:700;font-size:14px;color:#3730a3;">${t.category}</span>
-            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">${t.quotes.length} 条</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">${t.count} 条 · ${t.pct}%</span>
           </div>
           <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:8px;">
             💡 <strong>用途建议：</strong>${t.usage_hint}
