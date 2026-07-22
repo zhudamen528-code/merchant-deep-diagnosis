@@ -418,15 +418,15 @@
 
     <!-- 📝 笔记评论区 - 独立模块 -->
     <h3 style="margin: 32px 0 12px; font-size: 15px; color:#4338ca; background:#eef2ff; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #6366f1;">
-      📝 笔记评论洞察（近90d 776 篇笔记 · 5,665 条评论 · 893 独立用户 · BI 数据集全量）
+      📝 笔记评论洞察（近180d 776 篇笔记 · 5,665 条评论 · 893 独立用户 · 1,527 独立内容（其中 509 条长评高价值素材） · BI 数据集全量）
     </h3>
     <details class="caliber" style="margin-bottom:12px;">
       <summary>数据源说明</summary>
       <ul>
         <li><strong>来源</strong>：RedBI dataset <code>635971</code>「近180天笔记评论区数据」，底表 <code>redcdm.iceberg_dm_ecm_comment_metrics_td_df</code>，非浏览器爬取，是官方数据集全量</li>
         <li><strong>过滤</strong>：seller_id = <code>66ee9f75a9bf3400163aabe1</code>（温小张的店），时间 2026-04-22 ~ 2026-07-20（近90d），最新分区 <code>20260720</code></li>
-        <li><strong>全量口径</strong>：<strong>5,665 条评论</strong>（每条 comment_id 唯一），覆盖 <strong>776 篇笔记</strong>，<strong>893 位独立评论用户</strong></li>
-        <li><strong>分析口径</strong>：按评论 <code>content</code> 去重得 <strong>1,095 条独立评论内容</strong>（同一用户在多篇笔记下重复的相同文案计一次），主题占比按 1,095 分母算</li>
+        <li><strong>全量口径</strong>：<strong>5,665 条评论</strong>（每条 comment_id 唯一），覆盖 <strong>776 篇笔记</strong>，<strong>893 位独立评论用户</strong>；⚠️ 已识别 51 条为「同一用户复制粘贴到 5+ 篇笔记」的刷评行为，在主题分析中不做特殊处理但透明标注</li>
+        <li><strong>分析口径</strong>：按评论 <code>content</code> 去重得 <strong>1,527 条独立评论内容</strong>（同一用户在多篇笔记下重复的相同文案计一次），主题占比按 1,527 分母算；其中 <strong>509 条长评高价值素材</strong>（≥15字且非刷评），是真实用户主动写的种草/建议/情绪内容，主题聚合优先展示这类内容作为金句</li>
         <li><strong>主题聚合</strong>：11 大主题的关键词规则匹配（一条评论可命中多主题）</li>
         <li><strong>用途</strong>：真实用户 ID 可用于回访；长文本情感型金句素材；发现用户主动诉求；有效替代前端爬取的采样局限</li>
       </ul>
