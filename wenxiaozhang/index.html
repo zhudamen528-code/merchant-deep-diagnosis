@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>温小张的店 · 头部商家深度诊断 · 2026-07</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { font-size: 14px; }
+  body { font-family: -apple-system, "SF Pro Text", "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif; background:#f5f7fa; color:#1f2937; line-height:1.6; }
+  a { color:#0891b2; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  /* Container */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+  /* Header */
+  .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:#fff; padding: 32px 16px 40px; }
+  .hero h1 { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+  .hero .sub { margin-top: 8px; opacity: 0.85; font-size: 13px; }
+  .hero .meta { display:flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+  .hero .meta span { background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 20px; font-size: 12px; backdrop-filter: blur(10px); }
+
+  /* Section */
+  section { background:#fff; margin: 16px 0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow:hidden; }
+  .sect-h { padding: 18px 20px 8px; border-bottom: 1px solid #eef0f3; }
+  .sect-h h2 { font-size: 18px; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+  .sect-h .sub { font-size: 12px; color: #6b7280; margin-top: 4px; }
+  .sect-body { padding: 16px 20px; }
+
+  /* Caliber card */
+  details.caliber { background: #f8fafc; border-left: 3px solid #94a3b8; padding: 10px 14px; margin: 12px 20px 0; border-radius: 6px; font-size: 12px; color:#475569; }
+  details.caliber summary { cursor:pointer; font-weight: 600; color:#334155; user-select:none; }
+  details.caliber summary::-webkit-details-marker { display:none; }
+  details.caliber summary::before { content: "📊 "; }
+  details.caliber summary::after { content: " · 点击展开"; opacity:0.5; font-weight:400; }
+  details.caliber[open] summary::after { content: " · 点击折叠"; }
+  details.caliber ul { margin: 8px 0 0 16px; }
+  details.caliber li { margin: 2px 0; }
+
+  /* KPI cards */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 8px; }
+  .kpi { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; }
+  .kpi .label { font-size: 12px; color:#6b7280; }
+  .kpi .value { font-size: 24px; font-weight: 700; color: #0f172a; margin-top: 4px; letter-spacing: -0.5px; }
+  .kpi .delta { font-size: 12px; margin-top: 6px; padding: 2px 8px; border-radius: 12px; display:inline-block; }
+  .kpi .delta.up { background:#d1fae5; color:#065f46; }
+  .kpi .delta.down { background:#fee2e2; color:#991b1b; }
+  .kpi .delta.warn { background:#fef3c7; color:#92400e; }
+  .kpi.alert { border-left: 4px solid #ef4444; }
+  .kpi.good { border-left: 4px solid #10b981; }
+
+  /* Signal card */
+  .signals { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin: 12px 0; }
+  .signal { padding: 14px 16px; border-radius: 10px; border-left: 4px solid; }
+  .signal.warn { background: #fffbeb; border-color: #f59e0b; }
+  .signal.alert { background: #fef2f2; border-color: #ef4444; }
+  .signal.good { background: #f0fdf4; border-color: #10b981; }
+  .signal.info { background: #eff6ff; border-color: #3b82f6; }
+  .signal .title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .signal .desc { font-size: 12px; color: #4b5563; }
+
+  /* Chart */
+  .chart { width: 100%; height: 320px; margin-top: 8px; }
+  .chart.small { height: 260px; }
+
+  /* Table */
+  table { width:100%; border-collapse: collapse; font-size: 13px; }
+  table th, table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+  table th { background: #f8fafc; color: #475569; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  table tr.self { background: #fef3c7 !important; font-weight: 600; }
+  table tr:hover { background: #f9fafb; }
+  table .up { color: #059669; font-weight: 600; }
+  table .down { color: #dc2626; font-weight: 600; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Note cards */
+  .notes { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 12px; }
+  .note-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; background: #fff; display:flex; flex-direction:column; }
+  .note-card .note-rank { display:inline-block; background:#f59e0b; color:#fff; font-size:11px; padding:2px 8px; border-radius:12px; margin-bottom:8px; align-self: flex-start; }
+  .note-card .note-title { font-size: 14px; font-weight: 600; color: #1f2937; margin-bottom: 8px; line-height: 1.4; }
+  .note-card .note-meta { font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+  .note-card .note-gmv { font-size: 18px; font-weight: 700; color: #d97706; margin: 8px 0; }
+  .note-card .note-btn { display:inline-block; margin-top:auto; background:#ff2442; color:#fff; padding: 8px 12px; border-radius: 6px; font-size: 12px; text-align: center; transition: opacity 0.2s; }
+  .note-card .note-btn:hover { opacity: 0.85; text-decoration: none; }
+
+  /* Coming soon placeholder */
+  .placeholder { padding: 40px 20px; text-align: center; color: #94a3b8; background: repeating-linear-gradient(45deg, #f8fafc, #f8fafc 10px, #f1f5f9 10px, #f1f5f9 20px); border-radius: 10px; margin: 12px 0; }
+
+  /* TOC */
+  .toc { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #e5e7eb; padding: 10px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; z-index: 10; }
+  .toc a { display: inline-block; margin-right: 16px; font-size: 13px; color: #64748b; padding: 4px 0; }
+  .toc a.active { color: #667eea; border-bottom: 2px solid #667eea; }
+
+  /* Footer */
+  footer { text-align: center; padding: 24px 16px; color: #94a3b8; font-size: 12px; }
+
+  /* Mobile tweak */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 20px; }
+    .kpi .value { font-size: 20px; }
+    .sect-h h2 { font-size: 16px; }
+    .chart { height: 260px; }
+    table { font-size: 12px; }
+    table th, table td { padding: 8px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>🎯 温小张的店 · 头部商家深度诊断</h1>
+    <div class="sub">肉类速食主营 · 多品类合集型商家</div>
+    <div class="meta">
+      <span>📅 数据周期：2026-06-17 ~ 2026-07-16（近30天）</span>
+      <span>👤 AM：大门（朱锦程）</span>
+      <span>🏢 五组·休食</span>
+      <span>🕐 报告生成：2026-07-17</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <a href="#s0">⭐ 一屏诊断</a>
+    <a href="#s1">📈 生意分析</a>
+    <a href="#s2">🎯 品类结构</a>
+    <a href="#s3">🔥 竞品案例</a>
+    <a href="#s4">💬 细分品类机会</a>
+    <a href="#s5">💭 客户反馈</a>
+    <a href="#s6">👥 私域老客</a>
+    <a href="#s7">⚠️ 合规风险</a>
+    <a href="#s8">🚀 下阶段建议</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ 0. 一屏诊断 ============ -->
+<section id="s0">
+  <div class="sect-h">
+    <h2>⭐ 一屏诊断</h2>
+    <div class="sub">30 天核心信号 · 判断 温小张 当前经营状态</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>DGMV</strong>：dataset 1922 「人货场成交分析」T-1 苍穹当前挂户数据；商家口径；不含退款</li>
+      <li><strong>时间窗</strong>：本期 2026-06-17~2026-07-16（30天），上期 2026-05-18~2026-06-16（30天）</li>
+      <li><strong>环比</strong>：(本期 - 上期) / 上期 × 100%</li>
+      <li><strong>专营度阈值</strong>：Top1 类目占比 ≥ 80% 记为「单品类专营」；50-80% 为「主副营」；<50% 为「多品类合集」</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div class="kpis">
+      <div class="kpi alert">
+        <div class="label">近30d 总 DGMV</div>
+        <div class="value">122.79 万</div>
+        <div class="delta down">环比 -19.4%</div>
+      </div>
+      <div class="kpi">
+        <div class="label">主营品类占比</div>
+        <div class="value">39%</div>
+        <div class="delta warn">多品类合集</div>
+      </div>
+      <div class="kpi good">
+        <div class="label">老客占比</div>
+        <div class="value">97.9%</div>
+        <div class="delta up">5,929 位老客支撑</div>
+      </div>
+      <div class="kpi">
+        <div class="label">图文/视频占比</div>
+        <div class="value">96 : 4</div>
+        <div class="delta warn">视频短板明显</div>
+      </div>
+    </div>
+
+    <div class="signals">
+      <div class="signal alert">
+        <div class="title">🚨 商品笔记环比 -22%（第一负贡献）</div>
+        <div class="desc">近30d 商品笔记 ¥79.1万 → 上30d ¥101.5万，环比 -22%，是全店 -19.4% 的主要拉动因素；普通商卡也同步 -11.5%。核心场域集中在图文笔记 + 商卡，需要重点复盘选题节奏和头部达人合作是否松动。</div>
+      </div>
+      <div class="signal good">
+        <div class="title">✅ 一人食小规格心智已跑通</div>
+        <div class="desc">Top1 SKU「卤金钱腱 5袋装 100g」近30d ¥47.8万，独占店铺 39%；「10袋装」+「6袋装」等一人食规格总计 ¥66.9万，验证「量小/多口味/独立包装」是核心需求，可复制到鸡翅/鸭舌/牛肋排。</div>
+      </div>
+      <div class="signal good">
+        <div class="title">✅ 老客盘是护城河</div>
+        <div class="desc">老客(≥3次) 5,929 人贡献 ¥120.2 万，占 GMV 97.9%；新客 + 潜客合计仅 73 人 · ¥1.2 万（1%）。极端老客型商家，说明产品复购力强、但需要拉新工程。</div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 用户诉求信号最响：无辣/真空/独立包装</div>
+        <div class="desc">笔记评论区 1,095 条独立内容里，「产品建议 · 诉求」类占 15.3%（167 条第一大主题），主要集中在无辣版/独立包装/真空/保质期，是明确的产品迭代路径。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. 生意分析 ============ -->
+<section id="s1">
+  <div class="sect-h">
+    <h2>📈 1. 生意分析 · 场域拆解</h2>
+    <div class="sub">近 30 天 vs 上 30 天 · 4 大场域 DGMV 环比</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922「人货场成交分析」·「载体划分(店播/k播/笔记/商卡)」字段</li>
+      <li><strong>场域定义</strong>：普通商卡=搜索/推荐商卡；商品笔记=挂车图文/视频；店播=商家自播；K播=达人带货；普通笔记=无挂车但有商品成交归因</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div id="chart-carrier" class="chart"></div>
+
+    <div class="table-wrap" style="margin-top:16px;">
+      <table>
+        <thead>
+          <tr><th>场域</th><th>本期 DGMV</th><th>上期 DGMV</th><th>环比</th><th>本期占比</th></tr>
+        </thead>
+        <tbody id="tbl-carrier"></tbody>
+      </table>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📝 商品笔记过程指标（近30d）</h3>
+    <div class="kpis">
+      <div class="kpi">
+        <div class="label">图文笔记（购买单数）</div>
+        <div class="value">6,217 <span style="font-size:12px;color:#94a3b8;">单</span></div>
+        <div class="delta up">DGMV ¥77.2万</div>
+      </div>
+      <div class="kpi">
+        <div class="label">视频笔记（购买单数）</div>
+        <div class="value">237 <span style="font-size:12px;color:#94a3b8;">单</span></div>
+        <div class="delta warn">DGMV ¥2.5万</div>
+      </div>
+      <div class="kpi">
+        <div class="label">图文单均</div>
+        <div class="value">¥124</div>
+        <div class="delta up">占商笔 97%</div>
+      </div>
+      <div class="kpi">
+        <div class="label">视频单均</div>
+        <div class="value">¥105</div>
+        <div class="delta warn">占商笔 3%</div>
+      </div>
+    </div>
+    <div class="signal info" style="margin-top:12px;">
+      <div class="title">💡 图文强驱动 · 视频严重缺位</div>
+      <div class="desc">图文单量是视频的 <strong>26 倍</strong>，DGMV 是 30 倍——远超行业均衡水位（同类型商家一般在 60:40 附近）。<strong>诊断</strong>：温小张的「现卤/手工/温州特产」调性天然适合视频呈现（切开的多汁肉/热气/独立小袋开启感），当前视频严重不足是一个明确扩展方向。可先与 3-5 位美食探店/一人食垂类中腰部买手做「探源工厂」类合作视频。</div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📺 店播过程指标（近30d）</h3>
+    <div class="signal alert">
+      <div class="title">🚨 店播几乎缺位（¥0）</div>
+      <div class="desc">近30d 店播 DGMV 为 0，全店无自播场次；K播也仅 ¥0.4万（占 0.3%）。相比 商笔 ¥79万 + 商卡 ¥43万，直播场域完全没跑起来。<strong>建议</strong>：熟食卤味自播天然适合"现场切/现场吃/浓汤煮"的沉浸感呈现，可从 1 场/周试点开始，主播由张老板本人出镜（IP 型商家的天然优势）。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. 品类结构 ============ -->
+<section id="s2">
+  <div class="sect-h">
+    <h2>🎯 2. 品类结构 · 专营度诊断</h2>
+    <div class="sub">7+ 款卤味子品线 · 多品类合集 · Top1 卤金钱腱/卤牛腱占 39%</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922，按商品名称手动归一到 7 大卤味子品线</li>
+      <li><strong>类目角色</strong>：主营=占比 Top1；副营=Top2-3；长尾=Top4-6</li>
+      <li><strong>专营度</strong>：Top1 占 39% &lt; 50% → 多品类合集型；说明店铺不押单品，靠"卤味全家福"心智</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div id="chart-cat" class="chart"></div>
+  </div>
+</section>
+
+<!-- ============ 3. 竞品案例 ============ -->
+<section id="s3">
+  <div class="sect-h">
+    <h2>🔥 3. 同赛道启示 · 熟食卤味/温州特产</h2>
+    <div class="sub">近30d 熟食卤味观察 · 温小张 领跑「手工现卤/温州特产」赛道 · 参考商家动作</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922，卤味/熟食相关三级类目全平台商家（L4「肉制品」未打标，用 L3 兜底）</li>
+      <li><strong>观察范围</strong>：近30d 商家 GMV Top20 + 相关笔记评论生态</li>
+      <li><strong>温小张 位置</strong>：熟食卤味个人 IP 型商家的头部，¥122.8万 GMV 显著领先其他手工卤味商家</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <!-- 赛道大势 -->
+    <div class="signals">
+      <div class="signal good">
+        <div class="title">🏆 温小张 是"个人 IP × 手工现卤"的头部代表</div>
+        <div class="desc">近30d 熟食卤味类目中，同类"个人 IP + 手工现卤 + 地域特产"路径商家如「莫氏鸡煲的店」（¥23万）、「小凯家纯手工棒棒鸡的店」（¥2.3万）等，温小张 ¥122.8万 显著领跑。品牌代表如「札萨」「五芳斋」等虽有品牌背书但用户心智偏工业化预包装，与温小张的路径互补。</div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 值得对标：莫氏鸡煲的店（¥23万）</div>
+        <div class="desc">同为"个人 IP × 地域名菜"路径，主打鸡煲/鸡锅套餐，SKU 结构更聚焦 3-5 款主打；对标可学习「爆款单品 + 场景组合」的做法（拼盘/双人餐/家庭餐）。</div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 场景对手：札萨旗舰店 / 麻六记 / 优形</div>
+        <div class="desc">札萨（云南酱卤）、麻六记（地域菜品牌化）、优形（低脂即食肉）都在争夺"熟食即食"场景的 20-40 元档，虽然品类差异大但用户购买决策场景高度重叠。<strong>启示</strong>：品牌型的强项在标准化 & 品牌背书，个人 IP 型的强项在真人温度 & 手工感 — 强化温小张的手工现卤过程和张老板本人 IP 是最大差异化。</div>
+      </div>
+    </div>
+
+    <!-- 增长者共性 -->
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">💡 头部对标商家画像（供 温小张 参考）</h3>
+    <div class="signals">
+      <div class="signal info">
+        <div class="title">🎯 莫氏鸡煲的店（近30d ¥23万）</div>
+        <div class="desc">个人 IP × 川菜地域名菜路径。<strong>可借鉴</strong>：SKU 高度聚焦（3-5 款主打），套餐结构清晰（一人/双人/家庭），主理人真人出镜频率高。</div>
+      </div>
+      <div class="signal info">
+        <div class="title">🎯 小凯家纯手工棒棒鸡的店（¥2.3万）</div>
+        <div class="desc">同为「个人 IP × 手工卤味」路径体量较小，但笔记视频的"现拌/现淋汁"视觉冲击强。<strong>可借鉴</strong>：视频呈现打法（温小张目前视频仅占 3%，是明确洼地）。</div>
+      </div>
+      <div class="signal info">
+        <div class="title">🎯 札萨旗舰店（¥1.3万）</div>
+        <div class="desc">云南酱卤品牌型，主打"云南地域特产 + 酱卤工艺"。<strong>可借鉴</strong>：把"温州"地域标签做成产品线（如"温州老卤系列"），强化差异化。</div>
+      </div>
+    </div>
+
+    <!-- 高转化笔记案例 - 展示 温小张 自己的 -->
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">🎬 温小张 自身高热笔记（近90d · 全平台笔记覆盖 776 篇 · 供选题参考）</h3>
+    <p style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">💡 近半年 776 篇挂车/无挂车笔记，评论区总计 5,665 条真实用户反馈，是 温小张 内容资产的核心底盘。</p>
+    <div class="notes" id="notes-grid"></div>
+  </div>
+</section>
+
+<!-- ============ 4-8 数据待补 ============ -->
+<section id="s4">
+  <div class="sect-h">
+    <h2>💬 4. 细分品类机会</h2>
+    <div class="sub">温小张 7 大卤味子品线 + 3 个跳脱扩品方向</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922 + 笔记评论 dataset 635971 综合信号</li>
+      <li><strong>子品类</strong>：按温小张商品名称手动归一到 7 个子品线（卤金钱腱/卤牛肋排/手撕大鸡腿等）</li>
+      <li><strong>机会挖掘</strong>：结合评论区诉求（无辣/独立包装/温州特产/送礼）+ 视频缺位信号，给出 3 个扩品/扩场景机会</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <!-- 全景表 -->
+    <h3 style="font-size:15px;color:#334155;margin-bottom:8px;">🗺 温小张 7 大子品线全景（近30d）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>子品类</th><th>近30d GMV</th><th>商家数</th><th>商品数</th><th>环比</th><th>商家均值</th></tr>
+        </thead>
+        <tbody id="tbl-subcategories"></tbody>
+      </table>
+    </div>
+    <p style="font-size:12px;color:#6b7280;margin-top:6px;">🎯 = 温小张 已覆盖 · 🔥 = 高增机会</p>
+
+    <!-- 机会子方向 -->
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">🎯 机会子方向深度分析</h3>
+    <div id="opp-list"></div>
+
+    <div class="signal info" style="margin-top:16px;">
+      <div class="title">💡 综合洞察</div>
+      <div class="desc" id="community-insight-v2"></div>
+    </div>
+  </div>
+</section>
+
+<section id="s5">
+  <div class="sect-h">
+    <h2>💭 5. 客户反馈 · 商品评价洞察</h2>
+    <div class="sub"><span id="fb-source-info"></span></div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：RedBI dataset 8033「订单晒单评价自助分析数据集」</li>
+      <li><strong>过滤条件</strong>：店铺id = 温小张的店（<code>66ee9f75a9bf3400163aabe1</code>），时间近90d</li>
+      <li><strong>样本量</strong>：<strong>1,576 条</strong>有效评价（评价内容非空，全量拉取）</li>
+      <li><strong>主题分类</strong>：基于关键词规则匹配（负反馈 6 类 / 表扬 6 类），一条评价可命中多个主题</li>
+      <li><strong>"多少条提及"口径</strong>：全量样本的真实分布，可作决策依据</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <!-- 卖家口碑总览 -->
+    <div id="shop-rating-box"></div>
+
+    <!-- 评分分布图 -->
+    <h3 style="margin: 20px 0 12px; font-size: 15px; color:#334155;">📊 评分分布（近90d）</h3>
+    <div id="chart-score-dist" style="height:260px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px;"></div>
+
+    <!-- 品类聚合表 -->
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📦 按品类聚合（找到"到底对啥有意见"）</h3>
+    <div id="tbl-category-summary" style="margin-bottom:12px;"></div>
+
+    <!-- 品类 × 差评主题 -->
+    <h3 style="margin: 20px 0 12px; font-size: 15px; color:#334155;">🔍 各品类下的负反馈主题（差评+3星以下+明确诉求）</h3>
+    <div id="category-negatives" style="margin-bottom:16px;"></div>
+
+    <!-- 负反馈/需求区 -->
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">
+      🔴 全品类汇总 · 负反馈 & 需求主题
+    </h3>
+    <p style="font-size:12px;color:#6b7280;margin-bottom:12px;">💡 每条评价可能提及多主题；数字为该主题在全量 1,576 条评价中的出现次数</p>
+    <div id="feedback-themes-v2" style="margin-top:12px;"></div>
+
+    <!-- ⭐ 表扬素材库 -->
+    <h3 style="margin: 32px 0 12px; font-size: 15px; color:#92400e; background:#fff8f1; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+      ⭐ 表扬素材库（拿来做二次内容 · 转化新客）
+    </h3>
+    <p style="font-size:12px;color:#78716c;margin-bottom:12px;">💡 每一条真实评价都是一句「金句素材」，可以直接引用到笔记、直播口播、包装卡片、订单短信、朋友圈里</p>
+    <div id="positive-themes"></div>
+
+    <!-- 📝 笔记评论区 - 独立模块 -->
+    <h3 style="margin: 32px 0 12px; font-size: 15px; color:#4338ca; background:#eef2ff; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #6366f1;">
+      📝 笔记评论洞察（近90d 776 篇笔记 · 5,665 条评论 · 893 独立用户 · BI 数据集全量）
+    </h3>
+    <details class="caliber" style="margin-bottom:12px;">
+      <summary>数据源说明</summary>
+      <ul>
+        <li><strong>来源</strong>：RedBI dataset <code>635971</code>「近180天笔记评论区数据」，底表 <code>redcdm.iceberg_dm_ecm_comment_metrics_td_df</code>，非浏览器爬取，是官方数据集全量</li>
+        <li><strong>过滤</strong>：seller_id = <code>66ee9f75a9bf3400163aabe1</code>（温小张的店），时间 2026-04-22 ~ 2026-07-20（近90d），最新分区 <code>20260720</code></li>
+        <li><strong>全量口径</strong>：<strong>5,665 条评论</strong>（每条 comment_id 唯一），覆盖 <strong>776 篇笔记</strong>，<strong>893 位独立评论用户</strong></li>
+        <li><strong>分析口径</strong>：按评论 <code>content</code> 去重得 <strong>1,095 条独立评论内容</strong>（同一用户在多篇笔记下重复的相同文案计一次），主题占比按 1,095 分母算</li>
+        <li><strong>主题聚合</strong>：11 大主题的关键词规则匹配（一条评论可命中多主题）</li>
+        <li><strong>用途</strong>：真实用户 ID 可用于回访；长文本情感型金句素材；发现用户主动诉求；有效替代前端爬取的采样局限</li>
+      </ul>
+    </details>
+    <div id="note-comments-notes" style="margin-bottom:16px;"></div>
+    <div id="note-comments-themes"></div>
+
+    <div class="signal info" style="margin-top:16px;">
+      <div class="title">💡 综合建议</div>
+      <div class="desc">
+        <strong>短期（1-2 周可上）</strong>：<br>
+        ① 「无辣版/微辣版」新 SKU：笔记评论区 167 条"产品诉求"是第一大主题，无辣/独立包装呼声最响，可从卤金钱腱首发<br>
+        ② 用「品质盛赞 108 条 + 手工卤味制法 92 条」高热评论做「用户金句集」笔记（用户已写好的种草文案直接复用）<br>
+        ③ 视频缺位补齐：图文/视频 96:4 严重失衡，找 3-5 位美食/一人食垂类中腰部买手拍「工厂溯源 + 现卤过程」类视频<br><br>
+        <strong>中期（1-2 月）</strong>：<br>
+        ④ 「温州伴手礼组合装」：情绪主题「温州/家乡」17 条 + 送礼场景 22 条 = 39 条自发提及，可做节日礼盒（3-4 款卤味 + 温州文化包装）<br>
+        ⑤ 「下酒夜宵专线」：卤味天然场景但笔记评论仅 7 条（0.6%）提及，还未做出场景心智，可做「深夜下酒卤味」系列内容<br>
+        ⑥ 店播从 0 起步：熟食卤味自播天然适合"现场切/现场吃"，先 1 场/周试点，主播由张老板本人出镜（IP 型商家独特优势）<br><br>
+        <strong>长期（Q3-Q4）</strong>：<br>
+        ⑦ 品质质疑正面回应：30 条评论提及"不新鲜/加科技/水泡/廉价"，需拍卤汤/工厂/温州老作坊等溯源内容对冲信任缺口<br>
+        ⑧ 老客数字化沉淀：97.9% 老客占比是护城河但也意味着新客通道太窄，把 5,929 老客沉淀到私域，Q4 做"老带新裂变卡"
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s6">
+  <div class="sect-h">
+    <h2>👥 6. 私域老客</h2>
+    <div class="sub">复购结构 · ARPU · 老客健康度</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922，按「新老客」字段拆分</li>
+      <li><strong>老客(≥3次)</strong>：近30d 有购买 + 历史累计购买 ≥ 3 次</li>
+      <li><strong>新客(1-2次)</strong>：近30d 有购买 + 历史累计购买 1-2 次</li>
+      <li><strong>180天流失</strong>：过去 180 天曾购买、近30d 有回购</li>
+      <li><strong>潜客</strong>：其他类型</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div class="kpis">
+      <div class="kpi good">
+        <div class="label">老客(≥3次) 贡献</div>
+        <div class="value">97.9%</div>
+        <div class="delta up">¥120.2万 · 5,929 人</div>
+      </div>
+      <div class="kpi">
+        <div class="label">老客 30 天 ARPU</div>
+        <div class="value">¥203</div>
+        <div class="delta up">高客单高频型</div>
+      </div>
+      <div class="kpi warn">
+        <div class="label">新客占比</div>
+        <div class="value">0.5%</div>
+        <div class="delta warn">拉新通道极窄</div>
+      </div>
+      <div class="kpi warn">
+        <div class="label">180 天流失回购</div>
+        <div class="value">79 人</div>
+        <div class="delta warn">召回机制可优化</div>
+      </div>
+    </div>
+
+    <div id="chart-user-segments" class="chart small" style="margin-top:16px;"></div>
+
+    <div class="signal good" style="margin-top:12px;">
+      <div class="title">✨ 老客盘极其稳固是最大资产</div>
+      <div class="desc">5,929 名老客支撑 97.9% GMV，人均 ARPU ¥203（比一般休食商家高 3-5 倍），说明 温小张 的产品复购力和用户粘性都非常强，这是很多商家梦寐以求的护城河。<br><strong>下阶段增长机会</strong>：① 老客 ARPU 已经很高但仍有空间，可通过「拼盘全家福/家庭大礼包」等高客单套装继续提升；② 新客占比仅 0.5%，是明显的短板，需通过站外投放/新达人合作/9.9-19.9 元试吃装/评价返券拉新；③ 把 5,929 老客沉淀到私域池（企业微信/群），做"老带新裂变"闭环，提升 LTV。</div>
+    </div>
+  </div>
+</section>
+
+<section id="s7">
+  <div class="sect-h">
+    <h2>⚠️ 7. 合规风险预警</h2>
+    <div class="sub">近30d 违规明细 · 类目对标</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 28963「违规中心全量」</li>
+      <li><strong>时间窗</strong>：近30d</li>
+      <li><strong>说明</strong>：黑盒=商家/主播不可见（本报告不展示）；白盒=商家侧可查询</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div class="kpis">
+      <div class="kpi warn">
+        <div class="label">近30d 白盒违规</div>
+        <div class="value">2 条</div>
+        <div class="delta warn">笔记内容 + 账号治理</div>
+      </div>
+      <div class="kpi">
+        <div class="label">主要类型</div>
+        <div class="value" style="font-size:18px;">笔记内容 · 账号治理</div>
+        <div class="delta warn">博眼球 + 工业化量产号</div>
+      </div>
+      <div class="kpi good">
+        <div class="label">整体合规状况</div>
+        <div class="value" style="font-size:18px;">✅ 基本可控</div>
+        <div class="delta up">量级极低但需关注方向</div>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:16px;">
+      <table>
+        <thead><tr><th>风险域</th><th>子风险域</th><th>数量</th></tr></thead>
+        <tbody id="tbl-violation"></tbody>
+      </table>
+    </div>
+
+    <div class="signal info" style="margin-top:12px;">
+      <div class="title">💡 主要风险点</div>
+      <div class="desc">近30d 白盒违规集中在 <strong>笔记内容生态（博眼球骗互动 1 条）</strong> 和 <strong>问题账号（工业化量产号 1 条）</strong>。<strong>需重点整改</strong>：矩阵账号内容避免"标题党/骗互动"套路；同一模板高频量产账号可能被判为工业化，达人合作要求"至少两种拍摄场景/两种脚本"。</div>
+    </div>
+  </div>
+</section>
+
+<section id="s8">
+  <div class="sect-h">
+    <h2>🚀 8. 下阶段建议</h2>
+    <div class="sub">综合诊断 · 8月节点 · Q3 品方向（口味颗粒度）· 内容方向</div>
+  </div>
+  <div class="sect-body">
+    <h3 style="font-size: 15px; color:#334155; margin-bottom: 12px;">🎯 一句话诊断</h3>
+    <div class="signal info">
+      <div class="title">温小张 是"个人 IP × 手工现卤 × 温州特产"的头部代表，一人食小规格心智已跑通，下阶段核心在扩场景/补视频/拉新</div>
+      <div class="desc">温小张 近30d ¥122.8万，Top1 SKU 卤金钱腱 5袋装 占 39%，一人食小规格是最强需求信号；老客盘 97.9% 极稳，笔记评论 5,665 条真实反馈支撑产品迭代方向。近30d 环比 -19.4% 主要来自商品笔记 -22%，需要复盘选题节奏 + 头部达人合作稳定性。核心：<strong>无辣版/独立包装新 SKU（评论第一大诉求）+ 视频场域从 3% 拉起（工厂溯源 + IP 出镜）+ 温州伴手礼组合（送礼 + 情感）+ 店播从 0 试点</strong>。</div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📅 8-9 月节点日历</h3>
+    <div class="signals">
+      <div class="signal warn">
+        <div class="title">📆 8月：立秋（8/7）+ 七夕（8/29）</div>
+        <div class="desc"><strong>卤味方向</strong>：立秋"贴秋膘"→ 卤牛肋排/卤鸡腿"补肉补气"话术；七夕→ 双人下酒套餐（卤味拼盘 + 温州特产鸭舌）</div>
+      </div>
+      <div class="signal warn">
+        <div class="title">📆 9月：开学季 + 中秋（9/17-19）</div>
+        <div class="desc"><strong>开学季</strong>：宿舍党/职场党场景（一人食小包装追剧夜宵）；<strong>中秋</strong>：温州老家伴手礼组合（卤金钱腱 + 卤牛肋排 + 可乐鸭舌"温州三宝"礼盒）</div>
+      </div>
+      <div class="signal info">
+        <div class="title">📆 Q4 前瞻：10-11 月冷天 + 双11 + 双12</div>
+        <div class="desc">卤味冬季进入旺季（下酒 + 火锅配菜心智）；大促重点备货 Top5 SPU（卤金钱腱系列 5/10/6 袋装）+ 新拓无辣版拉新试装</div>
+      </div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">🍜 Q3 品方向建议（口味颗粒度）</h3>
+    <div class="signals">
+      <div class="signal good">
+        <div class="title">🌾 主线：一人食小规格全品复制</div>
+        <div class="desc"><strong>推荐动作</strong>：<br>• 卤金钱腱 5/10/6 袋装已跑通（¥66.9万），复制到卤牛肋排/手撕鸡腿/熏鸡翅<br>• 「无辣版」卤金钱腱（笔记评论 15.3% 诉求最响）<br>• 「小份试吃装 3 袋」用于新客拉新（19.9 元档）<br>• 独立真空袋优化（评论多次提及"开袋更方便"）</div>
+      </div>
+      <div class="signal good">
+        <div class="title">🎁 蓝海：温州伴手礼组合线</div>
+        <div class="desc"><strong>推荐动作</strong>：<br>• 「温州三宝」礼盒（卤金钱腱 + 卤牛肋排 + 可乐鸭舌）<br>• 温州老家文化包装（瓯江/雁荡/瑞安元素）<br>• 中秋/春节走"回老家伴手礼"心智<br>笔记评论「温州/家乡」17 条 + 送礼 22 条 = 39 条自发信号，未做透</div>
+      </div>
+      <div class="signal info">
+        <div class="title">🍺 试验：下酒夜宵场景专线</div>
+        <div class="desc"><strong>创新思路</strong>：<br>• "深夜下酒 3 件套"：卤金钱腱 + 可乐鸭舌 + 熏鸡翅<br>• "追剧一人食"：微波 3 分钟即食礼包<br>• "周末双人餐"：拼盘 + 精酿啤酒 CP 联名</div>
+      </div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📝 内容方向建议</h3>
+    <ol style="padding-left: 20px; line-height: 2;">
+      <li><strong>视频短板重点补齐</strong>：图文/视频 96:4 严重失衡，找 3-5 位美食探店/一人食垂类中腰部买手拍「工厂溯源 + 现卤过程 + 张老板出镜」类视频</li>
+      <li><strong>品质质疑正面回应</strong>：30 条评论提及"不新鲜/加科技/水泡/廉价"，拍卤汤翻滚/工厂全景/温州老作坊等真实溯源内容对冲</li>
+      <li><strong>规避雷区</strong>：白盒违规集中在「博眼球骗互动 + 工业化量产号」，达人合作要求"至少两种拍摄场景/两种脚本"，避免账号被判为量产号</li>
+      <li><strong>季节内容准备</strong>：8月立秋提前2周铺"贴秋膘"卤牛肋排；9月中秋前3周铺"温州老家伴手礼"礼盒组合；开学季前2周铺"宿舍党/职场党一人食"场景</li>
+    </ol>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">🎪 场域动作建议</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>场域</th><th>当前状态</th><th>建议动作</th></tr></thead>
+        <tbody>
+          <tr><td>商品笔记 (64%)</td><td>-22.0% 主要下滑</td><td>头部达人合作稳定性复盘，补拍无辣版/温州伴手礼新品笔记，视频占比从 3% 拉起</td></tr>
+          <tr><td>普通商卡 (35%)</td><td>-11.5% 温和下滑</td><td>SEO 优化 + 关键词覆盖新品（无辣/一人食/温州特产/送礼）</td></tr>
+          <tr><td>K播 (0.3%)</td><td>-73.8% 极弱</td><td>补充 3-5 个一人食/夜宵/美食探店垂类中腰部买手</td></tr>
+          <tr><td>店播 (0%)</td><td>缺位</td><td>1场/周试点，张老板本人出镜"现场切/现场吃/工厂溯源"</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">💡 3 个"不太离谱"的跳脱思考</h3>
+    <div class="signals">
+      <div class="signal info">
+        <div class="title">💡 1. "温州老家伴手礼"礼盒线</div>
+        <div class="desc">温小张最大差异化不是"卤味"而是"温州特产"。评论区 17 条自发提及"温州/家乡/家乡味"，可做一条独立礼盒线（温州三宝/瓯江系列/雁荡系列），瞄准"回老家/送同事/伴手礼"场景，客单价可拉到 200+ 元档。</div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 2. "张老板直播工厂日"</div>
+        <div class="desc">解决品质质疑 + 视频缺位 + 店播缺位 三个短板一次性：每周固定 1 场"张老板带你逛温州现卤工厂"直播（1-1.5 小时），直播回放沉淀为切片视频供达人二创。个人 IP 型商家最强的资产就是真人温度，别只在图文里出现。</div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 3. "老客带新裂变卡"</div>
+        <div class="desc">5,929 老客支撑 97.9%，但新客通道极窄（0.5%）——是明确的结构短板。可试点"老客邀请卡"：老客推荐新朋友首单 -20 元，老客本人下单 -10 元券。5,929 老客只要 10% 分享成功即可带来近 600 位新客，把老客盘变成主动拉新引擎。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>📊 DIBP 数据平台 · 数据来源：RedBI dataset 1922（人货场成交分析） / 8033（订单晒单评价） / 635971（笔记评论区）/ 28963（违规中心）</p>
+  <p style="margin-top:6px;">🤖 本报告由 DIBP AI 自动生成 · 生成时间 2026-07-22 · <a href="https://github.com/zhudamen528-code/merchant-deep-diagnosis" target="_blank">GitHub</a></p>
+</footer>
+
+<script>
+fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
+  window.__DATA__ = data;
+
+  // 1. 场域环比图
+  const carrier = data.carrier;
+  echarts.init(document.getElementById('chart-carrier')).setOption({
+    tooltip: { trigger:'axis', axisPointer:{type:'shadow'} },
+    legend: { data:['上30d','本30d','环比%'], top:0 },
+    grid: { left:10, right:40, bottom:10, top:40, containLabel:true },
+    xAxis: { type:'category', data: carrier.map(x=>x.name) },
+    yAxis: [{ type:'value', name:'DGMV(元)' }, { type:'value', name:'环比%', splitLine:{show:false} }],
+    series: [
+      { name:'上30d', type:'bar', data: carrier.map(x=>x.prev), itemStyle:{color:'#cbd5e1'} },
+      { name:'本30d', type:'bar', data: carrier.map(x=>x.now), itemStyle:{color:'#667eea'} },
+      { name:'环比%', type:'line', yAxisIndex:1, data: carrier.map(x=>x.wow.toFixed(1)),
+        itemStyle:{color:'#ef4444'}, symbolSize:8, label:{show:true, formatter:'{c}%'} },
+    ],
+  });
+
+  // 场域表格
+  document.getElementById('tbl-carrier').innerHTML = carrier.map(x=>`
+    <tr>
+      <td>${x.name}</td>
+      <td>${(x.now/10000).toFixed(2)}万</td>
+      <td>${(x.prev/10000).toFixed(2)}万</td>
+      <td class="${x.wow>=0?'up':'down'}">${x.wow>=0?'+':''}${x.wow.toFixed(1)}%</td>
+      <td>${x.ratio.toFixed(1)}%</td>
+    </tr>`).join('');
+
+  // 2. 品类环形图
+  echarts.init(document.getElementById('chart-cat')).setOption({
+    tooltip: { trigger:'item', formatter:'{b}: {c}元 ({d}%)' },
+    legend: { orient:'horizontal', bottom:0 },
+    series: [{
+      type:'pie', radius:['40%','70%'], center:['50%','45%'],
+      data: data.categories.map(c=>({name:`${c.name} [${c.role}]`, value:c.dgmv})),
+      label:{ formatter:'{b}\n{d}%', fontSize:12 },
+      itemStyle:{ borderColor:'#fff', borderWidth:2 },
+    }],
+    color:['#667eea','#f59e0b','#10b981','#94a3b8'],
+  });
+
+  // ====== 第4章 v2：细分品类机会 ======
+  const cv2 = data.community_v2;
+  if (cv2) {
+    // 全景表
+    document.getElementById('tbl-subcategories').innerHTML = cv2.sub_categories.map(s => {
+      const wowStr = s.wow===null ? '-' : `<span class="${s.wow>=0?'up':'down'}">${s.wow>=0?'+':''}${s.wow}%</span>`;
+      const isHot = s.wow!==null && s.wow>0 && s.shops<30;
+      const marks = [s.santu_covered?'🎯':'', isHot?'🔥':''].filter(x=>x).join(' ');
+      return `<tr class="${s.santu_covered?'self':''}">
+        <td>${marks} ${s.cat}</td>
+        <td>${s.gmv_wan}万</td>
+        <td>${s.shops}</td>
+        <td>${s.items}</td>
+        <td>${wowStr}</td>
+        <td>${s.per_shop_wan}万</td>
+      </tr>`;
+    }).join('');
+    
+    // 机会子方向
+    const levelStyle = {
+      star: {bg:'#fef3c7', border:'#f59e0b', label:'⭐ 明星机会'},
+      growth: {bg:'#dcfce7', border:'#10b981', label:'📈 稳步增长'},
+      blueOcean: {bg:'#dbeafe', border:'#3b82f6', label:'🌊 蓝海观察'},
+    };
+    document.getElementById('opp-list').innerHTML = cv2.opportunities.map(o => {
+      const st = levelStyle[o.level] || levelStyle.growth;
+      return `<div style="background:${st.bg};border:1px solid ${st.border};border-radius:10px;padding:14px;margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-weight:700;font-size:15px;color:#1e293b;">${o.sub_cat}</span>
+          <span style="font-size:11px;background:${st.border}22;color:${st.border};border-radius:4px;padding:2px 8px;font-weight:600;">${st.label}</span>
+        </div>
+        <div style="font-size:13px;color:#475569;margin-bottom:10px;">
+          <strong>环比 ${o.wow>0?'+':''}${o.wow}%</strong> · GMV ${o.gmv_wan}万 · 商家数 ${o.shops}<br>
+          ${o.insight}
+        </div>
+        ${o.hot_keywords.length>0 ? `
+        <div style="background:#fff;border-radius:6px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-size:12px;color:#94a3b8;margin-bottom:4px;">🔑 高频关键词（基于 Top 商品标题）</div>
+          ${o.hot_keywords.map(k=>`
+            <div style="font-size:12px;color:#334155;margin:2px 0;">
+              <strong style="color:#667eea;">${k.kw}</strong> 
+              <span style="font-size:11px;color:#94a3b8;">(${k.freq}次)</span> — ${k.note}
+            </div>`).join('')}
+        </div>` : ''}
+        ${o.leader_brands.length>0 ? `
+        <div style="background:#fff;border-radius:6px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-size:12px;color:#94a3b8;margin-bottom:4px;">🏆 头部案例商家</div>
+          <div style="font-size:12px;color:#334155;">${o.leader_brands.join(' · ')}</div>
+        </div>` : ''}
+        <div style="background:#fff;border-left:3px solid ${st.border};padding:8px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#166534;">
+          💼 <strong>温小张 行动：</strong>${o.santu_action}
+        </div>
+      </div>`;
+    }).join('');
+    document.getElementById('community-insight-v2').textContent = cv2.insight;
+  }
+
+  // ====== 第5章 v4：客户反馈（商品评价 + 笔记评论双源） ======
+  const fb2 = data.user_feedback;
+  if (fb2) {
+    document.getElementById('fb-source-info').innerHTML = fb2.source_type + ' · ' + fb2.source_note;
+
+    // 卖家口碑分卡片
+    const ratingBox = document.getElementById('shop-rating-box');
+    if (ratingBox && fb2.shop_rating) {
+      ratingBox.innerHTML = `
+        <div class="kpis" style="margin-bottom:12px;">
+          <div class="kpi good">
+            <div class="label">🌟 卖家口碑分</div>
+            <div class="value">${fb2.shop_rating.score}</div>
+            <div class="delta up">/5.0 优秀</div>
+          </div>
+          <div class="kpi good">
+            <div class="label">📦 有效评价</div>
+            <div class="value">${fb2.total_reviews}</div>
+            <div class="delta up">近90d 全量</div>
+          </div>
+          <div class="kpi good">
+            <div class="label">💚 好评率</div>
+            <div class="value">${fb2.good_pct}%</div>
+            <div class="delta up">优秀</div>
+          </div>
+          <div class="kpi">
+            <div class="label">💔 差评率</div>
+            <div class="value">${fb2.bad_pct}%</div>
+            <div class="delta">${fb2.bad_pct < 5 ? '低' : '需关注'}</div>
+          </div>
+        </div>`;
+    }
+
+    // 评分分布图
+    if (fb2.score_dist) {
+      const scoreChart = echarts.init(document.getElementById('chart-score-dist'));
+      scoreChart.setOption({
+        grid: {left:60, right:30, top:20, bottom:40},
+        tooltip: {},
+        xAxis: {type:'category', data: fb2.score_dist.map(s=>s.star+'星')},
+        yAxis: {type:'value', name:'评价数'},
+        series: [{
+          type:'bar', barWidth:'40%',
+          data: fb2.score_dist.map(s=>({
+            value: s.count,
+            itemStyle: {color: s.star>=4?'#10b981':(s.star==3?'#f59e0b':'#ef4444')}
+          })),
+          label: {show:true, position:'top', formatter: p => p.data.value+' ('+fb2.score_dist[p.dataIndex].pct+'%)'}
+        }]
+      });
+    }
+
+    const weightColor = {high:'#ef4444', medium:'#f59e0b', insight:'#667eea'};
+
+    // 负反馈区
+    document.getElementById('feedback-themes-v2').innerHTML = fb2.negative_themes.map(t => `
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+          <span style="font-weight:600;font-size:14px;color:#1e293b;">${t.category}</span>
+          <span style="font-size:11px;background:#fee2e2;color:#dc2626;border-radius:4px;padding:2px 8px;font-weight:600;">${t.mention_count} 条 · ${t.mention_pct}%</span>
+        </div>
+        <div style="font-size:13px;color:#475569;margin-bottom:8px;">${t.insight}</div>
+        ${t.business_opportunity ? `<div style="background:#f0fdf4;border-left:3px solid #10b981;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#166534;margin-bottom:6px;">
+          💼 <strong>行动建议：</strong>${t.business_opportunity}
+        </div>` : ''}
+        ${t.quotes.slice(0,3).map(q=>`
+          <div style="background:#f8fafc;border-radius:6px;padding:6px 10px;margin-top:6px;font-size:12px;color:#475569;">
+            <span style="font-weight:600;color:#667eea;">${q.user}：</span>${q.quote}
+          </div>`).join('')}
+      </div>`).join('');
+
+    // ⭐ 表扬素材区
+    const posBox = document.getElementById('positive-themes');
+    if (posBox && fb2.positive_themes) {
+      posBox.innerHTML = fb2.positive_themes.map(t => `
+        <div style="background:#fff8f1;border:1.5px solid #fbbf24;border-radius:10px;padding:14px;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:14px;color:#92400e;">${t.category}</span>
+            <span style="font-size:11px;background:#fef3c7;color:#92400e;border-radius:4px;padding:2px 8px;font-weight:600;">${t.mention_count} 条 · ${t.mention_pct}%</span>
+          </div>
+          <div style="background:#fef9c3;border-left:3px solid #f59e0b;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#78350f;margin-bottom:8px;">
+            📝 <strong>内容素材建议：</strong>${t.usage_hint}
+          </div>
+          ${t.quotes.slice(0,3).map(q=>`
+            <div style="background:#fff;border:1px solid #fde68a;border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12px;color:#475569;">
+              <span style="font-weight:600;color:#d97706;">${q.user}：</span>${q.quote}
+            </div>`).join('')}
+        </div>`).join('');
+    }
+
+    // === 品类聚合表 ===
+    const catBox = document.getElementById('tbl-category-summary');
+    if (catBox && fb2.category_summary) {
+      const rows = fb2.category_summary.map(c => {
+        const scoreColor = c.avg_score >= 4.7 ? '#10b981' : (c.avg_score >= 4.4 ? '#f59e0b' : '#ef4444');
+        return `<tr>
+          <td>${c.category}</td>
+          <td style="text-align:right;">${c.review_count.toLocaleString()}</td>
+          <td style="text-align:right;color:${scoreColor};font-weight:700;">${c.avg_score}</td>
+          <td style="text-align:right;">${c.item_count}</td>
+        </tr>`;
+      }).join('');
+      catBox.innerHTML = `<div style="overflow-x:auto;"><table style="width:100%;font-size:13px;border-collapse:collapse;background:#fff;">
+        <thead><tr style="background:#f1f5f9;color:#475569;">
+          <th style="padding:8px 12px;text-align:left;">品类</th>
+          <th style="padding:8px 12px;text-align:right;">评价数</th>
+          <th style="padding:8px 12px;text-align:right;">平均评分</th>
+          <th style="padding:8px 12px;text-align:right;">SPU数</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>`;
+    }
+
+    // === 品类 × 差评主题 ===
+    const catNegBox = document.getElementById('category-negatives');
+    if (catNegBox && fb2.category_negatives) {
+      catNegBox.innerHTML = fb2.category_negatives.map(c => `
+        <details style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;margin-bottom:8px;" ${c.themes[0]?.count >= 30 ? 'open' : ''}>
+          <summary style="cursor:pointer;font-weight:600;color:#1e293b;font-size:14px;">
+            📦 ${c.category}
+            <span style="font-size:11px;background:#fee2e2;color:#dc2626;border-radius:4px;padding:2px 8px;margin-left:8px;font-weight:600;">${c.themes.reduce((s,t)=>s+t.count,0)} 条负反馈</span>
+          </summary>
+          <div style="margin-top:10px;">
+            ${c.themes.slice(0,6).map(t => `
+              <div style="background:#fef2f2;border-left:3px solid #ef4444;padding:6px 10px;margin-top:6px;border-radius:0 6px 6px 0;">
+                <div style="font-size:12px;color:#991b1b;font-weight:600;">${t.name} · ${t.count} 条</div>
+                ${t.examples.slice(0,2).map(ex=>`<div style="font-size:11px;color:#78716c;margin-top:2px;">· ${ex.slice(0,120)}</div>`).join('')}
+              </div>`).join('')}
+          </div>
+        </details>`).join('');
+    }
+  }
+
+  // ====== 📝 笔记评论区（独立模块 v0.9） ======
+  const nc = data.note_comments;
+  if (nc) {
+    const notesBox = document.getElementById('note-comments-notes');
+    if (notesBox) {
+      notesBox.innerHTML = `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;font-size:12px;color:#475569;">
+        <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:13px;margin-bottom:8px;">
+          <div>📊 <strong>${(nc.total_raw||0).toLocaleString()}</strong> 条评论</div>
+          <div>📝 <strong>${(nc.total_notes||0).toLocaleString()}</strong> 篇笔记</div>
+          <div>👥 <strong>${(nc.unique_users||0).toLocaleString()}</strong> 位独立用户</div>
+          <div>🔍 <strong>${(nc.total_unique||0).toLocaleString()}</strong> 条独立内容</div>
+        </div>
+        <div style="color:#64748b;line-height:1.6;padding-top:6px;border-top:1px dashed #e2e8f0;">${nc.source_note}</div>
+      </div>`;
+    }
+    const themesBox = document.getElementById('note-comments-themes');
+    if (themesBox) {
+      themesBox.innerHTML = nc.themes.map(t => `
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:14px;color:#3730a3;">${t.category}</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">${t.count} 条 · ${t.pct}%</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:8px;">
+            💡 <strong>用途建议：</strong>${t.usage_hint}
+          </div>
+          ${t.quotes.map(q=>`
+            <div style="background:#f8fafc;border:1px solid #e0e7ff;border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12px;color:#475569;">
+              <span style="font-weight:600;color:#6366f1;">${q.user}</span>：${q.quote}
+              ${q.note_id?`<a href="https://www.xiaohongshu.com/discovery/item/${q.note_id}" target="_blank" style="color:#94a3b8;font-size:11px;margin-left:6px;text-decoration:none;">🔗 原笔记</a>`:''}
+            </div>`).join('')}
+        </div>`).join('');
+    }
+  }
+
+  // 6. TOP 笔记卡片
+  document.getElementById('notes-grid').innerHTML = data.top_notes.map(n=>`
+    <div class="note-card">
+      <span class="note-rank">🔥 高转化案例</span>
+      <div class="note-title">${n.title || '(无标题)'}</div>
+      <div class="note-meta">👤 ${n.author}</div>
+      <div class="note-meta">📅 发布于 ${n.publish_date}</div>
+      <a class="note-btn" href="https://www.xiaohongshu.com/discovery/item/${n.note_id}" target="_blank">🔗 打开笔记 →</a>
+    </div>
+  `).join('');
+
+  // 7. 用户分层饼图
+  echarts.init(document.getElementById('chart-user-segments')).setOption({
+    tooltip: { trigger:'item', formatter:'{b}<br>DGMV: ¥{c}<br>占比: {d}%' },
+    legend: { orient:'horizontal', bottom:0 },
+    series: [{
+      type:'pie', radius:['30%','60%'], center:['50%','45%'],
+      data: data.user_segments.map(s=>({name:`${s.name} · ${s.users}人`, value:s.dgmv})),
+      label:{ formatter:'{b}\n{d}%', fontSize:11 },
+    }],
+    color:['#10b981','#f59e0b','#3b82f6','#94a3b8'],
+  });
+
+  // 8. 违规表（只显示白盒，黑盒商家不可见）
+  const violationsVisible = data.violations.filter(v => v.penalty_type === '白盒');
+  document.getElementById('tbl-violation').innerHTML = violationsVisible.length > 0
+    ? violationsVisible.map(v=>`
+        <tr>
+          <td>${v.domain}</td>
+          <td>${v.sub_domain || '-'}</td>
+          <td>${v.count}</td>
+        </tr>`).join('')
+    : `<tr><td colspan="3" style="text-align:center;color:#94a3b8;padding:20px;">✅ 无商家可见违规</td></tr>`;
+
+  // 响应式 resize
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.chart').forEach(el => {
+      const inst = echarts.getInstanceByDom(el);
+      if (inst) inst.resize();
+    });
+  });
+
+  // TOC 高亮
+  const tocLinks = document.querySelectorAll('.toc a');
+  const sections = document.querySelectorAll('section');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      const rect = s.getBoundingClientRect();
+      if (rect.top < 120) current = s.id;
+    });
+    tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+  });
+});
+</script>
+</body>
+</html>
