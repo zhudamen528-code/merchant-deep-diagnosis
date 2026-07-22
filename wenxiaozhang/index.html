@@ -432,6 +432,12 @@
       </ul>
     </details>
     <div id="note-comments-notes" style="margin-bottom:16px;"></div>
+
+    <!-- 主题金句区块 · 显式提示 -->
+    <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:14px;font-size:13px;color:#78350f;">
+      🎯 <strong>下方 11 个主题卡片</strong>：每张卡片展示该主题的 <strong>命中条数、占比、用途建议</strong>，以及 <strong>5 条真实用户原话金句（≥15字长评优先）</strong>——直接可复用到笔记文案、直播口播、包装卡片、订单回访短信。
+    </div>
+
     <div id="note-comments-themes"></div>
 
     <div class="signal info" style="margin-top:16px;">
@@ -888,17 +894,19 @@ fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
     const themesBox = document.getElementById('note-comments-themes');
     if (themesBox) {
       themesBox.innerHTML = nc.themes.map(t => `
-        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:10px;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
-            <span style="font-weight:700;font-size:14px;color:#3730a3;">${t.category}</span>
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:15px;color:#3730a3;">${t.category}</span>
             <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">${t.count} 条 · ${t.pct}%</span>
           </div>
-          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:8px;">
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:10px;">
             💡 <strong>用途建议：</strong>${t.usage_hint}
           </div>
-          ${t.quotes.map(q=>`
-            <div style="background:#f8fafc;border:1px solid #e0e7ff;border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12px;color:#475569;">
-              <span style="font-weight:600;color:#6366f1;">${q.user}</span>：${q.quote}
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin:8px 0 4px;">📣 真实用户金句（${(t.quotes||[]).length} 条 · 优先长评）</div>
+          ${(t.quotes||[]).map(q=>`
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.6;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">${q.user}</span><br>
+              <span style="color:#1e293b;">${q.quote}</span>
               ${q.note_id?`<a href="https://www.xiaohongshu.com/discovery/item/${q.note_id}" target="_blank" style="color:#94a3b8;font-size:11px;margin-left:6px;text-decoration:none;">🔗 原笔记</a>`:''}
             </div>`).join('')}
         </div>`).join('');
