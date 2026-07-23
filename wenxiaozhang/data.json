@@ -1277,24 +1277,20 @@
   "top_notes": [],
   "user_segments": [
     {
-      "name": "老客(≥3次)",
-      "dgmv": 1202138.0,
-      "users": 5929
+      "name": "店铺新客",
+      "dgmv": 682479.0,
+      "users": 4007,
+      "gmv_wow": -26.2,
+      "users_wow": -28.8,
+      "arpu": 170
     },
     {
-      "name": "180天流失回购",
-      "dgmv": 13687.0,
-      "users": 79
-    },
-    {
-      "name": "新客(1-2次)",
-      "dgmv": 6295.0,
-      "users": 34
-    },
-    {
-      "name": "潜客",
-      "dgmv": 5819.0,
-      "users": 39
+      "name": "店铺老客(有过购买)",
+      "dgmv": 521311.0,
+      "users": 2271,
+      "gmv_wow": -7.3,
+      "users_wow": -9.8,
+      "arpu": 230
     }
   ],
   "violations": [
