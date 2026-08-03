@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>金帝巧克力旗舰店 · 头部商家深度诊断 · 2026-08</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { font-size: 14px; }
+  body { font-family: -apple-system, "SF Pro Text", "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif; background:#f5f7fa; color:#1f2937; line-height:1.6; }
+  a { color:#0891b2; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  /* Container */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+  /* Header */
+  .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:#fff; padding: 32px 16px 40px; }
+  .hero h1 { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+  .hero .sub { margin-top: 8px; opacity: 0.85; font-size: 13px; }
+  .hero .meta { display:flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+  .hero .meta span { background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 20px; font-size: 12px; backdrop-filter: blur(10px); }
+
+  /* Section */
+  section { background:#fff; margin: 16px 0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow:hidden; }
+  .sect-h { padding: 18px 20px 8px; border-bottom: 1px solid #eef0f3; }
+  .sect-h h2 { font-size: 18px; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+  .sect-h .sub { font-size: 12px; color: #6b7280; margin-top: 4px; }
+  .sect-body { padding: 16px 20px; }
+
+  /* Caliber card */
+  details.caliber { background: #f8fafc; border-left: 3px solid #94a3b8; padding: 10px 14px; margin: 12px 20px 0; border-radius: 6px; font-size: 12px; color:#475569; }
+  details.caliber summary { cursor:pointer; font-weight: 600; color:#334155; user-select:none; }
+  details.caliber summary::-webkit-details-marker { display:none; }
+  details.caliber summary::before { content: "📊 "; }
+  details.caliber summary::after { content: " · 点击展开"; opacity:0.5; font-weight:400; }
+  details.caliber[open] summary::after { content: " · 点击折叠"; }
+  details.caliber ul { margin: 8px 0 0 16px; }
+  details.caliber li { margin: 2px 0; }
+
+  /* KPI cards */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 8px; }
+  .kpi { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; }
+  .kpi .label { font-size: 12px; color:#6b7280; }
+  .kpi .value { font-size: 24px; font-weight: 700; color: #0f172a; margin-top: 4px; letter-spacing: -0.5px; }
+  .kpi .delta { font-size: 12px; margin-top: 6px; padding: 2px 8px; border-radius: 12px; display:inline-block; }
+  .kpi .delta.up { background:#d1fae5; color:#065f46; }
+  .kpi .delta.down { background:#fee2e2; color:#991b1b; }
+  .kpi .delta.warn { background:#fef3c7; color:#92400e; }
+  .kpi.alert { border-left: 4px solid #ef4444; }
+  .kpi.good { border-left: 4px solid #10b981; }
+
+  /* Signal card */
+  .signals { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin: 12px 0; }
+  .signal { padding: 14px 16px; border-radius: 10px; border-left: 4px solid; }
+  .signal.warn { background: #fffbeb; border-color: #f59e0b; }
+  .signal.alert { background: #fef2f2; border-color: #ef4444; }
+  .signal.good { background: #f0fdf4; border-color: #10b981; }
+  .signal.info { background: #eff6ff; border-color: #3b82f6; }
+  .signal .title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .signal .desc { font-size: 12px; color: #4b5563; }
+
+  /* Chart */
+  .chart { width: 100%; height: 320px; margin-top: 8px; }
+  .chart.small { height: 260px; }
+
+  /* Table */
+  table { width:100%; border-collapse: collapse; font-size: 13px; }
+  table th, table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+  table th { background: #f8fafc; color: #475569; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  table tr.self { background: #fef3c7 !important; font-weight: 600; }
+  table tr:hover { background: #f9fafb; }
+  table .up { color: #059669; font-weight: 600; }
+  table .down { color: #dc2626; font-weight: 600; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Note cards */
+  .notes { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 12px; }
+  .note-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; background: #fff; display:flex; flex-direction:column; }
+  .note-card .note-rank { display:inline-block; background:#f59e0b; color:#fff; font-size:11px; padding:2px 8px; border-radius:12px; margin-bottom:8px; align-self: flex-start; }
+  .note-card .note-title { font-size: 14px; font-weight: 600; color: #1f2937; margin-bottom: 8px; line-height: 1.4; }
+  .note-card .note-meta { font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+  .note-card .note-gmv { font-size: 18px; font-weight: 700; color: #d97706; margin: 8px 0; }
+  .note-card .note-btn { display:inline-block; margin-top:auto; background:#ff2442; color:#fff; padding: 8px 12px; border-radius: 6px; font-size: 12px; text-align: center; transition: opacity 0.2s; }
+  .note-card .note-btn:hover { opacity: 0.85; text-decoration: none; }
+
+  /* Coming soon placeholder */
+  .placeholder { padding: 40px 20px; text-align: center; color: #94a3b8; background: repeating-linear-gradient(45deg, #f8fafc, #f8fafc 10px, #f1f5f9 10px, #f1f5f9 20px); border-radius: 10px; margin: 12px 0; }
+
+  /* TOC */
+  .toc { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #e5e7eb; padding: 10px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; z-index: 10; }
+  .toc a { display: inline-block; margin-right: 16px; font-size: 13px; color: #64748b; padding: 4px 0; }
+  .toc a.active { color: #667eea; border-bottom: 2px solid #667eea; }
+
+  /* Footer */
+  footer { text-align: center; padding: 24px 16px; color: #94a3b8; font-size: 12px; }
+
+  /* Mobile tweak */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 20px; }
+    .kpi .value { font-size: 20px; }
+    .sect-h h2 { font-size: 16px; }
+    .chart { height: 260px; }
+    table { font-size: 12px; }
+    table th, table td { padding: 8px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>🎯 金帝巧克力旗舰店 · 头部商家深度诊断</h1>
+    <div class="sub">国民老品牌复兴 · 夏日清凉巧克力新势力 · 冰感柚子+薄荷双爆款</div>
+    <div class="meta">
+      <span>📅 数据周期：2026-07-04 ~ 2026-08-03（近30天）</span>
+      <span>🏢 巧克力L3类目 TOP1</span>
+      <span>🕐 报告生成：2026-08-03</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <a href="#s0">⭐ 一屏诊断</a>
+    <a href="#s1">📈 生意分析</a>
+    <a href="#s2">🎯 品类结构</a>
+    <a href="#s3">🔥 竞品案例</a>
+    <a href="#s4">💬 细分品类机会</a>
+    <a href="#s5">💭 客户反馈</a>
+    <a href="#s6">👥 私域老客</a>
+    <a href="#s7">⚠️ 合规风险</a>
+    <a href="#s8">🚀 下阶段建议</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ 0. 一屏诊断 ============ -->
+<section id="s0">
+  <div class="sect-h">
+    <h2>⭐ 一屏诊断</h2>
+    <div class="sub">30 天核心信号 · 判断 金帝巧克力旗舰店 当前经营状态</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>DGMV</strong>：dataset 1922 「人货场成交分析」T-1 苍穹当前挂户数据；商家口径；不含退款</li>
+      <li><strong>时间窗</strong>：本期 2026-07-04~2026-08-03（30天），上期 2026-06-04~2026-07-03（30天）</li>
+      <li><strong>环比</strong>：(本期 - 上期) / 上期 × 100%</li>
+      <li><strong>专营度阈值</strong>：Top1 类目占比 ≥ 80% 记为「单品类专营」；50-80% 为「主副营」；<50% 为「多品类合集」</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div class="kpis">
+      <div class="kpi good">
+        <div class="label">近30d 总 DGMV</div>
+        <div class="value">14.36 万</div>
+        <div class="delta up">环比 +961% 爆发期</div>
+      </div>
+      <div class="kpi good">
+        <div class="label">主营品类占比</div>
+        <div class="value">66%</div>
+        <div class="delta up">冰感柚子巧克力棒 · 主副营</div>
+      </div>
+      <div class="kpi">
+        <div class="label">店铺新客占比</div>
+        <div class="value">95%</div>
+        <div class="delta up">5,778 人 · 新品期正常</div>
+      </div>
+      <div class="kpi warn">
+        <div class="label">图文/视频占比</div>
+        <div class="value">98 : 2</div>
+        <div class="delta warn">视频严重缺位</div>
+      </div>
+    </div>
+
+    <div class="signals">
+      <div class="signal good">
+        <div class="title">🚀 上升期爆发商家 · 环比 +961% / 巧克力L3类目 TOP1</div>
+        <div class="desc">近30d DGMV <strong>¥14.36万</strong>（上30d 仅 ¥1.35万），环比 <strong>+961%</strong>；在巧克力 L3 类目 15 家 TOP 商家中<strong>排名第一</strong>（超过每日黑巧 ¥7.0万 / 食验室 ¥6.8万 / 爱普诗 ¥5.2万）。7-8 月夏季爆品窗口 + 冰感柚子+薄荷双爆款 + 品牌情怀复兴叙事三重共振。</div>
+      </div>
+      <div class="signal good">
+        <div class="title">✅ 双爆款品类心智完全跑通</div>
+        <div class="desc">Top1 SKU「冰感柚子巧克力棒 青提+柚子+薄荷+抹茶」¥2.27万，冰感柚子系列合计 ¥8.7万（占店 61%）· 薄荷巧克力系列合计 ¥3.2万（占 23%）；笔记评论「薄荷/劲凉」<strong>27.4%</strong> + 「清凉/夏季」<strong>14.9%</strong> 双主题印证，「夏日清凉解腻」是完全建立起来的差异化心智。</div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 用户诉求主题：品质惊艳 + 品牌情怀 + 学生党待发力</div>
+        <div class="desc">4,600 条笔记评论：「品质盛赞」<strong>14.9%</strong> · 「金帝品牌情怀」<strong>9.5%</strong>（436 条童年回忆/国民品牌复兴叙事）· 「产品诉求」<strong>10.4%</strong>（口味迭代信号）· 「学生党/备考」仅 0.6%（28 条，8月开学季黄金窗口尚未启动）。</div>
+      </div>
+      <div class="signal warn">
+        <div class="title">⚠️ 场域集中度极高 · 视频/店播/K播三缺位</div>
+        <div class="desc">商品笔记独占 <strong>79%</strong>（¥11.4万，图文形式），普通商卡 20%；普通笔记仅 1%、K播/店播为 0。虽然爆款期这个结构是效率最优，但下阶段扩容需要视频/店播/K播作为第二增长引擎，特别是学生党/夏日场景更适合视频呈现。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. 生意分析 ============ -->
+<section id="s1">
+  <div class="sect-h">
+    <h2>📈 1. 生意分析 · 场域拆解</h2>
+    <div class="sub">近 30 天 vs 上 30 天 · 4 大场域 DGMV 环比</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922「人货场成交分析」·「载体划分(店播/k播/笔记/商卡)」字段</li>
+      <li><strong>场域定义</strong>：普通商卡=搜索/推荐商卡；商品笔记=挂车图文/视频；店播=商家自播；K播=达人带货；普通笔记=无挂车但有商品成交归因</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div id="chart-carrier" class="chart"></div>
+
+    <div class="table-wrap" style="margin-top:16px;">
+      <table>
+        <thead>
+          <tr><th>场域</th><th>本期 DGMV</th><th>上期 DGMV</th><th>环比</th><th>本期占比</th></tr>
+        </thead>
+        <tbody id="tbl-carrier"></tbody>
+      </table>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📝 商品笔记过程指标（近30d）</h3>
+    <div class="kpis">
+      <div class="kpi good">
+        <div class="label">图文笔记（购买单数）</div>
+        <div class="value">5,389 <span style="font-size:12px;color:#94a3b8;">单</span></div>
+        <div class="delta up">DGMV ¥11.3万</div>
+      </div>
+      <div class="kpi warn">
+        <div class="label">视频笔记（购买单数）</div>
+        <div class="value">115 <span style="font-size:12px;color:#94a3b8;">单</span></div>
+        <div class="delta warn">DGMV ¥0.28万</div>
+      </div>
+      <div class="kpi">
+        <div class="label">图文单均</div>
+        <div class="value">¥21</div>
+        <div class="delta">占商笔 98%</div>
+      </div>
+      <div class="kpi warn">
+        <div class="label">视频单均</div>
+        <div class="value">¥24</div>
+        <div class="delta warn">占商笔 2%</div>
+      </div>
+    </div>
+    <div class="signal info" style="margin-top:12px;">
+      <div class="title">💡 图文极强驱动 · 视频严重缺位（第一增长机会）</div>
+      <div class="desc">图文单量是视频的 <strong>47 倍</strong>——极端图文型商家。金帝主推的「冰感柚子巧克力棒」和「薄荷巧克力」都是<strong>视觉冲击强 / 需要感官呈现</strong>的品类（撕开小袋的仪式感、薄荷冒烟的清凉感、切开的多层结构），视频形式潜力极大。<strong>建议</strong>：下阶段与 5-10 位美食测评/清凉零食垂类中腰部达人合作短视频；重点做 ASMR「撕开+咬开+冷冻脆响」内容。</div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📺 店播/K播过程指标（近30d）</h3>
+    <div class="signal alert">
+      <div class="title">🚨 店播 & K播几乎完全缺位（¥0 + ¥0.4万）</div>
+      <div class="desc">近30d 店播 DGMV 为 0，全店无自播场次；K播也仅 ¥0.4万（占 0.3%）。相比商品笔记 ¥11.4万，直播场域完全没跑起来。<strong>建议</strong>：巧克力自播天然适合<strong>沉浸感呈现</strong>（冰镇过程/薄荷味切割/夏季消暑仪式），可从 1 场/周试点开始，主播出镜「金帝品牌人物 IP + 学生党/上班族场景」；K播可对接夏日零食/减脂/大学生垂类达人。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. 品类结构 ============ -->
+<section id="s2">
+  <div class="sect-h">
+    <h2>🎯 2. 品类结构 · 专营度诊断</h2>
+    <div class="sub">冰感柚子/薄荷/夹心 3 大主力子品线 · 主副营型 · Top1 冰感柚子巧克力棒 66%</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922，按商品名称手动归一到巧克力子品线</li>
+      <li><strong>类目角色</strong>：主营=占比 Top1；副营=Top2-3；长尾=Top4-6</li>
+      <li><strong>专营度</strong>：Top1 占 66% ∈ [50%,80%] → 主副营型；「冰感柚子」为主推爆款 + 「薄荷巧克力」为差异化副线</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div id="chart-cat" class="chart"></div>
+  </div>
+</section>
+
+<!-- ============ 3. 竞品案例 ============ -->
+<section id="s3">
+  <div class="sect-h">
+    <h2>🔥 3. 巧克力赛道竞对 · 近30d TOP15</h2>
+    <div class="sub">近30d 巧克力 L3 类目 · 金帝旗舰店 TOP1 领跑 · 参考同赛道对标</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922，巧克力 L3 类目全平台商家（近30d）</li>
+      <li><strong>观察范围</strong>：近30d 商家 GMV Top15</li>
+      <li><strong>金帝 位置</strong>：<strong>巧克力 L3 类目 TOP1</strong>，¥8.2万 领先每日黑巧 ¥7.0万 / 食验室 ¥6.8万 / 爱普诗 ¥5.2万</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <!-- 赛道大势 -->
+    <div class="signals">
+      <div class="signal good">
+        <div class="title">🏆 金帝旗舰店 = 巧克力赛道近30d TOP1（¥8.2万）</div>
+        <div class="desc">领先第二名「每日黑巧 CHOCDAY」17%（¥7.0万），领先「食验室」22%（¥6.7万），远超「爱普诗」「ROYCE'」「德芙」等国际品牌。<strong>金帝路径</strong>：国民老品牌 + 夏日新品爆款（冰感柚子 + 薄荷）+ 品牌情怀复兴 三重共振，是 2026年 巧克力赛道最亮眼的国产新势力案例。</div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 主要竞对格局 · 三大梯队</div>
+        <div class="desc">
+          <strong>健康代餐派</strong>（每日黑巧/食验室 ¥6-7万）：主打低糖/低卡/纯可可脂，用户是控糖健身群体<br>
+          <strong>国际品牌派</strong>（爱普诗/ROYCE'/德芙 ¥1.9-5.2万）：品牌力强但价格带高，用户是精致送礼场景<br>
+          <strong>国民新势力</strong>（金帝/金薄薄/一块小宇宙）：夏日创新口味 + 情怀复兴叙事 + 高性价比 —— 金帝领跑
+        </div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 差异化壁垒 · 金帝的"夏日限定"心智</div>
+        <div class="desc">在健康代餐派卷"低糖低卡"、国际品牌派卷"精致送礼"的红海里，金帝走出了独特的"夏日清凉零食"心智—— <strong>冰感柚子 = 夏天版的清爽零食</strong>、<strong>薄荷巧克力 = 备考提神零食</strong>，形成明确的季节+场景组合，是所有竞对里唯一把"夏天专属"打透的品牌。</div>
+      </div>
+    </div>
+
+    <!-- 竞对全景表 -->
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📊 巧克力 L3 类目 TOP15 商家（近30d）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>排名</th><th>商家名称</th><th>近30d DGMV</th><th>vs 金帝</th></tr>
+        </thead>
+        <tbody id="tbl-competitors"></tbody>
+      </table>
+    </div>
+
+    <!-- 高转化笔记案例 -->
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">🎬 金帝 自身高转化笔记（近30d Top10）</h3>
+    <p style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">💡 官方号 <code>金帝巧克力</code> + 矩阵号 <code>金帝听劝小组</code> 双主力驱动；后者做用户共创品牌 UGC 内容，是老品牌复兴叙事的核心抓手。</p>
+    <div class="notes" id="notes-grid"></div>
+  </div>
+</section>
+
+<!-- ============ 4-8 数据待补 ============ -->
+<section id="s4">
+  <div class="sect-h">
+    <h2>💬 4. 细分品类机会</h2>
+    <div class="sub">金帝 3 大主力子品线 + 4 个跳脱扩品扩场景方向</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922 + 笔记评论 dataset 635971 + 商品评价 dataset 8033 综合信号</li>
+      <li><strong>子品类</strong>：按金帝商品名称手动归一到 3 大子品线（冰感柚子/薄荷/夹心经典）</li>
+      <li><strong>机会挖掘</strong>：结合笔记评论 4600 条 + 商品评价 242 条真实用户诉求 + 学生党/送礼场景空缺信号，给出 4 个扩品/扩场景机会</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <!-- 全景表 -->
+    <h3 style="font-size:15px;color:#334155;margin-bottom:8px;">🗺 金帝 3 大子品线全景（近30d）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>子品类</th><th>近30d GMV</th><th>商品数</th><th>店内占比</th></tr>
+        </thead>
+        <tbody id="tbl-subcategories"></tbody>
+      </table>
+    </div>
+    <p style="font-size:12px;color:#6b7280;margin-top:6px;">🎯 = 金帝已覆盖 · ⭐ = 已跑通爆款 · 🌊 = 蓝海机会</p>
+
+    <!-- 机会子方向 -->
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">🎯 机会子方向深度分析</h3>
+    <div id="opp-list"></div>
+
+    <div class="signal info" style="margin-top:16px;">
+      <div class="title">💡 综合洞察</div>
+      <div class="desc" id="community-insight-v2"></div>
+    </div>
+  </div>
+</section>
+
+<section id="s5">
+  <div class="sect-h">
+    <h2>💭 5. 客户反馈 · 商品评价洞察</h2>
+    <div class="sub"><span id="fb-source-info"></span></div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：RedBI dataset 8033「订单晒单评价自助分析数据集」</li>
+      <li><strong>过滤条件</strong>：店铺id = 金帝巧克力旗舰店（<code>6a3b94a0321bf500159ae6ee</code>），时间近90d</li>
+      <li><strong>样本量</strong>：<strong>242 条</strong>有效评价（评价内容非空，全量拉取；评分字段异常改用文本情感分析）</li>
+      <li><strong>主题分类</strong>：基于关键词规则匹配（负反馈 6 类 / 表扬 6 类），一条评价可命中多个主题</li>
+      <li><strong>"多少条提及"口径</strong>：全量样本的真实分布，可作决策依据</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <!-- 卖家口碑总览 -->
+    <div id="shop-rating-box"></div>
+
+    <!-- 评分分布图 -->
+    <h3 style="margin: 20px 0 12px; font-size: 15px; color:#334155;">📊 评分分布（近90d）</h3>
+    <div id="chart-score-dist" style="height:260px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px;"></div>
+
+    <!-- 品类聚合表 -->
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📦 按品类聚合（找到"到底对啥有意见"）</h3>
+    <div id="tbl-category-summary" style="margin-bottom:12px;"></div>
+
+    <!-- 品类 × 差评主题 -->
+    <h3 style="margin: 20px 0 12px; font-size: 15px; color:#334155;">🔍 各品类下的负反馈主题（差评+3星以下+明确诉求）</h3>
+    <div id="category-negatives" style="margin-bottom:16px;"></div>
+
+    <!-- 负反馈/需求区 -->
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">
+      🔴 全品类汇总 · 负反馈 & 需求主题
+    </h3>
+    <p style="font-size:12px;color:#6b7280;margin-bottom:12px;">💡 每条评价可能提及多主题；数字为该主题在全量 242 条评价中的出现次数</p>
+    <div id="feedback-themes-v2" style="margin-top:12px;"></div>
+
+    <!-- ⭐ 表扬素材库 -->
+    <h3 style="margin: 32px 0 12px; font-size: 15px; color:#92400e; background:#fff8f1; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+      ⭐ 表扬素材库（拿来做二次内容 · 转化新客）
+    </h3>
+    <p style="font-size:12px;color:#78716c;margin-bottom:12px;">💡 每一条真实评价都是一句「金句素材」，可以直接引用到笔记、直播口播、包装卡片、订单短信、朋友圈里</p>
+    <div id="positive-themes"></div>
+
+    <!-- 📝 笔记评论区 - 独立模块 -->
+    <h3 style="margin: 32px 0 12px; font-size: 15px; color:#4338ca; background:#eef2ff; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #6366f1;">
+      📝 笔记评论洞察（近30d 260 篇笔记 · 5,778 条评论 · 2,149 独立用户 · 4,600 独立内容（其中 2,413 条长评高价值素材） · BI 数据集全量）
+    </h3>
+    <details class="caliber" style="margin-bottom:12px;">
+      <summary>数据源说明</summary>
+      <ul>
+        <li><strong>来源</strong>：RedBI dataset <code>635971</code>「近180天笔记评论区数据」，底表 <code>redcdm.iceberg_dm_ecm_comment_metrics_td_df</code>，非浏览器爬取，是官方数据集全量</li>
+        <li><strong>过滤</strong>：seller_id = <code>6a3b94a0321bf500159ae6ee</code>（金帝巧克力旗舰店），时间近180d，最新分区 <code>20260801</code></li>
+        <li><strong>全量口径</strong>：<strong>5,665 条评论</strong>（每条 comment_id 唯一），覆盖 <strong>776 篇笔记</strong>，<strong>893 位独立评论用户</strong>；⚠️ 已识别 51 条为「同一用户复制粘贴到 5+ 篇笔记」的刷评行为，在主题分析中不做特殊处理但透明标注</li>
+        <li><strong>分析口径</strong>：按评论 <code>content</code> 去重得 <strong>4,600 条独立评论内容</strong>（同一用户在多篇笔记下重复的相同文案计一次），主题占比按 4,600 分母算；其中 <strong>2,413 条长评高价值素材</strong>（≥15字且非刷评），是真实用户主动写的种草/建议/情绪内容，主题聚合优先展示这类内容作为金句</li>
+        <li><strong>主题聚合</strong>：11 大主题的关键词规则匹配（一条评论可命中多主题）</li>
+        <li><strong>用途</strong>：真实用户 ID 可用于回访；长文本情感型金句素材；发现用户主动诉求；有效替代前端爬取的采样局限</li>
+      </ul>
+    </details>
+    <div id="note-comments-notes" style="margin-bottom:16px;"></div>
+
+    <!-- 主题金句区块 · 显式提示 -->
+    <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:14px;font-size:13px;color:#78350f;">
+      🎯 <strong>下方 11 个主题卡片</strong>：每张卡片展示该主题的 <strong>命中条数、占比、用途建议</strong>，以及 <strong>5 条真实用户原话金句（≥15字长评优先）</strong>——直接可复用到笔记文案、直播口播、包装卡片、订单回访短信。
+    </div>
+
+    <div id="note-comments-themes">
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:15px;color:#3730a3;">🌿 薄荷/劲凉/口味</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">1259 条 · 27.4%</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:10px;">
+            💡 <strong>用途建议：</strong>薄荷差异化心智，主打&quot;薄荷 + 巧克力 = 反常规惊喜&quot;内容切入；口味迭代方向持续
+          </div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin:8px 0 4px;">📣 真实用户金句（5 条 · 优先长评）</div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论00012d</span><br>
+              <span style="color:#1e293b;">已经忘记第一次吃巧克力是什么感觉了 只记得第一次吃 金帝  的薄巧 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是清凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论037095</span><br>
+              <span style="color:#1e293b;">已经忘记第一次吃巧克力是什么感觉了 只记得第一次吃金帝的薄巧 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是清凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马上去驿</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01786e</span><br>
+              <span style="color:#1e293b;">超爱金帝巧克力！🍫作为一个资深的巧克力测评✅ 金帝巧克力必吃榜！
+[樱花R]经典款（闭眼入）
+• 榛仁夹心巧克力（最经典）
+纯可可脂，整颗榛子，很酥脆，独立包装，日常送礼都合适。
+•  珍爱白兰地风味 
+淡淡酒香，不喝酒也能接受，比榛仁款甜度低一点，很高级。
+• 纯黑巧
+控糖备孕友好，微苦不涩，可可香很正，解馋无负担。
+[樱花R]小众好吃款（力捧）
+• 巧克力棒
+香芋味，酥到掉渣，冻冰箱像脆皮雪糕，超适合夏天。
+• 充气巧克力
+国内首创，口感松软细腻，像云朵一样，超好吃！
+[樱花R]礼盒款（送礼</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论018355</span><br>
+              <span style="color:#1e293b;">当然是劲凉! 不限量的话 我能吃到这辈子再也不想吃为止 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是劲凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马上去驿站拿 </span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01432f</span><br>
+              <span style="color:#1e293b;">超爱金帝巧克力！🍫作为一个资深的巧克力测评✅ 金帝巧克力必吃榜！
+[樱花R]经典款（闭眼入）
+• 榛仁夹心巧克力（最经典）
+纯可可脂，整颗榛子，很酥脆，独立包装，日常送礼都合适。
+• 珍爱白兰地风味
+淡淡酒香，不喝酒也能接受，比榛仁款甜度低一点，很高级。
+• 纯黑巧
+控糖备孕友好，微苦不涩，可可香很正，解馋无负担。
+[樱花R]小众好吃款（力捧）
+• 巧克力棒
+香芋味，酥到掉渣，冻冰箱像脆皮雪糕，超适合夏天。
+• 充气巧克力
+国内首创，口感松软细腻，像云朵一样，超好吃！
+[樱花R]礼盒款（送礼体面</span>
+            </div>
+        </div>
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:15px;color:#3730a3;">🌡️ 清凉/降火/夏季</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">687 条 · 14.9%</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:10px;">
+            💡 <strong>用途建议：</strong>「夏日爆款」核心心智，笔记选题优先做&quot;冰镇食用/冰箱冷藏&quot;场景教育；季节窗口 5-9 月
+          </div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin:8px 0 4px;">📣 真实用户金句（5 条 · 优先长评）</div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论00012d</span><br>
+              <span style="color:#1e293b;">已经忘记第一次吃巧克力是什么感觉了 只记得第一次吃 金帝  的薄巧 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是清凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论037095</span><br>
+              <span style="color:#1e293b;">已经忘记第一次吃巧克力是什么感觉了 只记得第一次吃金帝的薄巧 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是清凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马上去驿</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01786e</span><br>
+              <span style="color:#1e293b;">超爱金帝巧克力！🍫作为一个资深的巧克力测评✅ 金帝巧克力必吃榜！
+[樱花R]经典款（闭眼入）
+• 榛仁夹心巧克力（最经典）
+纯可可脂，整颗榛子，很酥脆，独立包装，日常送礼都合适。
+•  珍爱白兰地风味 
+淡淡酒香，不喝酒也能接受，比榛仁款甜度低一点，很高级。
+• 纯黑巧
+控糖备孕友好，微苦不涩，可可香很正，解馋无负担。
+[樱花R]小众好吃款（力捧）
+• 巧克力棒
+香芋味，酥到掉渣，冻冰箱像脆皮雪糕，超适合夏天。
+• 充气巧克力
+国内首创，口感松软细腻，像云朵一样，超好吃！
+[樱花R]礼盒款（送礼</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01706d</span><br>
+              <span style="color:#1e293b;">初次邂逅巧克力的奇妙体验，是五岁也可能是四岁的那个午后。爸爸买了一桶裹着金纸做成元宝或者金币形状的巧克力。
+那是我第一次吃巧克力，只觉得醇厚香，像是甜口的芝麻酱。一丝可可微苦中和甜腻，丝滑得转瞬消融。年幼的我被这份独特滋味深深震撼。
+天气热巧克力都化了，妈妈把它们放进了冰箱里面。每当我幼儿园下学就可以得到一颗巧克力，冰凉丝润的口感比常温好吃。
+偶尔妈妈还会搭配一根九头崖超市刷满番茄酱的烤肠给我。这样的日子真让我难以忘怀。
+我印象小时候爸爸还会给我买那种像奶片一样包装的巧克力，是牛奶和黑巧混合的。</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论018355</span><br>
+              <span style="color:#1e293b;">当然是劲凉! 不限量的话 我能吃到这辈子再也不想吃为止 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是劲凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马上去驿站拿 </span>
+            </div>
+        </div>
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:15px;color:#3730a3;">❤️ 品质/好吃/惊艳</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">685 条 · 14.9%</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:10px;">
+            💡 <strong>用途建议：</strong>产品力证言，可挂到详情页&quot;用户真实反馈&quot;区，直播口播用户金句
+          </div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin:8px 0 4px;">📣 真实用户金句（5 条 · 优先长评）</div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论00012d</span><br>
+              <span style="color:#1e293b;">已经忘记第一次吃巧克力是什么感觉了 只记得第一次吃 金帝  的薄巧 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是清凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论012849</span><br>
+              <span style="color:#1e293b;">如果让金帝巧克力以“探索中国味道”为核心，我最期待的从来不是简单把中式食材撒在巧克力表面的浅尝辄止，而是让每一块巧克力都成为一把打开中国地域味觉记忆的钥匙，用金帝传承多年的丝滑可可基底，把藏在街头巷尾、山水之间的中国味道，妥帖地包裹进可可的醇香里
+
+第一款想做‌江津青花椒冷吃兔黑巧‌，完全锚定重庆本地的烟火基因。用金帝经典的72%高纯度黑巧做基底，可可的焦香先压下花椒的刺激感，再融入重庆江津现摘青花椒低温萃取的精油，麻味柔和不呛喉，最后嵌进提前卤制、烘干到酥香的冷吃兔细丁，咸鲜的肉香和可可的微苦</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论037095</span><br>
+              <span style="color:#1e293b;">已经忘记第一次吃巧克力是什么感觉了 只记得第一次吃金帝的薄巧 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是清凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马上去驿</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01786e</span><br>
+              <span style="color:#1e293b;">超爱金帝巧克力！🍫作为一个资深的巧克力测评✅ 金帝巧克力必吃榜！
+[樱花R]经典款（闭眼入）
+• 榛仁夹心巧克力（最经典）
+纯可可脂，整颗榛子，很酥脆，独立包装，日常送礼都合适。
+•  珍爱白兰地风味 
+淡淡酒香，不喝酒也能接受，比榛仁款甜度低一点，很高级。
+• 纯黑巧
+控糖备孕友好，微苦不涩，可可香很正，解馋无负担。
+[樱花R]小众好吃款（力捧）
+• 巧克力棒
+香芋味，酥到掉渣，冻冰箱像脆皮雪糕，超适合夏天。
+• 充气巧克力
+国内首创，口感松软细腻，像云朵一样，超好吃！
+[樱花R]礼盒款（送礼</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01706d</span><br>
+              <span style="color:#1e293b;">初次邂逅巧克力的奇妙体验，是五岁也可能是四岁的那个午后。爸爸买了一桶裹着金纸做成元宝或者金币形状的巧克力。
+那是我第一次吃巧克力，只觉得醇厚香，像是甜口的芝麻酱。一丝可可微苦中和甜腻，丝滑得转瞬消融。年幼的我被这份独特滋味深深震撼。
+天气热巧克力都化了，妈妈把它们放进了冰箱里面。每当我幼儿园下学就可以得到一颗巧克力，冰凉丝润的口感比常温好吃。
+偶尔妈妈还会搭配一根九头崖超市刷满番茄酱的烤肠给我。这样的日子真让我难以忘怀。
+我印象小时候爸爸还会给我买那种像奶片一样包装的巧克力，是牛奶和黑巧混合的。</span>
+            </div>
+        </div>
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:15px;color:#3730a3;">💡 产品诉求/建议</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">477 条 · 10.4%</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:10px;">
+            💡 <strong>用途建议：</strong>产品迭代信号 · 无糖版/小份装/冷藏包装/口味扩展
+          </div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin:8px 0 4px;">📣 真实用户金句（5 条 · 优先长评）</div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论025591</span><br>
+              <span style="color:#1e293b;">巧克力+「探索中国味道」，我最期待桂花龙井味，也希望下一站去往杭州。
+江南的桂花与龙井是独属于中式的温柔香气，醇厚丝滑的巧克力，搭配清润茶香与淡淡的桂花香，甜而不腻，口感层次一定很特别。金帝作为本土巧克力品牌，深耕中式风味真的很戳人，之前推出的国风口味我都有尝试，能感受到品牌用心挖掘各地特色美食。
+杭州满觉陇的桂花、西湖的龙井茶，都是刻在国人记忆里的味道。当西式巧克力融合江南茶香花香，碰撞出全新的中式甜品，想想就十分惊艳。很喜欢金帝探索中国各地风味的企划，把各地烟火融进巧克力，传递独属于我们的甜</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论017886</span><br>
+              <span style="color:#1e293b;">巧克力搭配原味无糖酸奶是我无限回购的神仙组合！浓稠清爽的酸奶搭配切块巧克力，醇厚可可香混合酸奶的微酸，低脂又解馋，当作早餐或者饭后小甜品再合适不过。一直很喜欢金帝这个国货巧克力品牌，味道醇厚不廉价，这次巧克力脆新品让我特别心动。在活动最后冲刺时间，不想错过这次试吃机会，如果能抽到名额，我会仔细记录口感，搭配多种食材创作不同吃法分享，用心产出完整走心的测评，大力推荐给身边朋友！[飞吻R][飞吻R][飞吻R][飞吻R][飞吻R][飞吻R][飞吻R][飞吻R][飞吻R]</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论02bf92</span><br>
+              <span style="color:#1e293b;">我最期待的 巧克力之探索中国味道  是[向右R]茉莉牛奶夹心巧克力棒，牛奶基底的醇香与茉莉花结合在一起肯定会很好吃，相比于外国流传进国内的巧克力的味道   甜腻感会减轻很多，这种中式味觉的感受让可可的厚重有了洗礼。金帝做为老品牌是从小吃到大的巧克力牌子  希望可以凭借中式风味再次强势回归，也可以出山楂风味 非常开胃，期待金帝可以开放更多新型的中式口味，带着我们中式巧克力口味走向国际市场开发新方向，继续探索中国味道，金帝加油[拳头R][拳头R][拳头R]我看好你。</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论009b2e</span><br>
+              <span style="color:#1e293b;">我最期待的巧克力之探索中国味道是[向右R]茉莉牛奶夹心巧克力棒，牛奶基底的醇香与茉莉花结合在一起肯定会很好吃，相比于外国流传进国内的巧克力的味道   甜腻感会减轻很多，这种中式味觉的感受让可可的厚重有了洗礼。金帝做为老品牌是从小吃到大的巧克力牌子  希望可以凭借中式风味再次强势回归，也可以出山楂风味 非常开胃，期待金帝可以开放更多新型的中式口味，带着我们中式巧克力口味走向国际市场开发新方向，继续探索中国味道，金帝加油[拳头R][拳头R][拳头R]我看好你。</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01bc68</span><br>
+              <span style="color:#1e293b;">一直很爱吃金帝巧克力，口感丝滑不齁甜，这次探索中国味道的主题特别戳我，我最期待桂花龙井口味！江南的桂花清香搭配龙井的清苦茶香，中和巧克力本身的醇厚，层次肯定很丰富。[派对R][派对R][派对R]平时很喜欢中式茶饮和糕点，桂花龙井是经典国风搭配，做成巧克力一定很特别。还希望品牌能去往杭州，挖掘更多江南风味甜品灵感。从上学时期就常买金帝，用料实在，性价比很高，真心希望能抽到限定礼盒，抢先尝一尝这款国风新口味，也期待金帝推出更多融合各地特色的巧克力！</span>
+            </div>
+        </div>
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:15px;color:#3730a3;">🏛️ 品牌/怀旧/情怀</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">436 条 · 9.5%</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:10px;">
+            💡 <strong>用途建议：</strong>「金帝经典」情怀营销 · 童年回忆/国民品牌复兴叙事
+          </div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin:8px 0 4px;">📣 真实用户金句（5 条 · 优先长评）</div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论00012d</span><br>
+              <span style="color:#1e293b;">已经忘记第一次吃巧克力是什么感觉了 只记得第一次吃 金帝  的薄巧 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是清凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论012849</span><br>
+              <span style="color:#1e293b;">如果让金帝巧克力以“探索中国味道”为核心，我最期待的从来不是简单把中式食材撒在巧克力表面的浅尝辄止，而是让每一块巧克力都成为一把打开中国地域味觉记忆的钥匙，用金帝传承多年的丝滑可可基底，把藏在街头巷尾、山水之间的中国味道，妥帖地包裹进可可的醇香里
+
+第一款想做‌江津青花椒冷吃兔黑巧‌，完全锚定重庆本地的烟火基因。用金帝经典的72%高纯度黑巧做基底，可可的焦香先压下花椒的刺激感，再融入重庆江津现摘青花椒低温萃取的精油，麻味柔和不呛喉，最后嵌进提前卤制、烘干到酥香的冷吃兔细丁，咸鲜的肉香和可可的微苦</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论037095</span><br>
+              <span style="color:#1e293b;">已经忘记第一次吃巧克力是什么感觉了 只记得第一次吃金帝的薄巧 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是清凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马上去驿</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01786e</span><br>
+              <span style="color:#1e293b;">超爱金帝巧克力！🍫作为一个资深的巧克力测评✅ 金帝巧克力必吃榜！
+[樱花R]经典款（闭眼入）
+• 榛仁夹心巧克力（最经典）
+纯可可脂，整颗榛子，很酥脆，独立包装，日常送礼都合适。
+•  珍爱白兰地风味 
+淡淡酒香，不喝酒也能接受，比榛仁款甜度低一点，很高级。
+• 纯黑巧
+控糖备孕友好，微苦不涩，可可香很正，解馋无负担。
+[樱花R]小众好吃款（力捧）
+• 巧克力棒
+香芋味，酥到掉渣，冻冰箱像脆皮雪糕，超适合夏天。
+• 充气巧克力
+国内首创，口感松软细腻，像云朵一样，超好吃！
+[樱花R]礼盒款（送礼</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01706d</span><br>
+              <span style="color:#1e293b;">初次邂逅巧克力的奇妙体验，是五岁也可能是四岁的那个午后。爸爸买了一桶裹着金纸做成元宝或者金币形状的巧克力。
+那是我第一次吃巧克力，只觉得醇厚香，像是甜口的芝麻酱。一丝可可微苦中和甜腻，丝滑得转瞬消融。年幼的我被这份独特滋味深深震撼。
+天气热巧克力都化了，妈妈把它们放进了冰箱里面。每当我幼儿园下学就可以得到一颗巧克力，冰凉丝润的口感比常温好吃。
+偶尔妈妈还会搭配一根九头崖超市刷满番茄酱的烤肠给我。这样的日子真让我难以忘怀。
+我印象小时候爸爸还会给我买那种像奶片一样包装的巧克力，是牛奶和黑巧混合的。</span>
+            </div>
+        </div>
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:15px;color:#3730a3;">🔍 品质质疑/信任</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">283 条 · 6.2%</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:10px;">
+            💡 <strong>用途建议：</strong>负面反馈关注 · 甜度调整/口味标签更清晰
+          </div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin:8px 0 4px;">📣 真实用户金句（5 条 · 优先长评）</div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论012849</span><br>
+              <span style="color:#1e293b;">如果让金帝巧克力以“探索中国味道”为核心，我最期待的从来不是简单把中式食材撒在巧克力表面的浅尝辄止，而是让每一块巧克力都成为一把打开中国地域味觉记忆的钥匙，用金帝传承多年的丝滑可可基底，把藏在街头巷尾、山水之间的中国味道，妥帖地包裹进可可的醇香里
+
+第一款想做‌江津青花椒冷吃兔黑巧‌，完全锚定重庆本地的烟火基因。用金帝经典的72%高纯度黑巧做基底，可可的焦香先压下花椒的刺激感，再融入重庆江津现摘青花椒低温萃取的精油，麻味柔和不呛喉，最后嵌进提前卤制、烘干到酥香的冷吃兔细丁，咸鲜的肉香和可可的微苦</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01786e</span><br>
+              <span style="color:#1e293b;">超爱金帝巧克力！🍫作为一个资深的巧克力测评✅ 金帝巧克力必吃榜！
+[樱花R]经典款（闭眼入）
+• 榛仁夹心巧克力（最经典）
+纯可可脂，整颗榛子，很酥脆，独立包装，日常送礼都合适。
+•  珍爱白兰地风味 
+淡淡酒香，不喝酒也能接受，比榛仁款甜度低一点，很高级。
+• 纯黑巧
+控糖备孕友好，微苦不涩，可可香很正，解馋无负担。
+[樱花R]小众好吃款（力捧）
+• 巧克力棒
+香芋味，酥到掉渣，冻冰箱像脆皮雪糕，超适合夏天。
+• 充气巧克力
+国内首创，口感松软细腻，像云朵一样，超好吃！
+[樱花R]礼盒款（送礼</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01706d</span><br>
+              <span style="color:#1e293b;">初次邂逅巧克力的奇妙体验，是五岁也可能是四岁的那个午后。爸爸买了一桶裹着金纸做成元宝或者金币形状的巧克力。
+那是我第一次吃巧克力，只觉得醇厚香，像是甜口的芝麻酱。一丝可可微苦中和甜腻，丝滑得转瞬消融。年幼的我被这份独特滋味深深震撼。
+天气热巧克力都化了，妈妈把它们放进了冰箱里面。每当我幼儿园下学就可以得到一颗巧克力，冰凉丝润的口感比常温好吃。
+偶尔妈妈还会搭配一根九头崖超市刷满番茄酱的烤肠给我。这样的日子真让我难以忘怀。
+我印象小时候爸爸还会给我买那种像奶片一样包装的巧克力，是牛奶和黑巧混合的。</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01432f</span><br>
+              <span style="color:#1e293b;">超爱金帝巧克力！🍫作为一个资深的巧克力测评✅ 金帝巧克力必吃榜！
+[樱花R]经典款（闭眼入）
+• 榛仁夹心巧克力（最经典）
+纯可可脂，整颗榛子，很酥脆，独立包装，日常送礼都合适。
+• 珍爱白兰地风味
+淡淡酒香，不喝酒也能接受，比榛仁款甜度低一点，很高级。
+• 纯黑巧
+控糖备孕友好，微苦不涩，可可香很正，解馋无负担。
+[樱花R]小众好吃款（力捧）
+• 巧克力棒
+香芋味，酥到掉渣，冻冰箱像脆皮雪糕，超适合夏天。
+• 充气巧克力
+国内首创，口感松软细腻，像云朵一样，超好吃！
+[樱花R]礼盒款（送礼体面</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论017ecd</span><br>
+              <span style="color:#1e293b;">炎炎盛夏，空气里裹挟着燥热的暑气，在闷热难耐的时候咬上一口丝滑的巧克力，最优选清爽的海盐抹茶口味。
+浓郁醇厚的可可基底弱化了甜腻的口感，微微的苦味刚好消解夏日的浮躁，清新的抹茶香气扑面而来，裹挟着淡淡的茶香，一扫周遭的闷热压抑。恰到好处的海盐咸香中和了糖分的厚重，入口先是绵密顺滑的可可在舌尖缓缓化开，茶香慢慢舒展，最后一丝淡淡的咸味收尾，不会齁得喉咙发紧。
+不同于常规的牛奶巧克力那般甜腻厚重，这款口味清爽柔和，即便在骄阳当头的午后食用，也不会觉得燥热上火。冰凉细腻的质地，入口温润又带着一丝清冽，</span>
+            </div>
+        </div>
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:15px;color:#3730a3;">👨‍👩‍👧 家人/送礼/分享</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">159 条 · 3.5%</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:10px;">
+            💡 <strong>用途建议：</strong>送礼/家人场景 · 教师节/中秋/开学季礼盒可绑定
+          </div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin:8px 0 4px;">📣 真实用户金句（5 条 · 优先长评）</div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01786e</span><br>
+              <span style="color:#1e293b;">超爱金帝巧克力！🍫作为一个资深的巧克力测评✅ 金帝巧克力必吃榜！
+[樱花R]经典款（闭眼入）
+• 榛仁夹心巧克力（最经典）
+纯可可脂，整颗榛子，很酥脆，独立包装，日常送礼都合适。
+•  珍爱白兰地风味 
+淡淡酒香，不喝酒也能接受，比榛仁款甜度低一点，很高级。
+• 纯黑巧
+控糖备孕友好，微苦不涩，可可香很正，解馋无负担。
+[樱花R]小众好吃款（力捧）
+• 巧克力棒
+香芋味，酥到掉渣，冻冰箱像脆皮雪糕，超适合夏天。
+• 充气巧克力
+国内首创，口感松软细腻，像云朵一样，超好吃！
+[樱花R]礼盒款（送礼</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01432f</span><br>
+              <span style="color:#1e293b;">超爱金帝巧克力！🍫作为一个资深的巧克力测评✅ 金帝巧克力必吃榜！
+[樱花R]经典款（闭眼入）
+• 榛仁夹心巧克力（最经典）
+纯可可脂，整颗榛子，很酥脆，独立包装，日常送礼都合适。
+• 珍爱白兰地风味
+淡淡酒香，不喝酒也能接受，比榛仁款甜度低一点，很高级。
+• 纯黑巧
+控糖备孕友好，微苦不涩，可可香很正，解馋无负担。
+[樱花R]小众好吃款（力捧）
+• 巧克力棒
+香芋味，酥到掉渣，冻冰箱像脆皮雪糕，超适合夏天。
+• 充气巧克力
+国内首创，口感松软细腻，像云朵一样，超好吃！
+[樱花R]礼盒款（送礼体面</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论017886</span><br>
+              <span style="color:#1e293b;">巧克力搭配原味无糖酸奶是我无限回购的神仙组合！浓稠清爽的酸奶搭配切块巧克力，醇厚可可香混合酸奶的微酸，低脂又解馋，当作早餐或者饭后小甜品再合适不过。一直很喜欢金帝这个国货巧克力品牌，味道醇厚不廉价，这次巧克力脆新品让我特别心动。在活动最后冲刺时间，不想错过这次试吃机会，如果能抽到名额，我会仔细记录口感，搭配多种食材创作不同吃法分享，用心产出完整走心的测评，大力推荐给身边朋友！[飞吻R][飞吻R][飞吻R][飞吻R][飞吻R][飞吻R][飞吻R][飞吻R][飞吻R]</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论02bf92</span><br>
+              <span style="color:#1e293b;">我最期待的 巧克力之探索中国味道  是[向右R]茉莉牛奶夹心巧克力棒，牛奶基底的醇香与茉莉花结合在一起肯定会很好吃，相比于外国流传进国内的巧克力的味道   甜腻感会减轻很多，这种中式味觉的感受让可可的厚重有了洗礼。金帝做为老品牌是从小吃到大的巧克力牌子  希望可以凭借中式风味再次强势回归，也可以出山楂风味 非常开胃，期待金帝可以开放更多新型的中式口味，带着我们中式巧克力口味走向国际市场开发新方向，继续探索中国味道，金帝加油[拳头R][拳头R][拳头R]我看好你。</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论009b2e</span><br>
+              <span style="color:#1e293b;">我最期待的巧克力之探索中国味道是[向右R]茉莉牛奶夹心巧克力棒，牛奶基底的醇香与茉莉花结合在一起肯定会很好吃，相比于外国流传进国内的巧克力的味道   甜腻感会减轻很多，这种中式味觉的感受让可可的厚重有了洗礼。金帝做为老品牌是从小吃到大的巧克力牌子  希望可以凭借中式风味再次强势回归，也可以出山楂风味 非常开胃，期待金帝可以开放更多新型的中式口味，带着我们中式巧克力口味走向国际市场开发新方向，继续探索中国味道，金帝加油[拳头R][拳头R][拳头R]我看好你。</span>
+            </div>
+        </div>
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:15px;color:#3730a3;">🚚 物流/融化/包装</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">117 条 · 2.5%</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:10px;">
+            💡 <strong>用途建议：</strong>客服口径 · 夏季冷链是熟食融化关键，可主动加冰袋提醒
+          </div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin:8px 0 4px;">📣 真实用户金句（5 条 · 优先长评）</div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论00012d</span><br>
+              <span style="color:#1e293b;">已经忘记第一次吃巧克力是什么感觉了 只记得第一次吃 金帝  的薄巧 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是清凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论037095</span><br>
+              <span style="color:#1e293b;">已经忘记第一次吃巧克力是什么感觉了 只记得第一次吃金帝的薄巧 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是清凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马上去驿</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01786e</span><br>
+              <span style="color:#1e293b;">超爱金帝巧克力！🍫作为一个资深的巧克力测评✅ 金帝巧克力必吃榜！
+[樱花R]经典款（闭眼入）
+• 榛仁夹心巧克力（最经典）
+纯可可脂，整颗榛子，很酥脆，独立包装，日常送礼都合适。
+•  珍爱白兰地风味 
+淡淡酒香，不喝酒也能接受，比榛仁款甜度低一点，很高级。
+• 纯黑巧
+控糖备孕友好，微苦不涩，可可香很正，解馋无负担。
+[樱花R]小众好吃款（力捧）
+• 巧克力棒
+香芋味，酥到掉渣，冻冰箱像脆皮雪糕，超适合夏天。
+• 充气巧克力
+国内首创，口感松软细腻，像云朵一样，超好吃！
+[樱花R]礼盒款（送礼</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01706d</span><br>
+              <span style="color:#1e293b;">初次邂逅巧克力的奇妙体验，是五岁也可能是四岁的那个午后。爸爸买了一桶裹着金纸做成元宝或者金币形状的巧克力。
+那是我第一次吃巧克力，只觉得醇厚香，像是甜口的芝麻酱。一丝可可微苦中和甜腻，丝滑得转瞬消融。年幼的我被这份独特滋味深深震撼。
+天气热巧克力都化了，妈妈把它们放进了冰箱里面。每当我幼儿园下学就可以得到一颗巧克力，冰凉丝润的口感比常温好吃。
+偶尔妈妈还会搭配一根九头崖超市刷满番茄酱的烤肠给我。这样的日子真让我难以忘怀。
+我印象小时候爸爸还会给我买那种像奶片一样包装的巧克力，是牛奶和黑巧混合的。</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论018355</span><br>
+              <span style="color:#1e293b;">当然是劲凉! 不限量的话 我能吃到这辈子再也不想吃为止 一口咬下去 酥脆的饼干层巧克力的味道很浓厚 接着是劲凉的薄荷味 让我一吃就震惊了 巧克力和薄荷居然可以融合得这么好 只咬了一小口 吃下去后 巧克力的香气 薄荷的清凉停留在我的口腔里 久久不散 后面忍不住把全部都吃完了 吃完后又一直在回味 怎么会有人能把巧克力和薄荷做得这么好吃!从那以后我就深深地爱上了薄巧 已经成为了金帝和薄巧的忠实粉丝了…后面每次买薄巧 从下单那一刻就一直在期待快递的到来 每天都会查看物流到哪了 快递一到 就马上去驿站拿 </span>
+            </div>
+        </div>
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:15px;color:#3730a3;">💖 复购/多次买/老客</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">41 条 · 0.9%</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:10px;">
+            💡 <strong>用途建议：</strong>信任状素材 · 「XX 姐已 N 刷」制造从众心理
+          </div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin:8px 0 4px;">📣 真实用户金句（5 条 · 优先长评）</div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论017886</span><br>
+              <span style="color:#1e293b;">巧克力搭配原味无糖酸奶是我无限回购的神仙组合！浓稠清爽的酸奶搭配切块巧克力，醇厚可可香混合酸奶的微酸，低脂又解馋，当作早餐或者饭后小甜品再合适不过。一直很喜欢金帝这个国货巧克力品牌，味道醇厚不廉价，这次巧克力脆新品让我特别心动。在活动最后冲刺时间，不想错过这次试吃机会，如果能抽到名额，我会仔细记录口感，搭配多种食材创作不同吃法分享，用心产出完整走心的测评，大力推荐给身边朋友！[飞吻R][飞吻R][飞吻R][飞吻R][飞吻R][飞吻R][飞吻R][飞吻R][飞吻R]</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01b627</span><br>
+              <span style="color:#1e293b;">金帝薄荷巧克力两款我直接锁死劲凉！清凉版温润柔和，薄荷和黑巧融合得刚刚好，日常解馋超舒服；但劲凉才是本命，一口下去凉意直冲天灵盖，纯可可黑巧醇厚不发苦，薄荷夹心清爽解腻，酥脆口感层次超绝，完全没有廉价牙膏味。要是巧克力无限供应，我能一次性炫完整两大盒！金帝真的太懂夏天，纯可可用料实在，犯困、吃完重油重辣来一块，口腔瞬间像开了空调，清凉感久久不散，国货薄荷巧克力天花板，无限回购款！</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论015a5f</span><br>
+              <span style="color:#1e293b;">巧克力搭配原味无糖酸奶是我无限回购的神仙组合！浓稠清爽的酸奶搭配切块巧克力，醇厚可可香混合酸奶的微酸，低脂又解馋，当作早餐或者饭后小甜品再合适不过。一直很喜欢金帝这个国货巧克力品牌，味道醇厚不廉价，这次巧克力脆新品让我特别心动。明天就是活动最后冲刺时间，不想错过这次试吃机会，若能抽到名额，我会仔细记录口感，搭配多种食材创作不同吃法分享，用心产出完整走心的测评，大力推荐给身边朋友！</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论02cf08</span><br>
+              <span style="color:#1e293b;">我是贵州本地人！探索中国味道最期待巧克力搭配贵州铜仁抹茶！
+铜仁是中国抹茶之都，梵净山云雾茶园种出来的抹茶清润回甘，我一直超爱金帝的抹茶巧克力棒，茶味浓郁、清苦不齁甜，回购无数次！
+特别希望金帝下一站风味落地贵州铜仁，把本地优质抹茶融入巧克力，本土好茶搭配丝滑巧克力肯定绝配，真心想要金帝回归限定礼，求幸运砸中我！</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论011614</span><br>
+              <span style="color:#1e293b;">小时候第一次吃巧克力应该是散装的金币巧克力！一直超爱吃各种甜食[害羞R][害羞R]和朋友都很喜欢薄荷味，朋友给我安利你家的薄荷巧克力棒，在她家尝了一个就爱上了！！回购了很多次真的好爱吃！榛子味也好香吃一口就爱上[哇R]这次想试试柚子的，希望能被选中，会给每个口味大写特写口味测评的[飞吻R][飞吻R][飞吻R]</span>
+            </div>
+        </div>
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:15px;color:#3730a3;">🎓 学生党/备考/宿舍</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">28 条 · 0.6%</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:10px;">
+            💡 <strong>用途建议：</strong>开学季/备考季选题重点 · 宿舍/图书馆/自习场景
+          </div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin:8px 0 4px;">📣 真实用户金句（5 条 · 优先长评）</div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论03a73c</span><br>
+              <span style="color:#1e293b;">嘴巴闲着无聊、晚自习刷题犯困，或是心情烦闷、节食减脂期间嘴馋难耐，特别想吃甜食的时候，一小块巧克力刚刚好能稳住食欲。比起饼干、蛋糕、酱香饼、薯条这类重油高热量零食，巧克力饱腹感要强很多，小小一块就能压制住泛滥的想吃零食的念头，不会越吃越上瘾。
+ 减脂阶段很容易克制甜食太久，积攒压抑感，反倒后续忍不住暴饮暴食，刻意完全戒掉甜食反而很难长久坚持饮食计划。偶尔吃一小块巧克力恰到好处，快速弥补甜食缺口，安抚想吃甜品的欲望，不用因为吃了零食产生很重的负罪感。</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论0257f3</span><br>
+              <span style="color:#1e293b;">[派对R]已4️⃣连！准大学生来啦！在无数个与困意较量的夜里，在成堆试卷的缝隙中，我总偷偷存着一个闪亮的梦：愿幸运之神在某个平凡午后突然按下暂停键，将一份“已中奖”的惊喜轻轻放在我掌心。 愿这份不期而遇的幸运，成为这个夏天，汗水之外最甜的奖励。 让我相信，努力通向未来，而运气，正在此刻发生。</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论03ad24</span><br>
+              <span style="color:#1e293b;">许愿呀，特别喜欢吃巧克力，我吃巧克力脑袋真的很喜欢很想试一下，感觉很好吃的样子超级喜欢吃甜食，巧克力统治天下呀！希望可以抽到我呀，下周就要考试了，其实这周也考试了，连续两周都要考试，希望可以好运一点，幸运一次吧[红色心形R]</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论039d00</span><br>
+              <span style="color:#1e293b;">我最爱吃巧克力了！我还记得读大学的时候，每次期末我就带两三包巧克力➕一大瓶矿泉水去图书馆学习，毕业后到现在，每次加班加点工作，也要吃巧克力保持精力[派对R]，希望抽到我试试金帝[派对R][派对R][派对R]</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论02fe36</span><br>
+              <span style="color:#1e293b;">更加偏爱柚子味是清爽挂，入口是酸酸甜甜的果香，后面有一点凉感尾巴。适合夏天、饭后、想吃点清爽巧克力的时候 
+哇哇哇我一次炫一盒不夸张[捂脸R]半夜有天馋你们家巧克力棒偷摸溜出宿舍吃了一整盒[哭惹R]</span>
+            </div>
+        </div>
+        <div style="background:#fff;border:1.5px solid #c7d2fe;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:15px;color:#3730a3;">💰 价格/性价比</span>
+            <span style="font-size:11px;background:#e0e7ff;color:#4338ca;border-radius:4px;padding:2px 8px;font-weight:600;">27 条 · 0.6%</span>
+          </div>
+          <div style="background:#eef2ff;border-left:3px solid #6366f1;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#3730a3;margin-bottom:10px;">
+            💡 <strong>用途建议：</strong>定价策略参考 · 高端款强化&quot;值&quot;证据链；引流款可放大 9.9 试吃装
+          </div>
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin:8px 0 4px;">📣 真实用户金句（5 条 · 优先长评）</div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01786e</span><br>
+              <span style="color:#1e293b;">超爱金帝巧克力！🍫作为一个资深的巧克力测评✅ 金帝巧克力必吃榜！
+[樱花R]经典款（闭眼入）
+• 榛仁夹心巧克力（最经典）
+纯可可脂，整颗榛子，很酥脆，独立包装，日常送礼都合适。
+•  珍爱白兰地风味 
+淡淡酒香，不喝酒也能接受，比榛仁款甜度低一点，很高级。
+• 纯黑巧
+控糖备孕友好，微苦不涩，可可香很正，解馋无负担。
+[樱花R]小众好吃款（力捧）
+• 巧克力棒
+香芋味，酥到掉渣，冻冰箱像脆皮雪糕，超适合夏天。
+• 充气巧克力
+国内首创，口感松软细腻，像云朵一样，超好吃！
+[樱花R]礼盒款（送礼</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01432f</span><br>
+              <span style="color:#1e293b;">超爱金帝巧克力！🍫作为一个资深的巧克力测评✅ 金帝巧克力必吃榜！
+[樱花R]经典款（闭眼入）
+• 榛仁夹心巧克力（最经典）
+纯可可脂，整颗榛子，很酥脆，独立包装，日常送礼都合适。
+• 珍爱白兰地风味
+淡淡酒香，不喝酒也能接受，比榛仁款甜度低一点，很高级。
+• 纯黑巧
+控糖备孕友好，微苦不涩，可可香很正，解馋无负担。
+[樱花R]小众好吃款（力捧）
+• 巧克力棒
+香芋味，酥到掉渣，冻冰箱像脆皮雪糕，超适合夏天。
+• 充气巧克力
+国内首创，口感松软细腻，像云朵一样，超好吃！
+[樱花R]礼盒款（送礼体面</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论01bc68</span><br>
+              <span style="color:#1e293b;">一直很爱吃金帝巧克力，口感丝滑不齁甜，这次探索中国味道的主题特别戳我，我最期待桂花龙井口味！江南的桂花清香搭配龙井的清苦茶香，中和巧克力本身的醇厚，层次肯定很丰富。[派对R][派对R][派对R]平时很喜欢中式茶饮和糕点，桂花龙井是经典国风搭配，做成巧克力一定很特别。还希望品牌能去往杭州，挖掘更多江南风味甜品灵感。从上学时期就常买金帝，用料实在，性价比很高，真心希望能抽到限定礼盒，抢先尝一尝这款国风新口味，也期待金帝推出更多融合各地特色的巧克力！</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论02703e</span><br>
+              <span style="color:#1e293b;">已4️⃣连[亲一个R]诚心许愿，盼幸运降临！愿这次的选择能被好运眷顾，让惊喜的数字与我紧紧相拥。不仅为收获，更为体验梦想照进现实那一刻的雀跃与感动。拜托啦，我的小幸运！[派对R][皱眉R]感谢生活总有未知与可能，让我保有这份孩子气般的期待。许愿不仅为了结果，更是对美好的一份主动邀约。愿这份心意能被幸运看见，若能如愿，那将不仅仅是礼物，更是生活对我微笑时，[喝奶茶R][喝奶茶R]那份值得珍藏的温柔回响。</span>
+            </div>
+            <div style="background:#f8fafc;border-left:3px solid #c7d2fe;border-radius:0 6px 6px 0;padding:10px 12px;margin-top:6px;font-size:13px;color:#334155;line-height:1.65;">
+              💬 <span style="font-weight:600;color:#6366f1;font-size:11px;">评论0251f1</span><br>
+              <span style="color:#1e293b;">说起来也是讽刺，人生中第一口巧克力是假的，就是代可可脂，在90年代，巧克力好像很贵，便宜的只能吃小卖部一块钱一块的巧克力，很甜很甜很甜，但是很开心，真正的巧克力也只能过年才能吃，一年就盼年初一这一天，长大之后巧克力变便宜了，可以天天吃，但是发现已经不喜欢吃甜的，越来越苦，对上一次吃巧克力已经是一年前在产房没力时候护士送的，最开始巧克力是开心的，到满足的，到维持血糖与体力的存在</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="signal info" style="margin-top:16px;">
+      <div class="title">💡 商品评价 + 笔记评论双源综合洞察</div>
+      <div class="desc"><strong>商品评价 242 条</strong>：好评率 84%（薄荷味惊喜/清凉解腻/品质惊艳三大主题），差评 9.5% 集中在夏季物流融化 + 8.7% 集中在口味不合；<strong>笔记评论 4,600 条</strong>：薄荷/劲凉 27% + 品质盛赞 15% + 品牌情怀 9.5% —— 用户对"金帝薄荷"的情感共鸣 + 老品牌复兴叙事都在跑通。下阶段最强内容素材来自评论区，可直接复用到达人笔记 / 详情页 UGC / 直播口播。</div>
+    </div>
+
+  </div>
+</section>
+
+<section id="s6">
+  <div class="sect-h">
+    <h2>👥 6. 私域老客</h2>
+    <div class="sub">爆发期新客洪流 · 老客复购初启动 · ARPU / 结构 / 沉淀策略</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 1922，按「<strong>店铺新老客</strong>」字段拆分（区别于「新老客/平台新老客」——后者是"该买家是否是小红书电商老用户"，会失真到 97% 老客）</li>
+      <li><strong>店铺老客</strong>：在金帝店铺历史有过购买记录且近30d 再次下单</li>
+      <li><strong>店铺新客</strong>：近30d 在金帝店铺完成首次购买</li>
+      <li><strong>ARPU</strong>：DGMV / 购买用户数</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div class="kpis">
+      <div class="kpi good">
+        <div class="label">店铺老客 GMV 占比</div>
+        <div class="value">4.8%</div>
+        <div class="delta">¥0.69万 · 206 人 · 新品期正常</div>
+      </div>
+      <div class="kpi good">
+        <div class="label">店铺老客 ARPU</div>
+        <div class="value">¥33.6</div>
+        <div class="delta up">复购人均高于新客</div>
+      </div>
+      <div class="kpi good">
+        <div class="label">店铺新客 GMV 占比</div>
+        <div class="value">95.2%</div>
+        <div class="delta up">¥13.67万 · 5,778 人</div>
+      </div>
+      <div class="kpi good">
+        <div class="label">新客 GMV 环比</div>
+        <div class="value">+915%</div>
+        <div class="delta up">爆发期正常结构</div>
+      </div>
+    </div>
+
+    <div id="chart-user-segments" class="chart small" style="margin-top:16px;"></div>
+
+    <div class="signal good" style="margin-top:12px;">
+      <div class="title">🚀 新品爆发期 · 新客洪流是本期最大亮点</div>
+      <div class="desc">按「店铺新老客」正确口径拆解：<br>
+        ① <strong>店铺新客 +915%</strong>：GMV ¥1.35万→¥13.67万，人数 585→5,778（+5,193 人），是大盘 +961% 的最大贡献者；<br>
+        ② <strong>店铺老客 +6779倍</strong>：GMV ¥62→¥6,920，人数 3→206——历史极低基数，爆发期首批复购客形成；<br>
+        ③ <strong>新老比 95:5</strong>：正处于"新客爆量首触发"阶段，未来 3-6 个月的核心是把 5,778 位新客沉淀成老客盘。
+      </div>
+    </div>
+
+    <div class="signal info" style="margin-top:12px;">
+      <div class="title">💡 下阶段的三个抓手</div>
+      <div class="desc">
+        ① <strong>新客→老客沉淀（本期最重要）</strong>：5,778 位新客里能沉淀到复购的比例，决定金帝下 3-6 个月能否从"爆款单品"变成"稳定复购品牌"；<strong>动作</strong>：包裹卡引导关注品牌号 + 30 天内二单专属券 + 加社群送新品试吃卡；<br>
+        ② <strong>爆款期扩容 · 视频/店播补齐</strong>：图文占 98% 的极端结构不利于持续拉新，趁 8-9 月夏季旺季末尾快速补齐视频（对接 5-10 位夏日零食 KOC）+ 每周 1 场店播试点；<br>
+        ③ <strong>老客体验精细化</strong>：206 位老客是"信任种子用户"，可组建 500-1000 人级别的核心用户群（沿用「金帝听劝小组」共创模式），做新品口味投票 + 早鸟内测，反哺笔记 UGC 弹药。
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s7">
+  <div class="sect-h">
+    <h2>⚠️ 7. 合规风险预警</h2>
+    <div class="sub">近30d 违规明细 · 类目对标</div>
+  </div>
+  <details class="caliber">
+    <summary>数据口径说明</summary>
+    <ul>
+      <li><strong>数据源</strong>：dataset 28963「违规中心全量」</li>
+      <li><strong>时间窗</strong>：近30d</li>
+      <li><strong>说明</strong>：黑盒=商家/主播不可见（本报告不展示）；白盒=商家侧可查询</li>
+    </ul>
+  </details>
+  <div class="sect-body">
+    <div class="kpis">
+      <div class="kpi warn">
+        <div class="label">近30d 白盒违规</div>
+        <div class="value">7 条</div>
+        <div class="delta warn">爆款期内容合规需关注</div>
+      </div>
+      <div class="kpi">
+        <div class="label">主要类型</div>
+        <div class="value" style="font-size:18px;">笔记内容 · 营销规范</div>
+        <div class="delta warn">带货不符 · 博眼球 · 滥发信息</div>
+      </div>
+      <div class="kpi warn">
+        <div class="label">整体合规状况</div>
+        <div class="value" style="font-size:18px;">⚠️ 需重点关注</div>
+        <div class="delta warn">爆发期批量投放易触雷</div>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:16px;">
+      <table>
+        <thead><tr><th>风险域</th><th>子风险域</th><th>数量</th></tr></thead>
+        <tbody id="tbl-violation"></tbody>
+      </table>
+    </div>
+
+    <div class="signal info" style="margin-top:12px;">
+      <div class="title">💡 主要风险点 & 整改方向</div>
+      <div class="desc">爆发期白盒违规 <strong>7 条</strong> 高于类目均值，集中在几个方向：<br>
+        • <strong>违规营销笔记（带货内容不符 1 条）</strong>：达人素材可能存在实物差异，需严把 3 审（图/文/口播一致性）<br>
+        • <strong>笔记内容生态（博眼球骗互动 1 条）</strong>：矩阵账号「金帝听劝小组」内容避免"标题党/骗互动"套路<br>
+        • <strong>问题账号（工业化量产号 1 条）</strong>：同一模板高频量产账号可能被判定，达人合作要求"至少两种拍摄场景/两种脚本"<br>
+        • <strong>商品合规（滥发信息 1 条）</strong>：详情页/图文避免密集 SKU 罗列，尊重平台种草内容底色<br>
+        • <strong>内容画风（诱导行为 1 条）</strong>+ <strong>AI 治理（AI 低质 1 条）</strong>+ <strong>商业内容治理（内容风险 1 条）</strong>：达人内容需人工审核，避免 AI 生成低质内容<br>
+        <strong>建议</strong>：请官方号 + 矩阵号统一走内容审核 SOP，避免爆发期"量>质"引发系统性合规风险
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s8">
+  <div class="sect-h">
+    <h2>🚀 8. 下阶段建议</h2>
+    <div class="sub">综合诊断 · 8-9 月节点 · Q3-Q4 品方向（口味颗粒度）· 内容方向</div>
+  </div>
+  <div class="sect-body">
+    <h3 style="font-size: 15px; color:#334155; margin-bottom: 12px;">🎯 一句话诊断</h3>
+    <div class="signal good">
+      <div class="title">金帝 = "国民老品牌复兴 × 夏日清凉爆款 × 品牌共创叙事"三重共振的爆发期头部，L3 类目 TOP1，下阶段核心在"沉淀新客 · 扩场景 · 内容合规"</div>
+      <div class="desc">金帝近30d ¥14.36万，Top1 SKU 冰感柚子巧克力棒 5袋装 ¥2.27万；<strong>店铺新老比 95:5</strong>（新客 ¥13.67万 / 老客 ¥6,920）——正处于"新客洪流首触发"阶段，是巧克力赛道近30d 增长最猛的品牌；4,600 条笔记评论主题验证「薄荷 27% + 清凉夏季 15% + 品牌情怀 9.5%」三重心智已建立。<strong>下阶段核心</strong>：<strong>把 5,778 位新客沉淀为老客盘（30 天内二单券+社群+新品共创） + 补齐视频/店播场域（应对图文 98% 极端结构） + 8-9 月开学季黄金窗口拉学生党（评论 28 条已有信号）+ 教师节礼盒抢占送礼场景 + 爆款期批量内容严把合规</strong>。</div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📅 8-9 月节点日历</h3>
+    <div class="signals">
+      <div class="signal warn">
+        <div class="title">📆 8月：立秋（8/7）+ 开学季（8月中下旬）</div>
+        <div class="desc"><strong>巧克力方向</strong>：立秋"贴秋膘"→ 冰感柚子秋日款+老金帝夹心经典款；<strong>开学季</strong>→ 「宿舍党/图书馆备考清凉零食」场景（薄荷巧克力+冰感柚子小份 19.9 元档）</div>
+      </div>
+      <div class="signal warn">
+        <div class="title">📆 9月：教师节（9/10）+ 中秋（9/17-19）</div>
+        <div class="desc"><strong>教师节</strong>：「感谢师恩」9 颗/24 颗礼盒（9月1日前铺完，锁定"性价比 + 有心意"人群）；<strong>中秋</strong>：金帝经典款+夏日新款双拼礼盒（新老组合，抢占送礼场景）</div>
+      </div>
+      <div class="signal info">
+        <div class="title">📆 Q4 前瞻：10-11 月秋冬 + 双11 + 双12</div>
+        <div class="desc">秋冬版薄荷姜茶/桂花龙井/山楂陈皮新品上线；大促重点备货 Top5 SPU（冰感柚子全口味装 + 薄荷巧克力清凉版）+ 教师节/中秋礼盒后续做圣诞跨界（"金帝薄荷 mojito 冰饮"跨界营销）</div>
+      </div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">🍜 Q3-Q4 品方向建议（口味颗粒度）</h3>
+    <div class="signals">
+      <div class="signal good">
+        <div class="title">🌡️ 主线：夏日双爆款持续放大 + 秋冬版延展</div>
+        <div class="desc"><strong>推荐动作</strong>：<br>• 冰感柚子巧克力棒（¥8.7万主力）+ 薄荷巧克力（¥3.2万副线）保持全 SKU 覆盖<br>• <strong>秋冬延展版</strong>：薄荷姜茶巧克力（暖胃版薄荷）/ 山楂陈皮巧克力（清爽秋冬）/ 桂花龙井巧克力（评论区已有用户呼吁）<br>• <strong>无糖/低糖版</strong>：笔记评论「产品诉求」10.4% 里有明确无糖需求，可推「学生备考无糖版」承接控糖细分</div>
+      </div>
+      <div class="signal good">
+        <div class="title">🎓 蓝海：学生党/备考场景专线</div>
+        <div class="desc"><strong>推荐动作</strong>：<br>• 「宿舍抽屉常备」小份薄荷装（19.9 元档）<br>• 「图书馆自习提神」纯黑巧薄荷组合<br>• 「军训防中暑」冰感柚子清凉款<br>• 「开学季返校礼」多口味 5-7 颗试装<br>笔记评论「学生党/备考」28 条 + 商品评价 4 条 = 32 条自发信号，市场刚启动</div>
+      </div>
+      <div class="signal info">
+        <div class="title">🎁 场景机会：教师节礼盒 + 品牌情怀线</div>
+        <div class="desc"><strong>创新思路</strong>：<br>• "感谢师恩" 9 颗/24 颗教师节礼盒（9月10日前铺完）<br>• "金帝经典 + 夏日新款"双拼礼盒（老品牌新体验组合）<br>• 复刻/复活经典款做怀旧营销（70/80/90后共鸣）<br>• 借「金帝听劝小组」共创模式招募老金帝人 UGC</div>
+      </div>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">📝 内容方向建议</h3>
+    <ol style="padding-left: 20px; line-height: 2;">
+      <li><strong>视频短板重点补齐</strong>：图文/视频 98:2 极端失衡，找 5-10 位美食测评/清凉零食/学生党垂类中腰部达人拍「ASMR 撕开+咬开+冰镇脆响」类视频，冰感柚子/薄荷都是视觉/听觉冲击强的品类</li>
+      <li><strong>爆款期严把内容合规</strong>：近30d 7 条白盒违规集中在「带货不符/博眼球骗互动/工业化量产/AI 低质」——达人合作要求"至少两种拍摄场景/两种脚本"，避免账号被判为量产号；矩阵账号内容避免标题党</li>
+      <li><strong>差评正面回应</strong>：商品评价 23 条「融化/破损」+ 21 条「口味不合」——拍摄「夏季冷链发货流程 + 冰袋包装」视频对冲；口味不合可做「口味分级/薄荷/柚子偏好测试」互动内容</li>
+      <li><strong>季节内容准备</strong>：8月开学季前2周铺"宿舍/图书馆备考清凉零食"场景；9月教师节前3周铺"感谢师恩"礼盒；10月国庆铺"送家人/长辈"经典款情怀；12月圣诞铺"金帝薄荷冰饮"跨界内容</li>
+    </ol>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">🎪 场域动作建议</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>场域</th><th>当前状态</th><th>建议动作</th></tr></thead>
+        <tbody>
+          <tr><td>商品笔记 (79%)</td><td>¥11.4万，+1160% 爆发</td><td>保持节奏；重点补视频形式（当前 98% 图文），达人扩容到 10+ 位；把学生党/送礼/秋冬延展新品笔记铺进选题库</td></tr>
+          <tr><td>普通商卡 (20%)</td><td>¥2.8万，+1120% 爆发</td><td>SEO 关键词优化：夏日巧克力/薄荷零食/学生宿舍零食；教师节礼盒关键词提前铺</td></tr>
+          <tr><td>普通笔记 (1%)</td><td>¥0.18万</td><td>矩阵账号「金帝听劝小组」持续做用户共创内容；正在爬升，扩大用户 UGC 招募</td></tr>
+          <tr><td>K播 (0.3%)</td><td>¥0.4万 极弱</td><td>补充 5-10 个夏日零食/学生党/减脂/校园垂类中腰部达人</td></tr>
+          <tr><td>店播 (0%)</td><td>完全缺位</td><td>1场/周试点，主播出镜"金帝品牌人物 + 学生党/上班族场景"</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin: 24px 0 12px; font-size: 15px; color:#334155;">💡 3 个"不太离谱"的跳脱思考</h3>
+    <div class="signals">
+      <div class="signal info">
+        <div class="title">💡 1. "金帝听劝共创"深化 · 品牌 UGC 战场</div>
+        <div class="desc">笔记评论「品牌/情怀」436 条 9.5% 已经验证「国民老品牌复兴叙事」的用户共鸣；现有「金帝听劝小组」矩阵号是极优秀的起点。<strong>可放大</strong>：设立"金帝口味研究所"用户共创项目——从 5,000+ 已下单用户中招募 100 位品鉴官，做「桂花龙井/薄荷姜茶/山楂陈皮」等新口味投票 + 早鸟内测，反哺笔记 UGC 弹药。这是国民品牌唯一能打过国际大牌的路径。</div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 2. "金帝夏日冰饮吧" · 跨界营销</div>
+        <div class="desc">冰感柚子和薄荷巧克力的「清凉解腻」心智可延展到冰饮场景：<br>
+          • 「金帝薄荷 mojito」：巧克力棒 + 苏打水 + 薄荷叶<br>
+          • 「金帝柚子冰美式」：冰感柚子棒 + 冰美式咖啡<br>
+          • 「金帝雪顶冰淇淋」：融化的薄荷巧克力 + 香草冰淇淋<br>
+          搭配 5-10 位咖啡/饮品/家庭料理达人做跨界内容，让「吃巧克力」变成「夏日仪式感」，客单价可拉到 40+ 元档。
+        </div>
+      </div>
+      <div class="signal info">
+        <div class="title">💡 3. "新客沉淀漏斗"精细化运营</div>
+        <div class="desc">按「店铺新老客」正确口径，店铺新客占 <strong>95%（5,778 人）</strong> · 老客占 5%（206 人 / ARPU ¥33.6），这是新品爆发期的典型结构；<strong>下阶段核心是把新客沉淀成复购老客</strong>：<br>
+          • 首单包裹卡 → 引导关注品牌号（首月转化率目标 30%+）<br>
+          • 30 天内二单专属券（¥5-10 券，锚定平均 ARPU ¥25）<br>
+          • 加社群送新品试吃卡（500-1000 人级用户群，做新品早鸟内测）<br>
+          • 60 天内累计 3 单送金帝周边礼品（帆布袋/杯垫等品牌物料）<br>
+          如果 5,778 位新客能实现 10-15% 沉淀老客率，未来 3 个月老客盘可从 206 人涨到 600-900 人，形成稳定复购底盘。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>📊 DIBP 数据平台 · 数据来源：RedBI dataset 1922（人货场成交分析） / 8033（订单晒单评价） / 635971（笔记评论区）/ 28963（违规中心）</p>
+  <p style="margin-top:6px;">🤖 本报告由 DIBP AI 自动生成 · 生成时间 2026-08-03 · <a href="https://github.com/zhudamen528-code/merchant-deep-diagnosis" target="_blank">GitHub</a></p>
+</footer>
+
+<script>
+fetch('data.json?_=' + Date.now()).then(r=>r.json()).then(data => {
+  window.__DATA__ = data;
+
+  // 1. 场域环比图
+  const carrier = data.carrier;
+  echarts.init(document.getElementById('chart-carrier')).setOption({
+    tooltip: { trigger:'axis', axisPointer:{type:'shadow'} },
+    legend: { data:['上30d','本30d','环比%'], top:0 },
+    grid: { left:10, right:40, bottom:10, top:40, containLabel:true },
+    xAxis: { type:'category', data: carrier.map(x=>x.name) },
+    yAxis: [{ type:'value', name:'DGMV(元)' }, { type:'value', name:'环比%', splitLine:{show:false} }],
+    series: [
+      { name:'上30d', type:'bar', data: carrier.map(x=>x.prev), itemStyle:{color:'#cbd5e1'} },
+      { name:'本30d', type:'bar', data: carrier.map(x=>x.now), itemStyle:{color:'#667eea'} },
+      { name:'环比%', type:'line', yAxisIndex:1, data: carrier.map(x=>x.wow!==null?x.wow.toFixed(1):'0'),
+        itemStyle:{color:'#ef4444'}, symbolSize:8, label:{show:true, formatter:'{c}%'} },
+    ],
+  });
+
+  // 场域表格
+  document.getElementById('tbl-carrier').innerHTML = carrier.map(x=>`
+    <tr>
+      <td>${x.name}</td>
+      <td>${(x.now/10000).toFixed(2)}万</td>
+      <td>${(x.prev/10000).toFixed(2)}万</td>
+      <td class="${x.wow===null?'':(x.wow>=0?'up':'down')}">${x.wow===null?'—':(x.wow>=0?'+':'')+x.wow.toFixed(1)+'%'}</td>
+      <td>${x.ratio.toFixed(1)}%</td>
+    </tr>`).join('');
+
+  // 2. 品类环形图
+  echarts.init(document.getElementById('chart-cat')).setOption({
+    tooltip: { trigger:'item', formatter:'{b}: {c}元 ({d}%)' },
+    legend: { orient:'horizontal', bottom:0 },
+    series: [{
+      type:'pie', radius:['40%','70%'], center:['50%','45%'],
+      data: data.categories.map(c=>({name:`${c.name} [${c.role}]`, value:c.dgmv})),
+      label:{ formatter:'{b}\n{d}%', fontSize:12 },
+      itemStyle:{ borderColor:'#fff', borderWidth:2 },
+    }],
+    color:['#667eea','#f59e0b','#10b981','#94a3b8'],
+  });
+
+  // ====== 第4章 v2：细分品类机会 ======
+  const cv2 = data.community_v2;
+  if (cv2) {
+    // 全景表
+    document.getElementById('tbl-subcategories').innerHTML = cv2.sub_categories.map(s => {
+      const pct = data.categories.find(c=>c.name===s.cat);
+      const pctStr = pct ? pct.pct.toFixed(1)+'%' : '-';
+      const marks = s.santu_covered?'🎯':'';
+      return `<tr class="${s.santu_covered?'self':''}">
+        <td>${marks} ${s.cat}</td>
+        <td>${s.gmv_wan}万</td>
+        <td>${s.items}</td>
+        <td>${pctStr}</td>
+      </tr>`;
+    }).join('');
+
+    // 竞对表（金帝新增）
+    const tblComp = document.getElementById('tbl-competitors');
+    if (tblComp && data.competitors) {
+      const selfGmv = data.competitors.find(c=>c.name==='金帝巧克力旗舰店')?.now_gmv || 0;
+      tblComp.innerHTML = data.competitors.map(c => {
+        const isSelf = c.name==='金帝巧克力旗舰店';
+        const ratio = isSelf ? '—' : (selfGmv>0 ? `${(c.now_gmv*100/selfGmv).toFixed(0)}%` : '—');
+        return `<tr class="${isSelf?'self':''}">
+          <td>#${c.rank}${isSelf?' 🏆':''}</td>
+          <td>${c.name}</td>
+          <td>¥${(c.now_gmv/10000).toFixed(2)}万</td>
+          <td>${ratio}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    // 机会子方向
+    const levelStyle = {
+      star: {bg:'#fef3c7', border:'#f59e0b', label:'⭐ 明星机会'},
+      growth: {bg:'#dcfce7', border:'#10b981', label:'📈 稳步增长'},
+      blueOcean: {bg:'#dbeafe', border:'#3b82f6', label:'🌊 蓝海观察'},
+    };
+    document.getElementById('opp-list').innerHTML = cv2.opportunities.map(o => {
+      const st = levelStyle[o.level] || levelStyle.growth;
+      const gmvStr = o.gmv_wan!==null && o.gmv_wan!==undefined ? `GMV ${o.gmv_wan}万` : '';
+      return `<div style="background:${st.bg};border:1px solid ${st.border};border-radius:10px;padding:14px;margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-weight:700;font-size:15px;color:#1e293b;">${o.sub_cat}</span>
+          <span style="font-size:11px;background:${st.border}22;color:${st.border};border-radius:4px;padding:2px 8px;font-weight:600;">${st.label}</span>
+        </div>
+        <div style="font-size:13px;color:#475569;margin-bottom:10px;">
+          ${gmvStr}<br>
+          ${o.insight}
+        </div>
+        ${o.hot_keywords && o.hot_keywords.length>0 ? `
+        <div style="background:#fff;border-radius:6px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-size:12px;color:#94a3b8;margin-bottom:4px;">🔑 高频关键词/信号</div>
+          ${o.hot_keywords.map(k=>`
+            <div style="font-size:12px;color:#334155;margin:2px 0;">
+              <strong style="color:#667eea;">${k.kw}</strong>${k.freq?` <span style="font-size:11px;color:#94a3b8;">(${k.freq}次)</span>`:''} — ${k.note}
+            </div>`).join('')}
+        </div>` : ''}
+        ${o.leader_brands && o.leader_brands.length>0 ? `
+        <div style="background:#fff;border-radius:6px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-size:12px;color:#94a3b8;margin-bottom:4px;">🏆 头部案例商家</div>
+          <div style="font-size:12px;color:#334155;">${o.leader_brands.join(' · ')}</div>
+        </div>` : ''}
+        <div style="background:#fff;border-left:3px solid ${st.border};padding:8px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#166534;">
+          💼 <strong>金帝 行动：</strong>${o.santu_action}
+        </div>
+      </div>`;
+    }).join('');
+    document.getElementById('community-insight-v2').textContent = cv2.insight;
+  }
+
+  // ====== 第5章 v4：客户反馈（商品评价 + 笔记评论双源） ======
+  const fb2 = data.user_feedback;
+  if (fb2) {
+    document.getElementById('fb-source-info').innerHTML = fb2.source_type + ' · ' + fb2.source_note;
+
+    // 卖家口碑分卡片
+    const ratingBox = document.getElementById('shop-rating-box');
+    if (ratingBox && fb2.shop_rating) {
+      ratingBox.innerHTML = `
+        <div class="kpis" style="margin-bottom:12px;">
+          <div class="kpi good">
+            <div class="label">🌟 卖家口碑分</div>
+            <div class="value">${fb2.shop_rating.score}</div>
+            <div class="delta up">/5.0 优秀</div>
+          </div>
+          <div class="kpi good">
+            <div class="label">📦 有效评价</div>
+            <div class="value">${fb2.total_reviews}</div>
+            <div class="delta up">近90d 全量</div>
+          </div>
+          <div class="kpi good">
+            <div class="label">💚 好评率</div>
+            <div class="value">${fb2.good_pct}%</div>
+            <div class="delta up">优秀</div>
+          </div>
+          <div class="kpi">
+            <div class="label">💔 差评率</div>
+            <div class="value">${fb2.bad_pct}%</div>
+            <div class="delta">${fb2.bad_pct < 5 ? '低' : '需关注'}</div>
+          </div>
+        </div>`;
+    }
+
+    // 评分分布图
+    if (fb2.score_dist) {
+      const scoreChart = echarts.init(document.getElementById('chart-score-dist'));
+      scoreChart.setOption({
+        grid: {left:60, right:30, top:20, bottom:40},
+        tooltip: {},
+        xAxis: {type:'category', data: fb2.score_dist.map(s=>s.star+'星')},
+        yAxis: {type:'value', name:'评价数'},
+        series: [{
+          type:'bar', barWidth:'40%',
+          data: fb2.score_dist.map(s=>({
+            value: s.count,
+            itemStyle: {color: s.star>=4?'#10b981':(s.star==3?'#f59e0b':'#ef4444')}
+          })),
+          label: {show:true, position:'top', formatter: p => p.data.value+' ('+fb2.score_dist[p.dataIndex].pct+'%)'}
+        }]
+      });
+    }
+
+    const weightColor = {high:'#ef4444', medium:'#f59e0b', insight:'#667eea'};
+
+    // 负反馈区
+    document.getElementById('feedback-themes-v2').innerHTML = fb2.negative_themes.map(t => `
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+          <span style="font-weight:600;font-size:14px;color:#1e293b;">${t.category}</span>
+          <span style="font-size:11px;background:#fee2e2;color:#dc2626;border-radius:4px;padding:2px 8px;font-weight:600;">${t.mention_count} 条 · ${t.mention_pct}%</span>
+        </div>
+        <div style="font-size:13px;color:#475569;margin-bottom:8px;">${t.insight}</div>
+        ${t.business_opportunity ? `<div style="background:#f0fdf4;border-left:3px solid #10b981;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#166534;margin-bottom:6px;">
+          💼 <strong>行动建议：</strong>${t.business_opportunity}
+        </div>` : ''}
+        ${t.quotes.slice(0,3).map(q=>`
+          <div style="background:#f8fafc;border-radius:6px;padding:6px 10px;margin-top:6px;font-size:12px;color:#475569;">
+            <span style="font-weight:600;color:#667eea;">${q.user}：</span>${q.quote}
+          </div>`).join('')}
+      </div>`).join('');
+
+    // ⭐ 表扬素材区
+    const posBox = document.getElementById('positive-themes');
+    if (posBox && fb2.positive_themes) {
+      posBox.innerHTML = fb2.positive_themes.map(t => `
+        <div style="background:#fff8f1;border:1.5px solid #fbbf24;border-radius:10px;padding:14px;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:14px;color:#92400e;">${t.category}</span>
+            <span style="font-size:11px;background:#fef3c7;color:#92400e;border-radius:4px;padding:2px 8px;font-weight:600;">${t.mention_count} 条 · ${t.mention_pct}%</span>
+          </div>
+          <div style="background:#fef9c3;border-left:3px solid #f59e0b;padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#78350f;margin-bottom:8px;">
+            📝 <strong>内容素材建议：</strong>${t.usage_hint}
+          </div>
+          ${t.quotes.slice(0,3).map(q=>`
+            <div style="background:#fff;border:1px solid #fde68a;border-radius:6px;padding:8px 10px;margin-top:6px;font-size:12px;color:#475569;">
+              <span style="font-weight:600;color:#d97706;">${q.user}：</span>${q.quote}
+            </div>`).join('')}
+        </div>`).join('');
+    }
+
+    // === 品类聚合表 ===
+    const catBox = document.getElementById('tbl-category-summary');
+    if (catBox && fb2.category_summary) {
+      const rows = fb2.category_summary.map(c => {
+        const scoreColor = c.avg_score >= 4.7 ? '#10b981' : (c.avg_score >= 4.4 ? '#f59e0b' : '#ef4444');
+        return `<tr>
+          <td>${c.category}</td>
+          <td style="text-align:right;">${c.review_count.toLocaleString()}</td>
+          <td style="text-align:right;color:${scoreColor};font-weight:700;">${c.avg_score}</td>
+          <td style="text-align:right;">${c.item_count}</td>
+        </tr>`;
+      }).join('');
+      catBox.innerHTML = `<div style="overflow-x:auto;"><table style="width:100%;font-size:13px;border-collapse:collapse;background:#fff;">
+        <thead><tr style="background:#f1f5f9;color:#475569;">
+          <th style="padding:8px 12px;text-align:left;">品类</th>
+          <th style="padding:8px 12px;text-align:right;">评价数</th>
+          <th style="padding:8px 12px;text-align:right;">平均评分</th>
+          <th style="padding:8px 12px;text-align:right;">SPU数</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>`;
+    }
+
+    // === 品类 × 差评主题 ===
+    const catNegBox = document.getElementById('category-negatives');
+    if (catNegBox && fb2.category_negatives) {
+      catNegBox.innerHTML = fb2.category_negatives.map(c => `
+        <details style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;margin-bottom:8px;" ${c.themes[0]?.count >= 30 ? 'open' : ''}>
+          <summary style="cursor:pointer;font-weight:600;color:#1e293b;font-size:14px;">
+            📦 ${c.category}
+            <span style="font-size:11px;background:#fee2e2;color:#dc2626;border-radius:4px;padding:2px 8px;margin-left:8px;font-weight:600;">${c.themes.reduce((s,t)=>s+t.count,0)} 条负反馈</span>
+          </summary>
+          <div style="margin-top:10px;">
+            ${c.themes.slice(0,6).map(t => `
+              <div style="background:#fef2f2;border-left:3px solid #ef4444;padding:6px 10px;margin-top:6px;border-radius:0 6px 6px 0;">
+                <div style="font-size:12px;color:#991b1b;font-weight:600;">${t.name} · ${t.count} 条</div>
+                ${t.examples.slice(0,2).map(ex=>`<div style="font-size:11px;color:#78716c;margin-top:2px;">· ${ex.slice(0,120)}</div>`).join('')}
+              </div>`).join('')}
+          </div>
+        </details>`).join('');
+    }
+  }
+
+  // ====== 📝 笔记评论区（独立模块 v0.9） ======
+  const nc = data.note_comments;
+  if (nc) {
+    const notesBox = document.getElementById('note-comments-notes');
+    if (notesBox) {
+      notesBox.innerHTML = `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;font-size:12px;color:#475569;">
+        <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:13px;margin-bottom:8px;">
+          <div>📊 <strong>${(nc.total_raw||0).toLocaleString()}</strong> 条评论</div>
+          <div>📝 <strong>${(nc.total_notes||0).toLocaleString()}</strong> 篇笔记</div>
+          <div>👥 <strong>${(nc.unique_users||0).toLocaleString()}</strong> 位独立用户</div>
+          <div>🔍 <strong>${(nc.total_unique||0).toLocaleString()}</strong> 条独立内容</div>
+        </div>
+        <div style="color:#64748b;line-height:1.6;padding-top:6px;border-top:1px dashed #e2e8f0;">${nc.source_note}</div>
+      </div>`;
+    }
+    // note-comments-themes 已静态注入到 HTML（避免 JS 渲染失败），此处不再动态渲染
+  }
+
+  // 6. TOP 笔记卡片
+  document.getElementById('notes-grid').innerHTML = data.top_notes.map(n=>`
+    <div class="note-card">
+      <span class="note-rank">🔥 高转化案例</span>
+      <div class="note-title">${n.title || '(无标题)'}</div>
+      <div class="note-meta">👤 ${n.author}</div>
+      <div class="note-meta">📅 发布于 ${n.publish_date}</div>
+      <a class="note-btn" href="https://www.xiaohongshu.com/discovery/item/${n.note_id}" target="_blank">🔗 打开笔记 →</a>
+    </div>
+  `).join('');
+
+  // 7. 用户分层饼图
+  echarts.init(document.getElementById('chart-user-segments')).setOption({
+    tooltip: { trigger:'item', formatter:'{b}<br>DGMV: ¥{c}<br>占比: {d}%' },
+    legend: { orient:'horizontal', bottom:0 },
+    series: [{
+      type:'pie', radius:['30%','60%'], center:['50%','45%'],
+      data: data.user_segments.map(s=>({name:`${s.name} · ${s.users}人`, value:s.dgmv})),
+      label:{ formatter:'{b}\n{d}%', fontSize:11 },
+    }],
+    color:['#10b981','#f59e0b','#3b82f6','#94a3b8'],
+  });
+
+  // 8. 违规表（只显示白盒，黑盒商家不可见）
+  const violationsVisible = data.violations.filter(v => v.penalty_type === '白盒');
+  document.getElementById('tbl-violation').innerHTML = violationsVisible.length > 0
+    ? violationsVisible.map(v=>`
+        <tr>
+          <td>${v.domain}</td>
+          <td>${v.sub_domain || '-'}</td>
+          <td>${v.count}</td>
+        </tr>`).join('')
+    : `<tr><td colspan="3" style="text-align:center;color:#94a3b8;padding:20px;">✅ 无商家可见违规</td></tr>`;
+
+  // 响应式 resize
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.chart').forEach(el => {
+      const inst = echarts.getInstanceByDom(el);
+      if (inst) inst.resize();
+    });
+  });
+
+  // TOC 高亮
+  const tocLinks = document.querySelectorAll('.toc a');
+  const sections = document.querySelectorAll('section');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      const rect = s.getBoundingClientRect();
+      if (rect.top < 120) current = s.id;
+    });
+    tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+  });
+});
+</script>
+</body>
+</html>
