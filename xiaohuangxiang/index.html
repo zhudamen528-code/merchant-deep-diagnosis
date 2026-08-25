@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小黄象旗舰店 · 上半年经营诊断 · 商家版</title>
+<script src="echarts.min.js"></script>
+<script>if(typeof echarts==="undefined"){document.write('<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"><\/script>')}</script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { font-size:14px; }
+  body { font-family:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; background:#f5f7fa; color:#1f2937; line-height:1.6; }
+  a { color:#0891b2; text-decoration:none; }
+  .wrap { max-width:1200px; margin:0 auto; padding:0 16px; }
+  .hero { background:linear-gradient(135deg,#0ea5e9 0%,#0369a1 100%); color:#fff; padding:32px 16px 40px; }
+  .hero h1 { font-size:24px; font-weight:700; }
+  .hero .sub { margin-top:8px; opacity:.88; font-size:13px; }
+  .hero .meta { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
+  .hero .meta span { background:rgba(255,255,255,.16); padding:6px 12px; border-radius:20px; font-size:12px; }
+  section { background:#fff; margin:16px 0; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.05); overflow:hidden; }
+  .sect-h { padding:18px 20px 8px; border-bottom:1px solid #eef0f3; }
+  .sect-h h2 { font-size:18px; color:#0f172a; }
+  .sect-h .sub { font-size:12px; color:#6b7280; margin-top:4px; }
+  .sect-body { padding:16px 20px; }
+  details.caliber { background:#f8fafc; border-left:3px solid #94a3b8; padding:10px 14px; margin:12px 20px 0; border-radius:6px; font-size:12px; color:#475569; }
+  details.caliber summary { cursor:pointer; font-weight:600; color:#334155; }
+  details.caliber summary::before { content:"📊 "; }
+  details.caliber ul { margin:8px 0 0 16px; }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-top:8px; }
+  .kpi { background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:14px; }
+  .kpi .label { font-size:12px; color:#6b7280; }
+  .kpi .value { font-size:23px; font-weight:700; color:#0f172a; margin-top:4px; letter-spacing:-.5px; }
+  .kpi .delta { font-size:12px; margin-top:6px; padding:2px 8px; border-radius:12px; display:inline-block; }
+  .kpi .delta.up { background:#d1fae5; color:#065f46; }
+  .kpi .delta.down { background:#fee2e2; color:#991b1b; }
+  .kpi .delta.warn { background:#fef3c7; color:#92400e; }
+  .kpi.alert { border-left:4px solid #ef4444; }
+  .kpi.good { border-left:4px solid #10b981; }
+  .signals { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin:12px 0; }
+  .signal { padding:14px 16px; border-radius:10px; border-left:4px solid; }
+  .signal.warn { background:#fffbeb; border-color:#f59e0b; }
+  .signal.alert { background:#fef2f2; border-color:#ef4444; }
+  .signal.good { background:#f0fdf4; border-color:#10b981; }
+  .signal.info { background:#eff6ff; border-color:#3b82f6; }
+  .signal .title { font-weight:600; font-size:14px; margin-bottom:4px; }
+  .signal .desc { font-size:12px; color:#4b5563; }
+  .chart { width:100%; height:340px; margin-top:8px; }
+  .chart.small { height:270px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th,td { padding:10px 8px; text-align:left; border-bottom:1px solid #f1f5f9; }
+  th { background:#f8fafc; color:#475569; font-weight:600; font-size:12px; }
+  tr.self { background:#fef3c7 !important; font-weight:600; }
+  .up { color:#059669; font-weight:600; }
+  .down { color:#dc2626; font-weight:600; }
+  .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .lead { font-size:13px; color:#475569; background:#f8fafc; padding:12px 14px; border-radius:8px; margin-bottom:14px; border-left:3px solid #0891b2; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:760px) { .two { grid-template-columns:1fr; } }
+  .sub-h { font-size:14px; font-weight:600; color:#0f172a; margin:18px 0 8px; padding-left:8px; border-left:3px solid #0891b2; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin-top:10px; }
+  .card { border:1px solid #e5e7eb; border-radius:10px; padding:14px; }
+  .card .ct { font-weight:600; font-size:13px; margin-bottom:6px; color:#0f172a; }
+  .card .cd { font-size:12px; color:#4b5563; }
+  .card.hi { border-left:4px solid #10b981; background:#f0fdf4; }
+  .card.mid { border-left:4px solid #f59e0b; background:#fffbeb; }
+  .card.lo { border-left:4px solid #3b82f6; background:#eff6ff; }
+  .toc { position:sticky; top:0; background:#fff; border-bottom:1px solid #e5e7eb; padding:10px 16px; overflow-x:auto; white-space:nowrap; z-index:10; }
+  .toc a { display:inline-block; margin-right:16px; font-size:13px; color:#64748b; }
+  footer { text-align:center; padding:24px 16px; color:#94a3b8; font-size:12px; }
+  .badge { display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px; background:#e0f2fe; color:#0369a1; margin-left:6px; }
+  @media(max-width:640px) { .hero h1 { font-size:19px; } .kpi .value { font-size:19px; } .chart { height:280px; } table { font-size:12px; } }
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <h1>🥟 小黄象旗舰店 · 上半年经营诊断</h1>
+  <div class="sub">早餐速食双引擎 · 直播场域领先 · 老客复购扎实</div>
+  <div class="meta">
+    <span>📅 数据周期：2026-01-01 ~ 2026-08-24（YTD 236 天）</span>
+    <span>🏷️ 面点类速食 · 三级类目第 2 名</span>
+    <span>🎯 对标：同赛道头部店铺</span>
+    <span>🕐 报告生成：2026-08-25</span>
+  </div>
+</div></header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#s0">⭐ 一屏诊断</a><a href="#s1">📈 生意大盘</a><a href="#s2">⚔️ 场域对标</a>
+  <a href="#s3">🏷️ 类目排名</a><a href="#s4">🛒 商品矩阵</a><a href="#s5">📝 商笔漏斗</a>
+  <a href="#s6">🎬 店播专项</a><a href="#s7">👥 新老客</a><a href="#s8">💭 客户反馈</a>
+  <a href="#s9">⚠️ 合规</a><a href="#s10">🚀 下半年建议</a>
+</div></nav>
+
+<main class="wrap">
+
+<!-- ===== S0 ===== -->
+<section id="s0">
+  <div class="sect-h"><h2>⭐ 一屏诊断 · 上半年全景</h2>
+    <div class="sub">2026 年 1-8 月累计表现 · 同比口径为 2025 年同期（1/1~8/24）</div></div>
+  <details class="caliber"><summary>数据口径</summary><ul><li>数据源：商家粒度 1d 宽表 <code>dm_seller_metrics_1d_di</code>（全量商家，无行权限限制）</li><li>DGMV = <code>dgmv</code> 字段日累加；同比对照 2025-01-01 ~ 2025-08-24 同口径</li><li>类目排名分母 = 该层级内 YTD DGMV &gt; 0 的商家数；类目归属取 2026-08-24 快照主营类目（近 180 天 DGMV 最大类目判定）</li><li>⚠️ 8 月为 1-24 日不完整月，跨月比较均已折算为日均</li></ul></details>
+  <div class="sect-body">
+    <div class="kpis"><div class="kpi good"><div class="label">YTD DGMV</div><div class="value">847.7万</div><div class="delta up">+12.7%（YoY）</div></div><div class="kpi "><div class="label">订单量</div><div class="value">84,473</div><div class="delta up">+4.3%（YoY）</div></div><div class="kpi "><div class="label">客单价</div><div class="value">¥100.4</div><div class="delta warn">对标 ¥1XX</div></div><div class="kpi good"><div class="label">店播场次</div><div class="value">225</div><div class="delta up">累计 4,386 小时</div></div><div class="kpi good"><div class="label">三级类目排名</div><div class="value">第 2 名</div><div class="delta up">/ 968 家</div></div><div class="kpi "><div class="label">老客占比</div><div class="value">68.9%</div><div class="delta warn">老客 583.9万</div></div></div>
+    <div class="signals"><div class="signal good"><div class="title">🏆 品类地位稳固</div><div class="desc">面点类速食三级类目 <b>第 2 名</b>（968 家有成交商家中），其中 K 播 <b>第 1</b>、店播 <b>第 3</b>、商卡 <b>第 4</b>，是品类里少有的多场域同时进入前五的店铺。</div></div><div class="signal good"><div class="title">📈 增速跑赢对标</div><div class="desc">YTD DGMV <b>847.7万</b>，同比 <b>+12.7%</b>；同赛道对标品牌同期同比 <b>+1.6%</b>。增速优势明显。</div></div><div class="signal info"><div class="title">🎬 直播是核心壁垒</div><div class="desc">上半年开播 <b>225</b> 场、累计 <b>4,386</b> 小时，店播贡献 <b>301.7万</b>（占 35.6%）。品类内仅 154 家店铺有店播成交，这条线是差异化优势。</div></div><div class="signal warn"><div class="title">🚀 商品笔记是最大增量空间</div><div class="desc">商笔 YTD <b>45.6万</b>，占大盘 5.4%。同品类头部店铺该场域可做到 <b>7XX万</b> 量级——这是全年最值得投入的一块空间。</div></div></div>
+  </div>
+</section>
+
+<!-- ===== S1 ===== -->
+<section id="s1">
+  <div class="sect-h"><h2>📈 1. 上半年生意大盘</h2>
+    <div class="sub">月度趋势 · 五场域拆解 · 同比归因</div></div>
+  <div class="sect-body">
+    <div class="lead">
+      YTD <b>847.7万</b>，同比 <b>+12.7%</b>。全年最大单月是 <b>3 月 232.2万</b>，
+      是其余 7 个月平均（<b>87.9万</b>）的 <b>2.6 倍</b>——3 月大促是全年最强脉冲。
+      H1 日均 <b>3.82万</b>，7-8 月日均 <b>2.84万</b>（<b>-25.7%</b>）。
+    </div>
+    <div id="c_trend" class="chart"></div>
+    <div class="sub-h">五场域 YTD 拆解</div>
+    <div class="table-wrap"><table>
+      <tr><th>场域</th><th>本店 DGMV</th><th>占比</th><th>同比</th><th>对标店铺</th><th>对标占比</th></tr>
+      <tr><td><b>商品笔记</b></td><td>45.6万</td><td>5.4%</td><td><span class="down">-37.9%</span></td><td>7XX万</td><td>5X%</td></tr><tr><td><b>店播</b></td><td>301.7万</td><td>35.6%</td><td><span class="down">-3.7%</span></td><td><span style="color:#94a3b8">未开展</span></td><td>—</td></tr><tr><td><b>K播</b></td><td>255.6万</td><td>30.2%</td><td><span class="up">+67.7%</span></td><td>3XX万</td><td>2X%</td></tr><tr><td><b>商卡</b></td><td>204.0万</td><td>24.1%</td><td><span class="up">+14.9%</span></td><td>2XX万</td><td>2X%</td></tr><tr style="background:#f8fafc;font-weight:600"><td>四场域合计</td><td>806.9万</td><td>95.2%</td><td>—</td><td>1,3XX万</td><td>9X%</td></tr>
+    </table></div>
+    <p style="font-size:12px;color:#6b7280;margin-top:10px">
+      另有搜索场景 <b>83.9万</b>、私域（私信群聊）<b>132.6万</b>，与上述场域存在渠道归因交叉，不计入四场域合计。
+      四场域合计占大盘 95.2%，其余为其他渠道归因。
+    </p>
+    <div id="c_carrier" class="chart small"></div>
+  </div>
+</section>
+
+<!-- ===== S2 核心对标章 ===== -->
+<section id="s2">
+  <div class="sect-h"><h2>⚔️ 2. 场域结构对标 <span class="badge">核心章</span></h2>
+    <div class="sub">同一级类目 · 两条不同路线的结构性差异 （对外版：竞对数据做了脱敏处理，仅保留量级参考）</div></div>
+  <div class="sect-body">
+    <div class="lead">两家店铺走的是两条不同的路线，各有优势场域。把两边的结构摊开看，能清楚看到小黄象「直播强、笔记待补」的机会点在哪。</div>
+
+    <div class="cards">
+      <div class="card hi"><div class="ct">🎬 店播 · 本店独有壁垒</div><div class="cd">
+        本店 <b>301.7万</b>（占 35.6%），
+        对标店铺该场域未开展。
+        品类内 968 家有成交店铺中仅 <b>154 家</b>有店播成交，竞争密度低，是最稳的差异化资产。
+      </div></div>
+      <div class="card mid"><div class="ct">📝 商品笔记 · 最大增量空间</div><div class="cd">
+        本店 <b>45.6万</b>（占 5.4%），
+        对标 <b>7XX万</b>（占 5X%）。
+        两家体量差 <b>5XX万</b>，其中商笔一项差 <b>6XX万</b>。
+      </div></div>
+      <div class="card lo"><div class="ct">🎤 K 播 · 双方都强但打法不同</div><div class="cd">
+        本店 <b>255.6万</b>（占 30.2%）·
+        合作主播 <b>9,974</b> 人次，走「广铺量」路线。
+        对标 <b>3XX万</b>·主播 <b>2,5XX</b> 人次，走「少而精」路线。
+      </div></div>
+      <div class="card lo"><div class="ct">🛍️ 商卡 · 结构接近</div><div class="cd">
+        本店 <b>204.0万</b>（24.1%）vs
+        对标 <b>2XX万</b>（2X%）。
+        商卡曝光 <b>40,503,772</b>、CTR <b>4.29%</b>、GPM <b>¥50.4</b>，是两家最可比的一环。
+      </div></div>
+    </div>
+
+    <div class="sub-h">场域占比对照</div>
+    <div id="c_cmp" class="chart"></div>
+
+    <div class="sub-h">增长动能对照（YTD 同比）</div>
+    <div class="table-wrap"><table>
+      <tr><th>指标</th><th>小黄象</th><th>对标店铺</th><th>解读</th></tr>
+      <tr class="self"><td>YTD DGMV</td><td>847.7万</td><td>1,3XX万</td>
+        <td>本店为对标的 <b>61%</b>，体量差 <b>5XX万</b></td></tr>
+      <tr><td>DGMV 同比</td><td class="up">+12.7%</td><td>+1.6%</td>
+        <td>本店增速领先 <b>11.1pt</b>，体量在追赶</td></tr>
+      <tr><td>订单量同比</td><td>+4.3%</td><td>+6.9%</td>
+        <td>订单结构差异</td></tr>
+      <tr><td>客单价</td><td>¥100.4</td><td>¥1XX</td>
+        <td>本店客单低 <b>13%</b>，套装/组合装是抬升空间</td></tr>
+      <tr><td>粉丝量</td><td>96,120</td><td>374,3XX</td>
+        <td>对标粉丝池是本店 <b>3.9倍</b>，涨粉是长线课题</td></tr>
+      <tr><td>新客 DGMV 同比</td><td>-5.2%</td><td>-10.8%</td>
+        <td>拉新引擎需要加力</td></tr>
+      <tr><td>老客 DGMV 同比</td><td>+23.2%</td><td>+21.5%</td>
+        <td>老客盘增长扎实，复购模型跑通</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- ===== S3 ===== -->
+<section id="s3">
+  <div class="sect-h"><h2>🏷️ 3. 类目排名阶梯</h2>
+    <div class="sub">从三级主营类目一路看到大食品（休食+生鲜+大健康）</div></div>
+  <details class="caliber"><summary>数据口径</summary><ul><li>「大食品」在数据表中无现成字段，按行业赛道 <code>seller_op_industry</code> 取 休食 + 生鲜 + 大健康 三赛道合并</li><li>排名分母 = 该层级内 YTD DGMV &gt; 0 的商家数；场域排名分母为该场域有成交的商家数</li><li>两家同属一级类目「粮油调味/速食/干货/烘焙」，但三级类目不同（面点类速食 vs 熏腊/香肠/火腿制品）</li></ul></details>
+  <div class="sect-body">
+    <div class="lead">
+      小黄象在自己的三级类目「面点类速食」是 <b>第 2 名</b>，
+      往上每升一级排名掉一档，到大食品盘子是第 81 名。
+      最值得看的是场域排名的分化：<b>K 播第 1</b>、
+      <b>店播第 3</b>、<b>商卡第 4</b>，
+      但 <b>商笔只有第 19</b>——三条腿进前五，一条腿掉到 20 名开外。
+    </div>
+    <div class="sub-h">小黄象 · 排名阶梯</div>
+    <div class="table-wrap"><table>
+      <tr><th>层级</th><th>有成交商家</th><th>总排名</th><th>K播</th><th>店播</th><th>商笔</th><th>商卡</th></tr>
+      <tr><td>三级</td><td>968</td><td><b>2</b></td><td>1</td><td>3</td><td>19</td><td>4</td></tr><tr><td>二级</td><td>1,003</td><td><b>2</b></td><td>1</td><td>3</td><td>19</td><td>4</td></tr><tr><td>一级</td><td>10,999</td><td><b>6</b></td><td>4</td><td>4</td><td>127</td><td>7</td></tr><tr><td>赛道</td><td>47,275</td><td><b>32</b></td><td>28</td><td>38</td><td>640</td><td>33</td></tr><tr><td>大食品</td><td>72,278</td><td><b>81</b></td><td>72</td><td>74</td><td>1145</td><td>95</td></tr>
+    </table></div>
+    <div class="sub-h">对标店铺 · 排名阶梯</div>
+    <div class="table-wrap"><table>
+      <tr><th>层级</th><th>有成交商家</th><th>总排名</th><th>K播</th><th>店播</th><th>商笔</th><th>商卡</th></tr>
+      <tr><td>三级</td><td>801</td><td><b>1</b></td><td>1</td><td>—</td><td>1</td><td>1</td></tr><tr><td>二级</td><td>1,692</td><td><b>1</b></td><td>2</td><td>—</td><td>1</td><td>1</td></tr><tr><td>一级</td><td>10,999</td><td><b>3</b></td><td>3</td><td>1XX</td><td>2</td><td>3</td></tr><tr><td>赛道</td><td>47,275</td><td><b>1X</b></td><td>1X</td><td>5XX</td><td>2</td><td>1X</td></tr><tr><td>大食品</td><td>72,278</td><td><b>4X</b></td><td>5X</td><td>8XX</td><td>8</td><td>4X</td></tr>
+    </table></div>
+    <p style="font-size:12px;color:#6b7280;margin-top:10px">
+      对标店铺三级类目是「熏腊/香肠/火腿制品」，商笔在该类目及一级类目均为头部；
+      店播场域因未开展，排名无参考意义（已标 —）。
+    </p>
+  </div>
+</section>
+
+<!-- ===== S4 ===== -->
+<section id="s4">
+  <div class="sect-h"><h2>🛒 4. 商品矩阵</h2>
+    <div class="sub">YTD TOP10 单品 · 结构与客单对照</div></div>
+  <details class="caliber"><summary>数据口径</summary><ul><li>数据源：订单包裹底表 <code>dwd_ecm_trade_package_nsku_di</code>，有效状态（package_status in 2/26/28/3/4/5/55/6/65/7）+ is_visible=1 + is_valid=1</li><li>商品名取 <code>dim_goods_base_df.new_item_name</code>（2026-08-24 快照）；同款商品若改过标题会拆成多行，未做归一</li><li>口径为订单成交额（RGMV 视角），与前文 DGMV 渠道归因口径不同，两者不可直接相加</li></ul></details>
+  <div class="sect-body">
+    <div class="lead">
+      小黄象 TOP1 单品「橄榄油香煎鸡排」YTD <b>441.2万</b>、占店铺 <b>15.0%</b>，
+      TOP10 合计占 <b>51.7%</b>——头部集中度适中，不是单品集中型。
+      核心结构是「鸡排 + 手抓饼 + 披萨 + 意面」四条早餐速食主线，
+      客单价区间 ¥82~¥401。
+    </div>
+    <div class="sub-h">小黄象 · TOP10 单品</div>
+    <div class="table-wrap"><table>
+      <tr><th>#</th><th>商品</th><th>成交额</th><th>订单</th><th>客单</th><th>占店比</th></tr>
+      <tr><td>1</td><td>【官方】橄榄油香煎鸡排半成品空气炸锅轻食健身餐三明治100g/袋</td><td>441.2万</td><td>16,216</td><td>¥272</td><td>15.0%</td></tr><tr><td>2</td><td>【官方】120s卷边披萨榴莲速食半成品空气炸锅夜宵一人食追剧嘴馋</td><td>238.3万</td><td>7,668</td><td>¥311</td><td>8.1%</td></tr><tr><td>3</td><td>【官方】黄油手抓饼葱油饼儿童美食早餐速食空气炸锅饼皮一人食</td><td>201.6万</td><td>9,640</td><td>¥209</td><td>6.9%</td></tr><tr><td>4</td><td>【官方任选10件】鸡排手抓饼奶酪饼鸡蛋灌饼馒头葱油饼鸡腿</td><td>152.7万</td><td>18,744</td><td>¥82</td><td>5.2%</td></tr><tr><td>5</td><td>【官方】鸡翅根鸡翅中袋早餐半成品</td><td>103.1万</td><td>3,079</td><td>¥335</td><td>3.5%</td></tr><tr><td>6</td><td>【官方】新奥尔良鸡翅中&鸡翅根速食半成品空气炸锅</td><td>93.9万</td><td>2,342</td><td>¥401</td><td>3.2%</td></tr><tr><td>7</td><td>【官方】番茄&黑椒意大利面夜宵半成品速食儿童早餐一人食代餐</td><td>92.2万</td><td>2,968</td><td>¥311</td><td>3.1%</td></tr><tr><td>8</td><td>【开学季】120秒卷边比萨(香肠派对)空气炸锅速食烘焙早餐100g…</td><td>74.1万</td><td>2,376</td><td>¥312</td><td>2.5%</td></tr><tr><td>9</td><td>【专场】120秒卷边比萨(香肠派对)空气炸锅速食烘焙早餐</td><td>64.3万</td><td>2,265</td><td>¥284</td><td>2.2%</td></tr><tr><td>10</td><td>【官方】小奶酪饼芋泥原制蒙古奶酪饼西式餐芝士饼100g105g</td><td>56.1万</td><td>2,264</td><td>¥248</td><td>1.9%</td></tr>
+    </table></div>
+    <div class="sub-h">对标店铺 · TOP10 单品</div>
+    <div class="table-wrap"><table>
+      <tr><th>#</th><th>商品</th><th>成交额</th><th>订单</th><th>客单</th><th>占店比</th></tr>
+      <tr><td>1</td><td>经典番茄意大利面黑椒肉酱拌面套装意面家庭套餐通心粉【五盒装】</td><td>6XX万</td><td>21,1XX</td><td>¥3XX</td><td>1X%</td></tr><tr><td>2</td><td>原味黑猪肉嵊州老面小笼包小笼包子速食早餐半成品早饭速冻面点</td><td>4XX万</td><td>14,7XX</td><td>¥2XX</td><td>9%</td></tr><tr><td>3</td><td>虾饼虾仁空气炸锅食材早餐半成品果蔬虾肉制品</td><td>3XX万</td><td>12,0XX</td><td>¥3XX</td><td>8%</td></tr><tr><td>4</td><td>火山石烤肠台湾纯香肉肠地道肉肠黑胡椒火腿肠</td><td>3XX万</td><td>8,5XX</td><td>¥4XX</td><td>8%</td></tr><tr><td>5</td><td>【刘雨鑫专属】爆汁猪肉烤肠台式地道芝士脆皮肠270g*5</td><td>3XX万</td><td>8,5XX</td><td>¥3XX</td><td>6%</td></tr><tr><td>6</td><td>薄底披萨拉丝半成品饼胚烘焙速食空气炸锅加热即食儿童早餐</td><td>2XX万</td><td>6,1XX</td><td>¥4XX</td><td>6%</td></tr><tr><td>7</td><td>黑猪肉大葱馅饼酥皮馅饼安格斯牛肉馅饼煎饼早餐冷冻方便速食</td><td>2XX万</td><td>8,6XX</td><td>¥2XX</td><td>5%</td></tr><tr><td>8</td><td>原味鸡排奥尔良味鸡胸排香煎鸡胸肉早餐半成品速食冷冻鸡胸肉</td><td>1XX万</td><td>6,0XX</td><td>¥2XX</td><td>4%</td></tr><tr><td>9</td><td>爆汁虾肉肠儿童早餐虾肠空气炸锅烤肠半成品速食香肠</td><td>1XX万</td><td>4,9XX</td><td>¥3XX</td><td>3%</td></tr><tr><td>10</td><td>【密子君专属】爆汁猪肉烤肠台式地道芝士脆皮肠270g*5</td><td>1XX万</td><td>4,4XX</td><td>¥3XX</td><td>3%</td></tr>
+    </table></div>
+    <div class="cards">
+      <div class="card mid"><div class="ct">💡 单品客单对照</div><div class="cd">
+        对标店铺 TOP10 客单区间 ¥2XX~¥4XX，
+        整店客单 ¥1XX vs 本店 ¥100.4。对方大量使用 <b>「×5 组合装」</b>拉高单笔金额，
+        本店「任选 10 件」类组合客单仅 ¥82，组合定价还有空间。
+      </div></div>
+      <div class="card lo"><div class="ct">🎯 达人专属款打法</div><div class="cd">
+        对标店铺 TOP10 里有 <b>2 款</b>是达人冠名专属款（占其 TOP10 的 9.6% 量级）。
+        本店也有「敏希妈」「小白专场」「董生活」等专属款，但均未进 TOP10——
+        专属款的<b>货品选择</b>（用主推爆款而非边缘款做专属）是可直接复用的经验。
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== S5 ===== -->
+<section id="s5">
+  <div class="sect-h"><h2>📝 5. 商品笔记漏斗对标</h2>
+    <div class="sub">定位商笔到底卡在哪一环：量、点击、还是转化</div></div>
+  <details class="caliber"><summary>数据口径</summary><ul><li>CTR1 = 笔记商卡曝光PV ÷ 笔记曝光PV；CTR2 = 笔记商卡点击PV ÷ 笔记商卡曝光PV（均为 PV 加权自算，非算术平均）</li><li>商笔 GPM = 商笔 DGMV ÷ 笔记曝光PV × 1000，即每千次笔记曝光带来的成交额</li><li>笔记数为「有曝光的笔记数」日累加，含主子账号，跨天重复曝光不除重</li></ul></details>
+  <div class="sect-body">
+    <div class="lead">
+      逐环拆下来，<b>量的缺口远大于效率缺口</b>：笔记曝光差 <b>5.3 倍</b>，
+      而 CTR1 只差 1.12 倍、CTR2 差 1.34 倍。
+      最终 GPM 差 <b>3.0 倍</b>——效率仍有提升余地，而补量的边际收益来得更快。
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>漏斗环节</th><th>小黄象</th><th>对标店铺</th><th>倍数</th></tr>
+      
+<tr><td>发布有曝光笔记数</td><td>155,211</td><td>226,5XX</td><td>1.5×</td></tr>
+<tr><td>笔记曝光 PV</td><td>25,063,805</td><td>133886,6XX</td><td>5.3×</td></tr>
+<tr><td>笔记点击率 CTR1</td><td>5.96%</td><td>6.X%</td><td>1.12×</td></tr>
+<tr><td>商卡点击率 CTR2</td><td>3.36%</td><td>4.X%</td><td>1.34×</td></tr>
+<tr class="self"><td>商笔 GPM（千次曝光成交）</td><td>¥18.2</td><td>¥5X</td><td>3.0×</td></tr>
+<tr><td>商笔 DGMV</td><td>45.6万</td><td>7XX万</td><td>16.2×</td></tr>
+
+    </table></div>
+    <div class="two" style="margin-top:18px">
+      <div>
+        <div class="sub-h">小黄象 · 图文 vs 视频</div>
+        <div class="table-wrap"><table>
+          <tr><th>类型</th><th>曝光PV</th><th>DGMV</th><th>GPM</th></tr>
+<tr><td>图文笔记</td><td>361,316</td><td>0.6万</td><td>¥16.6</td></tr>
+<tr><td>视频笔记</td><td>4,597,901</td><td>9.1万</td><td>¥19.8</td></tr>
+
+        </table></div>
+        <p style="font-size:12px;color:#6b7280;margin-top:8px">
+          视频笔记占本店商笔曝光 <b>92.7%</b>、
+          成交 <b>93.8%</b>，是绝对主力。
+        </p>
+      </div>
+      <div>
+        <div class="sub-h">对标店铺 · 图文 vs 视频</div>
+        <div class="table-wrap"><table>
+          <tr><th>类型</th><th>曝光PV</th><th>DGMV</th><th>GPM</th></tr>
+<tr><td>图文笔记</td><td>2177,1XX</td><td>4.X万</td><td>¥2X</td></tr>
+<tr><td>视频笔记</td><td>40746,7XX</td><td>1XX万</td><td>¥4X</td></tr>
+
+        </table></div>
+        <p style="font-size:12px;color:#6b7280;margin-top:8px">
+          对标店铺视频占其商笔曝光 <b>94.9%</b>，
+          同样是视频驱动——<b>路线一致，差在体量</b>，可直接对标其发布节奏。
+        </p>
+      </div>
+    </div>
+    <div id="c_funnel" class="chart small"></div>
+  </div>
+</section>
+
+<!-- ===== S6 ===== -->
+<section id="s6">
+  <div class="sect-h"><h2>🎬 6. 店播专项</h2>
+    <div class="sub">本店最强场域 · 品类内竞争密度最低的赛道</div></div>
+  <details class="caliber"><summary>数据口径</summary><ul><li>数据源：交易侧商家店播宽表 <code>dm_ecm_seller_live_metrics_1d_di</code></li><li>开播场次 = <code>live_day_num_1d</code>（单账号当日开播记 1 场）；时长为开播时长（秒转小时）</li><li>店播 GPM = 店播 DGMV ÷ 直播观播次数 × 1000；观播次数为 PV 非 UV</li></ul></details>
+  <div class="sect-body">
+    <div class="lead">
+      上半年开播 <b>225</b> 场、<b>4,386</b> 小时，几乎<b>每天都在播</b>（月均 28 场），
+      场均 <b>19.5 小时</b>、场均产出 <b>1.34万</b>。
+      这是品类里极少数把店播做成常态化基本盘的店铺——968 家有成交店铺中只有 154 家有店播成交，
+      而本店店播排到<b>第 3 名</b>。
+    </div>
+    <div class="kpis"><div class="kpi good"><div class="label">开播场次</div><div class="value">225</div><div class="delta up">月均 28 场</div></div><div class="kpi good"><div class="label">累计时长</div><div class="value">4,386h</div><div class="delta up">场均 19.5h</div></div><div class="kpi "><div class="label">场均产出</div><div class="value">1.34万</div><div class="delta up">店播 301.7万</div></div><div class="kpi "><div class="label">店播 GPM</div><div class="value">¥2,575</div><div class="delta up">每千次观播成交</div></div></div>
+    <div id="c_live" class="chart"></div>
+    <div class="sub-h">店播成交的观众来源结构</div>
+    <div class="table-wrap"><table>
+      <tr><th>观众类型</th><th>DGMV</th><th>占比</th><th>说明</th></tr>
+      
+<tr><td>非粉丝</td><td>163.6万</td><td>58.5%</td><td>公域拉新主力</td></tr>
+<tr><td>老粉丝</td><td>103.3万</td><td>36.9%</td><td>私域复购基本盘</td></tr>
+<tr><td>新粉丝</td><td>12.7万</td><td>4.5%</td><td>转粉后即时转化</td></tr>
+
+    </table></div>
+    <p style="font-size:12px;color:#6b7280;margin-top:10px">
+      其中广告流量贡献 <b>89.5万</b>、平台扶持流量贡献 <b>51.9万</b>（合计占店播 46.9%），
+      自然流量仍是主体。非粉丝占比 58.5% 说明店播同时承担<b>拉新</b>职能，不只是老客收割场。
+    </p>
+    <div class="cards">
+      <div class="card mid"><div class="ct">🔍 8 月：时长没减，产出在降</div><div class="cd">
+        8 月（1-24 日）开播 24 场、382 小时，
+        日均时长 <b>15.9h</b>，与 7 月的 <b>15.9h</b> 基本持平；
+        但日均店播产出从 <b>0.96万</b> 到 <b>0.89万</b>
+        （<b>-8%</b>）。
+        投入没变、产出变了，说明问题不在开播量，而在<b>单场转化</b>——选品、货品节奏、流量结构值得逐项看。
+      </div></div>
+      <div class="card lo"><div class="ct">📊 时长边际效率在下降</div><div class="cd">
+        1 月场均 23.7h → 8 月场均
+        15.9h，时长在压缩；
+        但单位时长产出（GMV/小时）从 ¥314 到
+        ¥560，
+        说明<b>压短并精</b>的方向是对的，关键是别把总时长压过头。
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== S7 ===== -->
+<section id="s7">
+  <div class="sect-h"><h2>👥 7. 新老客结构</h2>
+    <div class="sub">两家正好互为镜像 · 各自的风险与机会</div></div>
+  <details class="caliber"><summary>数据口径</summary><ul><li>新客/老客 DGMV 取宽表 <code>new_customer_dgmv</code> / <code>old_customer_dgmv</code>（平台口径）</li><li>⚠️ 此为平台新老客口径，非店铺新老客；店铺口径老客占比通常显著低于平台口径</li></ul></details>
+  <div class="sect-body">
+    <div class="lead">
+      本店老客贡献 <b>68.9%</b>（<b>583.9万</b>），新客 <b>31.1%</b>；
+      对标店铺则是新客 <b>5X%</b> 为主。
+      两家正好相反：本店是<b>复购驱动型</b>，对标是<b>拉新驱动型</b>。
+      好消息是本店老客盘同比 <b>+23.2%</b>、新客同比 <b>-5.2%</b>，
+      需要关注结构均衡。
+    </div>
+    <div class="two">
+      <div><div class="sub-h">小黄象 · 新老客结构</div><div id="c_user_x" class="chart small"></div></div>
+      <div><div class="sub-h">对标店铺 · 新老客结构</div><div id="c_user_f" class="chart small"></div></div>
+    </div>
+    <div class="cards">
+      <div class="card hi"><div class="ct">✅ 复购模型已跑通</div><div class="cd">
+        老客 DGMV <b>583.9万</b>、同比 <b>+23.2%</b>，
+        评价里「复购/回购」相关提及 <b>1,055</b> 条（占全部评价 9.0%）。
+        早餐速食是天然高频复购品类，这条护城河比 GMV 体量更有价值。
+      </div></div>
+      <div class="card mid"><div class="ct">🎯 拉新是下半年主线</div><div class="cd">
+        新客占比 31.1%，对标 5X%。
+        新客主要靠<b>公域进水口</b>——而本店商笔（最大公域进水口）仅占 5.4%。
+        补商笔和补拉新，本质是<b>同一件事</b>。
+      </div></div>
+      <div class="card lo"><div class="ct">💬 私域已有基础</div><div class="cd">
+        私信群聊场景贡献 <b>132.6万</b>，购买用户 <b>639</b> 人，
+        店播老粉丝贡献 <b>103.3万</b>。私域+店播的组合是老客盘的双引擎，可继续加码社群预告。
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== S8 ===== -->
+<section id="s8">
+  <div class="sect-h"><h2>💭 8. 客户反馈洞察</h2>
+    <div class="sub">YTD 商品评价 11,763 条全量分析</div></div>
+  <details class="caliber"><summary>数据口径</summary><ul><li>数据源：BI 数据集 8033（订单晒单评价），店铺 id 过滤，2026 年 1-8 月，全量 11,763 条（非抽样）</li><li>⚠️ 该数据集评分字段存在映射异常，本报告只用评价<b>文本</b>做情感与主题识别，不使用星级</li><li>主题归类为关键词正则匹配，一条评价只归入第一个命中主题（避免重复计数）；未命中任何情感词的评价不计入正负面</li></ul></details>
+  <div class="sect-body">
+    <div class="lead">
+      全量 <b>11,763</b> 条评价里，正向提及 <b>8,300</b> 条（70.6%），
+      负向 <b>972</b> 条（<b>8.26%</b>）——负面率低于 10%，产品口碑扎实。
+      评价集中在<b>鸡排/鸡肉（42.9%）</b>和
+      <b>手抓饼/葱油饼（25.9%）</b>两条主线，与 TOP 单品结构一致。
+    </div>
+    <div class="two">
+      <div><div class="sub-h">👍 正向主题</div>
+        <div class="table-wrap"><table><tr><th>主题</th><th>条数</th><th>占比</th></tr><tr><td>好吃惊艳</td><td>6,517</td><td>55.4%</td></tr><tr><td>复购</td><td>1,055</td><td>9.0%</td></tr><tr><td>孩子爱吃</td><td>430</td><td>3.7%</td></tr><tr><td>方便快手</td><td>241</td><td>2.0%</td></tr><tr><td>早餐场景</td><td>57</td><td>0.5%</td></tr></table></div>
+      </div>
+      <div><div class="sub-h">🔧 待优化主题</div>
+        <div class="table-wrap"><table><tr><th>主题</th><th>条数</th><th>占比</th></tr><tr><td>口感不佳</td><td>432</td><td>3.67%</td></tr><tr><td>价格</td><td>245</td><td>2.08%</td></tr><tr><td>包装物流</td><td>139</td><td>1.18%</td></tr><tr><td>太咸太油</td><td>109</td><td>0.93%</td></tr><tr><td>分量少</td><td>47</td><td>0.40%</td></tr></table></div>
+      </div>
+    </div>
+    <div class="sub-h">评价的商品分布</div>
+    <div id="c_rev" class="chart small"></div>
+    <div class="cards">
+      <div class="card hi"><div class="ct">🌟 「孩子爱吃」是核心心智</div><div class="cd">
+        <b>430</b> 条评价主动提到孩子/宝宝/挑食（3.7%）。
+        儿童早餐是本店已经占住的心智，开学季、儿童营养是天然的内容抓手。
+      </div></div>
+      <div class="card mid"><div class="ct">🔧 口感是第一优化项</div><div class="cd">
+        「口感不佳」<b>432</b> 条（3.67%）是最大负向主题，
+        其次是「价格」<b>245</b> 条。建议按 SPU 下钻定位具体是哪几款拖分，
+        而不是全店做口感改造。
+      </div></div>
+      <div class="card lo"><div class="ct">📦 冷链包装可控</div><div class="cd">
+        包装物流类负面 <b>139</b> 条（1.18%），
+        冻品类目属正常水平。夏季是高发期，可在详情页前置冷链说明降低预期差。
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== S9 ===== -->
+<section id="s9">
+  <div class="sect-h"><h2>⚠️ 9. 合规风险</h2>
+    <div class="sub">YTD 白盒违规 15 条 · 其中 10 条处罚中</div></div>
+  <details class="caliber"><summary>数据口径</summary><ul><li>数据源：BI 数据集 28963（违规中心全量），店铺 id 过滤，2026 年 1-8 月</li><li>仅展示白盒违规（商家在后台可见的处罚）；黑盒处罚不对外呈现</li><li>「正在处罚中」表示约束仍生效，需优先处理；「处罚已结束」为历史记录</li></ul></details>
+  <div class="sect-body">
+    <div class="lead">
+      YTD 白盒违规 <b>15</b> 条，其中 <b>10</b> 条仍在处罚中。
+      按休食友好商家红线口径（近 30 天严重违规 ≤5 条），需重点关注的是
+      <b>违规营销笔记、虚假宣传、商品合规（滥发信息）</b>这几类反复出现的类型。
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>风险域</th><th>子风险域</th><th>处置状态</th></tr>
+      <tr><td>供给生态</td><td>—</td><td><span class="down">正在处罚中</span></td></tr><tr><td>TNS画风-虚假不实</td><td>AIGC生成</td><td><span class="down">正在处罚中</span></td></tr><tr><td>原创</td><td>—</td><td><span class="down">正在处罚中</span></td></tr><tr><td>直播特殊风险</td><td>录播</td><td>处罚已结束</td></tr><tr><td>问题账号</td><td>高频低质号</td><td><span class="down">正在处罚中</span></td></tr><tr><td>问题账号</td><td>工业化量产号</td><td><span class="down">正在处罚中</span></td></tr><tr><td>违规营销笔记</td><td>带货内容不符</td><td><span class="down">正在处罚中</span></td></tr><tr><td>禁售</td><td>禁限售&红线</td><td>处罚已结束</td></tr><tr><td>商业内容治理</td><td>内容风险</td><td><span class="down">正在处罚中</span></td></tr><tr><td>笔记内容生态</td><td>博眼球骗互动</td><td><span class="down">正在处罚中</span></td></tr><tr><td>商品合规</td><td>滥发信息</td><td>处罚已结束</td></tr><tr><td>违规营销直播</td><td>履约承诺不符</td><td>处罚已结束</td></tr><tr><td>虚假宣传笔记</td><td>虚假宣传合规</td><td>处罚已结束</td></tr><tr><td>商业生态</td><td>导流</td><td><span class="down">正在处罚中</span></td></tr><tr><td>商品合规</td><td>滥发信息</td><td><span class="down">正在处罚中</span></td></tr>
+    </table></div>
+    <div class="cards">
+      <div class="card mid"><div class="ct">🎯 优先整改方向</div><div class="cd">
+        「商品合规 · 滥发信息」出现 <b>2</b> 次（1 条处罚中），建议排查商品标题/详情的重复铺词；
+        「违规营销笔记 · 带货内容不符」需核对笔记内容与挂车商品的一致性。
+      </div></div>
+      <div class="card lo"><div class="ct">📋 内容侧规范</div><div class="cd">
+        涉及 AIGC 生成、博眼球骗互动、导流等内容类处罚，多与投放素材相关。
+        建议在商笔提量的同时同步建立素材合规清单，避免提量带来违规同步上升。
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== S10 ===== -->
+<section id="s10">
+  <div class="sect-h"><h2>🚀 10. 下半年建议</h2>
+    <div class="sub">一句话诊断 · 场域动作 · 9-12 月节奏 · 跳脱思考</div></div>
+  <div class="sect-body">
+    <div class="lead" style="border-left-color:#10b981;background:#f0fdf4">
+      <b>一句话诊断：</b>小黄象是「直播双引擎 + 老客深耕」型选手，
+      店播（35.6%）和 K 播（30.2%）合计撑起
+      65.8% 的大盘，
+      三级类目 K 播第 1、店播第 3；YTD 同比 <b>+12.7%</b> 跑赢同赛道对标。
+      下半年唯一能改变名次的抓手是<b>商品笔记</b>——它现在只占 5.4%，
+      同品类头部能做到 5X%，这既是 GMV 空间也是拉新进水口。
+    </div>
+
+    <div class="sub-h">场域动作表</div>
+    <div class="table-wrap"><table>
+      <tr><th>场域</th><th>当前定位</th><th>下半年动作</th><th>可量化目标</th></tr>
+      <tr class="self"><td><b>商品笔记</b></td><td>最大增量空间（5.4%）</td>
+        <td>补量优先于补效率：视频笔记按对标节奏提发布频次，主推已验证 TOP 单品（鸡排/手抓饼/披萨）；素材沿用「儿童早餐」心智</td>
+        <td>笔记曝光从 25,063,805 提到 5,000 万级（+2×），GPM 维持 ¥18 即可带来
+            +91万 商笔 DGMV</td></tr>
+      <tr><td><b>店播</b></td><td>核心壁垒（35.6%）</td>
+        <td>守住时长基本盘，恢复到月均 500h 以上；延续「压短并精」但不压总量；社群预告导流提升开播初始热度</td>
+        <td>月均场次 ≥28 场、月均时长 ≥480h、场均产出 ≥1.3万</td></tr>
+      <tr><td><b>K 播</b></td><td>类目第 1（30.2%）</td>
+        <td>防守为主：3 月大场模式已验证（单月 89.8万），
+            9-11 月大促复刻头部合作节奏；同时沉淀腰尾部买手常态池保持买手结构多元</td>
+        <td>保持三级类目 K 播第 1；大促月 K 播 ≥50万</td></tr>
+      <tr><td><b>商卡</b></td><td>稳定盘（24.1%）</td>
+        <td>组合装定价优化：当前「任选 10 件」客单仅 ¥82，
+            对标店铺用「×5 组合装」把客单做到 ¥4XX 量级</td>
+        <td>整店客单价从 ¥100.4 提到 ¥110+</td></tr>
+    </table></div>
+
+    <div class="sub-h">9-12 月节奏日历</div>
+    <div class="cards">
+      <div class="card hi"><div class="ct">📚 9 月 · 开学季</div><div class="cd">
+        本店最强心智期（430 条评价提到孩子）。
+        主推儿童早餐组合（鸡排/手抓饼/奶酪饼/坚果馒头），沿用已有「开学季」款；
+        商笔在这个月起量最顺，建议作为提量第一战场。
+      </div></div>
+      <div class="card mid"><div class="ct">🎃 10-11 月 · 双 11 大促</div><div class="cd">
+        参照 3 月脉冲经验（232.2万，基线 2.6 倍）：
+        K 播头部大场 + 店播加长时长 + 商笔前置种草三线同步；
+        提前 3 周开始笔记铺量，让大促日的搜索承接有内容池。
+      </div></div>
+      <div class="card lo"><div class="ct">🍲 12 月 · 冬季囤货 &amp; 年货节预热</div><div class="cd">
+        冻品在冬季有天然优势（冷链成本低、囤货需求强）。
+        主推家庭大份装/火锅场景（虾滑已有基础），为年货节储备组合装；
+        同时是全年老客复购的最后一个窗口，社群提前锁单。
+      </div></div>
+    </div>
+
+    <div class="sub-h">💡 跳脱思考（供讨论，非结论）</div>
+    <div class="cards">
+      <div class="card lo"><div class="ct">🍱 「一周早餐订阅」组合</div><div class="cd">
+        本店 TOP 单品覆盖鸡排/饼类/包子/意面/奶酪饼，天然能拼出「周一到周五不重样」。
+        把「任选 10 件」升级成有场景叙事的「一周早餐盒」，客单和复购都有抬升空间，
+        也更容易做成笔记选题。
+      </div></div>
+      <div class="card lo"><div class="ct">🔥 冬季火锅场景延展</div><div class="cd">
+        虾滑（虾含量 95%）已在店内验证，冬季火锅是速食冻品的第二大场景。
+        可考虑把虾滑+牛肉丸+培根拼成火锅拼盘，切入与早餐互补的晚间场景，
+        摊平早餐单一场景的季节波动。
+      </div></div>
+      <div class="card lo"><div class="ct">🎬 店播优势反哺笔记</div><div class="cd">
+        本店有 225 场、4,386 小时的直播素材库，
+        这是商笔提量最低成本的素材来源——直播切片做成商笔视频，
+        既解决「量从哪来」也保证内容真实感。这是本店独有、对标店铺没有的资产。
+      </div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    小黄象旗舰店 · 上半年经营诊断 （商家版） · 数据周期 2026-01-01 ~ 2026-08-24<br>
+    数据源：商家 1d 宽表 / 店播宽表 / 订单包裹底表 / BI 8033 评价 / BI 28963 违规中心 · 报告生成 2026-08-25
+    <br><span style="color:#cbd5e1">※ 对标店铺数据已做脱敏处理，仅保留量级参考</span>
+  </div>
+</footer>
+
+<script>
+const D = {"months": ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月*"], "xhx_m": [80.9, 62.1, 232.2, 104.6, 128.1, 83.6, 89.9, 66.3], "fwp_m": [200, 90, 400, 100, 100, 200, 200, 90], "ext": true, "carrier_names": ["商品笔记", "店播", "K播", "商卡"], "xhx_car": [45.6, 301.7, 255.6, 204.0], "fwp_car": [700, 0, 300, 300], "xhx_live": [], "rev_cat": {"手抓饼/葱油饼": 3049, "其他": 577, "鸡排/鸡肉": 5049, "意面": 671, "虾滑/海鲜": 498, "包子/面点": 1012, "披萨": 473, "肠/培根": 86, "奶酪饼/芋泥": 214, "组合装/礼包": 134}, "rev_pos": {"好吃惊艳": 6517, "复购": 1055, "孩子爱吃": 430, "方便快手": 241, "早餐场景": 57}, "rev_neg": {"包装物流": 139, "价格": 245, "口感不佳": 432, "太咸太油": 109, "分量少": 47}, "user_x": [263.6, 583.9], "user_f": [700, 600], "live_months": ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月*"], "live_sessions": [31, 17, 31, 30, 31, 30, 31, 24], "live_hours": [736.0, 457.5, 721.7, 625.1, 489.5, 480.5, 493.6, 382.0], "live_gmv": [23.1, 19.0, 78.5, 46.0, 47.5, 36.3, 29.9, 21.4], "kplay_gmv": [22.4, 19.7, 89.8, 18.7, 37.6, 14.5, 29.4, 23.5], "note_gmv": [4.5, 4.5, 8.8, 5.8, 7.8, 4.8, 5.3, 4.1], "card_gmv": [25.9, 16.3, 42.6, 27.4, 29.1, 24.7, 22.6, 15.4]};
+const EXT = D.ext;
+const C1='#0891b2', C2='#f59e0b', C3='#10b981', C4='#8b5cf6';
+function mk(id,opt){ const el=document.getElementById(id); if(!el) return; const c=echarts.init(el); c.setOption(opt); window.addEventListener('resize',()=>c.resize()); }
+
+// trend
+mk('c_trend',{
+  tooltip:{trigger:'axis', formatter:function(p){
+    let s=p[0].axisValue+'<br>';
+    p.forEach(x=>{ let v=x.value;
+      if(x.seriesName.indexOf('对标')>=0 && EXT){ s+=x.marker+x.seriesName+': ~'+Math.round(v/100)*100+'万<br>'; }
+      else { s+=x.marker+x.seriesName+': '+v+'万<br>'; } });
+    return s; }},
+  legend:{top:6,data:['小黄象','对标店铺']},
+  grid:{left:50,right:20,top:50,bottom:30},
+  xAxis:{type:'category',data:D.months,axisLine:{lineStyle:{color:'#cbd5e1'}}},
+  yAxis:{type:'value',name:'万元',splitLine:{lineStyle:{color:'#f1f5f9'}}},
+  series:[
+    {name:'小黄象',type:'line',smooth:true,data:D.xhx_m,itemStyle:{color:C1},lineStyle:{width:3},
+      areaStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(8,145,178,.25)'},{offset:1,color:'rgba(8,145,178,0)'}])},
+      label:{show:true,position:'top',fontSize:10,formatter:'{c}'}},
+    {name:'对标店铺',type:'line',smooth:true,data:D.fwp_m,itemStyle:{color:C2},
+      lineStyle:{width:2,type:'dashed'}}
+  ]});
+
+// carrier stacked share
+mk('c_carrier',{
+  tooltip:{trigger:'item',formatter:'{b}: {c}万 ({d}%)'},
+  legend:{bottom:0},
+  series:[{type:'pie',radius:['42%','66%'],center:['50%','45%'],
+    data:D.carrier_names.map((n,i)=>({name:n,value:D.xhx_car[i]})),
+    label:{formatter:'{b}\n{d}%',fontSize:11},
+    itemStyle:{borderColor:'#fff',borderWidth:2},
+    color:[C2,C3,C1,C4]}]});
+
+// compare share bars
+(function(){
+  const tot_x=D.xhx_car.reduce((a,b)=>a+b,0), tot_f=D.fwp_car.reduce((a,b)=>a+b,0);
+  const sx=D.xhx_car.map(v=>+(v/tot_x*100).toFixed(1));
+  const sf=D.fwp_car.map(v=>+(v/tot_f*100).toFixed(1));
+  mk('c_cmp',{
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},valueFormatter:v=>v+'%'},
+    legend:{top:6,data:['小黄象','对标店铺']},
+    grid:{left:80,right:96,top:50,bottom:46},
+    xAxis:{type:'value',name:'场域占比 (%)',nameLocation:'middle',nameGap:28,
+      nameTextStyle:{fontSize:11,color:'#94a3b8'},max:60,interval:15,
+      axisLabel:{margin:10,formatter:'{value}'},splitLine:{lineStyle:{color:'#f1f5f9'}}},
+    yAxis:{type:'category',data:D.carrier_names,axisLine:{lineStyle:{color:'#cbd5e1'}}},
+    series:[
+      {name:'小黄象',type:'bar',data:sx,itemStyle:{color:C1,borderRadius:[0,4,4,0]},
+        label:{show:true,position:'right',formatter:'{c}%',fontSize:11}},
+      {name:'对标店铺',type:'bar',data:sf,itemStyle:{color:C2,borderRadius:[0,4,4,0]},
+        label:{show:true,position:'right',formatter:'{c}%',fontSize:11}}
+    ]});
+})();
+
+// funnel: monthly carrier lines for xhx
+mk('c_funnel',{
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'万'},
+  legend:{top:6,data:['商品笔记','店播','K播','商卡']},
+  grid:{left:50,right:20,top:50,bottom:30},
+  xAxis:{type:'category',data:D.months,axisLine:{lineStyle:{color:'#cbd5e1'}}},
+  yAxis:{type:'value',name:'万元',splitLine:{lineStyle:{color:'#f1f5f9'}}},
+  series:[
+    {name:'商品笔记',type:'line',smooth:true,data:D.note_gmv,itemStyle:{color:C2}},
+    {name:'店播',type:'line',smooth:true,data:D.live_gmv,itemStyle:{color:C3}},
+    {name:'K播',type:'line',smooth:true,data:D.kplay_gmv,itemStyle:{color:C1}},
+    {name:'商卡',type:'line',smooth:true,data:D.card_gmv,itemStyle:{color:C4}}
+  ]});
+
+// live: sessions bar + hours line + gmv line
+mk('c_live',{
+  tooltip:{trigger:'axis'},
+  legend:{top:6,data:['开播时长(h)','店播DGMV(万)','开播场次']},
+  grid:{left:55,right:55,top:50,bottom:30},
+  xAxis:{type:'category',data:D.live_months,axisLine:{lineStyle:{color:'#cbd5e1'}}},
+  yAxis:[{type:'value',name:'时长h',splitLine:{lineStyle:{color:'#f1f5f9'}}},
+         {type:'value',name:'万元/场次',splitLine:{show:false}}],
+  series:[
+    {name:'开播时长(h)',type:'bar',data:D.live_hours,itemStyle:{color:'rgba(16,185,129,.5)',borderRadius:[4,4,0,0]}},
+    {name:'店播DGMV(万)',type:'line',yAxisIndex:1,smooth:true,data:D.live_gmv,itemStyle:{color:C1},lineStyle:{width:3},
+      label:{show:true,position:'top',fontSize:10}},
+    {name:'开播场次',type:'line',yAxisIndex:1,smooth:true,data:D.live_sessions,itemStyle:{color:C2},lineStyle:{type:'dashed'}}
+  ]});
+
+// user pies
+function pie(id,arr,names){
+  mk(id,{tooltip:{trigger:'item',formatter:'{b}: {c}万 ({d}%)'},
+    legend:{bottom:0},
+    series:[{type:'pie',radius:['45%','68%'],center:['50%','44%'],
+      data:[{name:names[0],value:arr[0]},{name:names[1],value:arr[1]}],
+      label:{formatter:'{b}\n{d}%',fontSize:12},
+      itemStyle:{borderColor:'#fff',borderWidth:2},color:[C2,C1]}]});
+}
+pie('c_user_x',D.user_x,['新客','老客']);
+pie('c_user_f',D.user_f,['新客','老客']);
+
+// reviews by category
+(function(){
+  const e=Object.entries(D.rev_cat).sort((a,b)=>b[1]-a[1]);
+  mk('c_rev',{
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},valueFormatter:v=>v+'条'},
+    grid:{left:100,right:40,top:20,bottom:30},
+    xAxis:{type:'value',name:'评价条数',splitLine:{lineStyle:{color:'#f1f5f9'}}},
+    yAxis:{type:'category',data:e.map(x=>x[0]).reverse(),axisLine:{lineStyle:{color:'#cbd5e1'}}},
+    series:[{type:'bar',data:e.map(x=>x[1]).reverse(),
+      itemStyle:{color:C1,borderRadius:[0,4,4,0]},
+      label:{show:true,position:'right',fontSize:11}}]});
+})();
+</script>
+</body>
+</html>
